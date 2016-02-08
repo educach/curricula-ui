@@ -38,7 +38,7 @@ QUnit.test( "model events", function( assert ) {
     assert.ok( true, "The view re-renders itself on updating its model." );
     doneChangeEvent();
   });
-  item1.set( 'name', "Some new name" );
+  item1.set( 'name', [ "Some new name" ] );
 
   var doneDestroyEvent = assert.async( 2 ),
       item2 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
@@ -77,7 +77,7 @@ QUnit.test( "view events", function( assert ) {
   view1.$el.find('input').change();
   view1.$el.find('input').change();
 
-  var doneClickEvent = assert.async( 1 ),
+  var doneClickEvent = assert.async(),
       item2 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
       view2 = new ArchibaldCurriculum.ItemView({ model: item2, editable: true });
   view2.on( 'select', function() {
@@ -110,3 +110,125 @@ QUnit.test( "view events", function( assert ) {
   view3.$el.dblclick();
   view3.$el.dblclick();
 });
+
+
+
+
+QUnit.module( "ItemListView" );
+
+/**
+ * Test initialization logic. It should not be possible to initialize an
+ * ItemListView without a collection.
+ */
+QUnit.test( "initialize", function( assert ) {
+  assert.throws(
+    function() {
+      var view = new ArchibaldCurriculum.ItemListView();
+    },
+    "Initializing a view without any collection throws an error."
+  );
+});
+
+/**
+ * Test collection event binding. ItemListViews should react on several
+ * collection events.
+ */
+QUnit.test( "collection events", function( assert ) {
+  assert.expect( 6 );
+
+  var doneAddRemoveEvent = assert.async( 2 ),
+      doneRenderEvent = assert.async( 2 ),
+      collection1 = new ArchibaldCurriculum.ItemCollection(),
+      view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1 }),
+      addedItem = new ArchibaldCurriculum.ItemModel({ name: [ "Some name "] });
+  view1.on( 'collection:add', function( item, collection, view ) {
+    assert.ok( true, "The view triggers a collection:add event on adding a model." );
+    assert.equal( item, addedItem, "The view passes the added item to the event handler." );
+    doneAddRemoveEvent();
+  });
+  view1.on( 'collection:remove', function( item, collection, view ) {
+    assert.ok( true, "The view triggers a collection:remove event on removing a model." );
+    assert.equal( item, addedItem, "The view passes the removed item to the event handler." );
+    doneAddRemoveEvent();
+  });
+  view1.on( 'render', function() {
+    assert.ok( true, "The view is re-rendered whenever an item is removed or added to the collection." );
+    doneRenderEvent();
+  });
+  collection1.add( addedItem );
+  collection1.remove( addedItem );
+});
+
+/**
+ * Test child ItemView event binding. ItemListViews should react on several
+ * child view events.
+ */
+QUnit.test( "child view events", function( assert ) {
+  assert.expect( 2 );
+
+  var doneChangeEvent = assert.async(),
+      doneSelectEvent = assert.async(),
+      item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
+      collection1 = new ArchibaldCurriculum.ItemCollection([ item1 ]),
+      view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1 });
+  view1.on( 'item:change', function() {
+    assert.ok( true, "The view triggers a item:change event on updating a model in the collection." );
+    doneChangeEvent();
+  });
+  view1.on( 'item:select', function() {
+    assert.ok( true, "The view triggers a item:select event on clicking on a child view." );
+    doneSelectEvent();
+  });
+  view1.render();
+  item1.set( 'name', [ "Some new name" ] );
+  view1.$el.find('li').click();
+});
+
+/**
+ * Test ItemListView events. ItemListViews trigger several events, as well as
+ * react to multiple DOM events.
+ */
+QUnit.test( "view events", function( assert ) {
+  assert.expect( 6 );
+
+  var doneCollapseExpandEvent = assert.async( 2 ),
+      collection1 = new ArchibaldCurriculum.ItemCollection(),
+      view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1 });
+  view1.on( 'column:collapse', function() {
+    assert.ok( true, "The view triggers a column:collapse event on being collapsed." );
+    assert.ok( view1.isCollapsed(), "The view gives correct information about being collapsed." );
+    doneCollapseExpandEvent();
+  });
+  view1.on( 'column:expand', function() {
+    assert.ok( true, "The view triggers a column:expand event on being collapsed." );
+    assert.ok( view1.isExpanded(), "The view gives correct information about being expanded." );
+    doneCollapseExpandEvent();
+  });
+  view1.collapse().expand();
+
+  var doneGoBackEvent = assert.async(),
+      doneGoToRootEvent = assert.async(),
+      collection2 = new ArchibaldCurriculum.ItemCollection(),
+      view2 = new ArchibaldCurriculum.ItemListView({ collection: collection2 });
+  view2.on( 'column:go-back', function() {
+    assert.ok( true, "The view triggers a column:go-back event on clicking on the Go Back button." );
+    doneGoBackEvent();
+  });
+  view2.on( 'column:go-to-root', function() {
+    assert.ok( true, "The view triggers a column:go-to-root event on clicking on the Go Back button." );
+    doneGoToRootEvent();
+  });
+  view2.render();
+  view2.$el.find('.archibald-column__button--show-parent').click();
+  view2.$el.find('.archibald-column__button--show-root').click();
+});
+
+
+
+
+QUnit.module( "ItemInfoView" );
+
+
+
+
+QUnit.module( "SummaryTreeView" );

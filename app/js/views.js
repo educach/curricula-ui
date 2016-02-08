@@ -206,7 +206,12 @@ Archibald.ItemListView = Backbone.View.extend({
 
     var that = this;
     this.collection
-      .bind('add remove', function() {
+      .bind('add', function(model) {
+        that.trigger('collection:add', model, that.collection, that);
+        that.render();
+      })
+      .bind('remove', function(model) {
+        that.trigger('collection:remove', model, that.collection, that);
         that.render();
       });
   },
@@ -219,7 +224,7 @@ Archibald.ItemListView = Backbone.View.extend({
     this.collection.forEach(function(model) {
       var item = new Archibald.ItemView({ model: model, editable: that.editable });
       item
-        .on('change', function(e) {
+        .on('model:change', function(e) {
           that.triggerItemEvent('change', model, e);
         })
         .on('select', function(e) {
@@ -229,15 +234,19 @@ Archibald.ItemListView = Backbone.View.extend({
       $ul.append(item.$el);
     });
 
+    this.trigger('render', this.collection, this);
+
     return this;
   },
   collapse: function() {
     this.$el.addClass('archibald-column--collapsed');
     this.trigger('column:collapse', this.collection, this);
+    return this;
   },
   expand: function() {
     this.$el.removeClass('archibald-column--collapsed');
     this.trigger('column:expand', this.collection, this);
+    return this;
   },
   isCollapsed: function() {
     return this.$el.hasClass('archibald-column--collapsed');

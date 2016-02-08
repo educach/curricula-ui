@@ -5,15 +5,20 @@
     "Wouter Admiraal <wad@wadmiraal.net>"
   ],
   "description": "JS application for managing and editing curricula data for LOM-CH descriptions.",
-  "moduleType": [
-    "amd"
-  ],
   "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
+    "assets",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "jquery": "1.7.2",
+    "underscore": "^1.8.3",
+    "backbone": "^1.2.3"
+  },
+  "devDependencies": {
+    "qunit": "~1.21.0"
+  }
 }

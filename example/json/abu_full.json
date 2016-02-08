@@ -1,0 +1,268 @@
+{
+  "root": [
+    {
+      "type": "lernbereich",
+      "name": ["Gesellschaft"],
+      "hasChildren": true,
+      "id": "gesellschaft"
+    },
+    {
+      "type": "lernbereich",
+      "name": ["Sprache unk Komunikation"],
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation"
+    },
+    {
+      "type": "lernbereich",
+      "name": ["Informatik"],
+      "hasChildren": true,
+      "id": "informatik"
+    }
+  ],
+  "gesellschaft": [
+    {
+      "type": "thema",
+      "name": "01 Berufliche Grundbildung",
+      "hasChildren": true,
+      "id": "gesellschaft_2"
+    },
+    {
+      "type": "thema",
+      "name": "02 Geld und Kauf",
+      "hasChildren": true,
+      "id": "gesellschaft_2"
+    },
+    {
+      "type": "thema",
+      "name": "03 Risiko und Sicherheit",
+      "hasChildren": true,
+      "id": "gesellschaft_2"
+    },
+    {
+      "type": "thema",
+      "name": "04 Demokratie und Mitgestaltung",
+      "hasChildren": true,
+      "id": "gesellschaft_2"
+    },
+    {
+      "type": "thema",
+      "name": "05 Kunst und Kultur",
+      "hasChildren": true,
+      "id": "gesellschaft_2"
+    },
+    {
+      "type": "thema",
+      "name": "06 Schweiz in Europa und der Welt",
+      "hasChildren": true,
+      "id": "gesellschaft_2"
+    },
+    {
+      "type": "thema",
+      "name": "07 Markt und Konsum",
+      "hasChildren": true,
+      "id": "gesellschaft_2"
+    },
+    {
+      "type": "thema",
+      "name": "08 Globale Herausforderungen",
+      "hasChildren": true,
+      "id": "gesellschaft_2"
+    },
+    {
+      "type": "thema",
+      "name": "09 Wohnen und Zusammenleben",
+      "hasChildren": true,
+      "id": "gesellschaft_2"
+    },
+    {
+      "type": "thema",
+      "name": "10 Arbeit und Zukunft",
+      "hasChildren": true,
+      "id": "gesellschaft_2"
+    }
+  ],
+  "gesellschaft_2": [
+    {
+      "type": "aspekt",
+      "name": "Ethik",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Identität",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Kultur",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Ökologie",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Politik",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Recht",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Technologie",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Wirtschaft",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Geschichte",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Gender",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Nachhaltigkeit",
+      "hasChildren": false,
+      "id": "gesellschaft_3"
+    }
+  ],
+  "sprache_und_kommunikation": [
+    {
+      "type": "thema",
+      "name": "01 Berufliche Grundbildung",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_2"
+    },
+    {
+      "type": "thema",
+      "name": "02 Geld und Kauf",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_2"
+    },
+    {
+      "type": "thema",
+      "name": "03 Risiko und Sicherheit",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_2"
+    },
+    {
+      "type": "thema",
+      "name": "04 Demokratie und Mitgestaltung",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_2"
+    },
+    {
+      "type": "thema",
+      "name": "05 Kunst und Kultur",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_2"
+    },
+    {
+      "type": "thema",
+      "name": "06 Schweiz in Europa und der Welt",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_2"
+    },
+    {
+      "type": "thema",
+      "name": "07 Markt und Konsum",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_2"
+    },
+    {
+      "type": "thema",
+      "name": "08 Globale Herausforderungen",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_2"
+    },
+    {
+      "type": "thema",
+      "name": "09 Wohnen und Zusammenleben",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_2"
+    },
+    {
+      "type": "thema",
+      "name": "10 Arbeit und Zukunft",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_2"
+    }
+  ],
+  "sprache_und_kommunikation_2": [
+    {
+      "type": "aspekt",
+      "name": "Rezeption",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Produktion",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_3"
+    },
+    {
+      "type": "aspekt",
+      "name": "Interaktion",
+      "hasChildren": true,
+      "id": "sprache_und_kommunikation_3"
+    }
+  ],
+  "sprache_und_kommunikation_3": [
+    {
+      "type": "kompetenz",
+      "name": "mündlich",
+      "hasChildren": false,
+      "id": "sprache_und_kommunikation_4"
+    },
+    {
+      "type": "kompetenz",
+      "name": "schriftlich",
+      "hasChildren": false,
+      "id": "sprache_und_kommunikation_4"
+    }
+  ],
+  "informatik": [
+    {
+      "type": "thema",
+      "name": "Informationstechnische Grundlagen",
+      "hasChildren": false,
+      "id": "informatik_2"
+    },
+    {
+      "type": "thema",
+      "name": "Informationserschliessung",
+      "hasChildren": false,
+      "id": "informatik_2"
+    },
+    {
+      "type": "thema",
+      "name": "Informationsbearbeitung",
+      "hasChildren": false,
+      "id": "informatik_2"
+    }
+  ]
+}

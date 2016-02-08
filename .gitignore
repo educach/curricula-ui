@@ -2,3 +2,5 @@
 /css/
 /json/
 
+*.sublime-*
+

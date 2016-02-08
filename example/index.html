@@ -1,0 +1,69 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Example</title>
+
+  <link rel="stylesheet" href="../assets/components/nanoscroller/bin/css/nanoscroller.css">
+  <link rel="stylesheet" href="../app/css/styles.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+
+  <script src="../assets/components/jquery/jquery.js"></script>
+  <script type="text/javascript">
+  var jQuery = $.noConflict();
+  </script>
+  <script src="../assets/components/underscore/underscore.js"></script>
+  <script src="../assets/components/backbone/backbone.js"></script>
+  <script src="../assets/components/nanoscroller/bin/javascripts/jquery.nanoscroller.js"></script>
+  <script src="../app/js/models.js"></script>
+  <script src="../app/js/views.js"></script>
+  <script src="../app/js/core.js"></script>
+  <script src="js/index.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="archibald-curriculum-display lp21">
+    <div class="archibald-lp21-filters" id="archibald-lp21-filters">
+      <div class="archibald-lp21-filters__wrapper">
+        <strong>Display cycles: </strong><br />
+        <label class="archibald-lp21-filters__filter archibald-lp21-filters__filter--cycle-1"><input type="checkbox" value="cycle-1" checked /> 1. Zyklus</label>
+        <label class="archibald-lp21-filters__filter archibald-lp21-filters__filter--cycle-2"><input type="checkbox" value="cycle-2" checked /> 2. Zyklus</label>
+        <label class="archibald-lp21-filters__filter archibald-lp21-filters__filter--cycle-3"><input type="checkbox" value="cycle-3" checked /> 3. Zyklus</label>
+      </div>
+
+      <div id="archibald-lp21-filter-warning" class="archibald-lp21-filters__message alert alert-warning hidden">
+        <strong>Warning:</strong> by unselecting one or more <em>cycles</em>, you <strong>hide</strong> items in the tree, but <strong>you do not de-select them!</strong> If you wish to deselect them, you have to do so by hand. Refer to the <em>Summary</em> below to see all the selected items.
+      </div>
+    </div>
+
+    <div class="archibald-row-wrapper">
+      <h3>Editor</h3>
+
+      <div class="archibald-item-info nano" id="archibald-item-info">
+        <h3 class="archibald-item-info__label" id="archibald-item-info-collapse"><i id="archibald-item-info-collapse" class="icon-plus"></i> Item info</h3>
+
+        <div class="archibald-item-info__content nano-content" id="archibald-item-info-content">
+          <span class="archibald-item-info__content__empty">Select an item to see its information</span>
+        </div>
+      </div>
+
+      <div class="archibald-row archibald-editor lp21-show-cycle-1 lp21-show-cycle-2 lp21-show-cycle-3" id="archibald-row">
+        <div class="archibald-editor__content" id="archibald-editor-content"></div>
+      </div>
+    </div>
+
+    <div class="archibald-row archibald-summary lp21-show-cycle-1 lp21-show-cycle-2 lp21-show-cycle-3" id="archibald-summary">
+      <h3 class="archibald-summary__label"><i id="archibald-summary-collapse" class="icon-minus"></i> Summary</h3>
+      <div class="archibald-summary__content" id="archibald-summary-content">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+appInit();
+</script>
+</body>
+</html>

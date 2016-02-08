@@ -1,0 +1,19 @@
+{
+  "name": "Archibald Curricula UI",
+  "version": "0.0.0",
+  "authors": [
+    "Wouter Admiraal <wad@wadmiraal.net>"
+  ],
+  "description": "JS application for managing and editing curricula data for LOM-CH descriptions.",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

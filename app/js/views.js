@@ -112,9 +112,11 @@ Archibald.ItemView = Backbone.View.extend({
     var that = this;
     this.model
       .bind('change', function() {
+        that.trigger('model:change', that.model, that);
         that.render();
       })
       .bind('destroy', function() {
+        that.trigger('model:destroy', that.model, that);
         that.remove();
       });
   },
@@ -133,7 +135,14 @@ Archibald.ItemView = Backbone.View.extend({
     this.$el.attr('id', 'archibald-column__wrapper__list__item-' + this.model.get('id'));
 
     // Same thing for the cycle data.
-    if (typeof this.model.get('data').cycle.indexOf !== 'undefined') {
+    // @todo This should not depend on any structured data. Either render any
+    //       data in it, or let other code register the 'render' event and add
+    //       stuff to the DOM.
+    if (
+      typeof this.model.get('data') !== 'undefined' &&
+      typeof this.model.get('data').cycle !== 'undefined' &&
+      typeof this.model.get('data').cycle.indexOf !== 'undefined'
+    ) {
       for (var i in { 1:1, 2:2, 3:3 }) {
         this.$el.toggleClass('has-cycle-' + i, this.model.get('data').cycle.indexOf(i) !== -1);
       }
@@ -149,18 +158,20 @@ Archibald.ItemView = Backbone.View.extend({
       this.$el.html('');
     }
 
+    this.trigger('render', this.model, this);
+
     return this;
   },
   updateModel: function(e) {
     this.model.set('active', this.$(e.target).is(':checked'));
-    this.trigger('change', e);
+    this.trigger('model:change', this.model, this, e);
   },
   triggerSelect: function(e) {
-    this.trigger('select', e);
+    this.trigger('select', this.model, this, e);
   },
   doubleClick: function(e) {
     this.model.set('active', !this.$el.find('input').is(':checked'));
-    this.trigger('change', e);
+    this.trigger('model:change', this.model, this, e);
   },
   preventBubble: function(e) {
     e.stopPropagation();

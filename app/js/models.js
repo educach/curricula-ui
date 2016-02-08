@@ -15,6 +15,7 @@
 Archibald.ItemModel = Backbone.Model.extend({
   defaults: {
     name: null,
+    type: null,
     parentId: "root",
     active: false,
     expanded: false,

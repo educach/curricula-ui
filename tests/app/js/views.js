@@ -21,6 +21,9 @@ QUnit.test( "initialize", function( assert ) {
   );
 });
 
+/**
+ * Test model event binding. ItemViews should react on several model events.
+ */
 QUnit.test( "model events", function( assert ) {
   assert.expect( 5 );
 
@@ -51,8 +54,12 @@ QUnit.test( "model events", function( assert ) {
   doneDestroyEvent();
 });
 
+/**
+ * Test ItemView events. ItemViews trigger several events, as well as react to
+ * multiple DOM events.
+ */
 QUnit.test( "view events", function( assert ) {
-  assert.expect( 4 );
+  assert.expect( 11 );
 
   var doneCheckboxEvent = assert.async( 2 ),
       checked = false,
@@ -65,9 +72,41 @@ QUnit.test( "view events", function( assert ) {
     assert.equal( itemModel.get( 'active'), checked, "The model active state correctly changed." );
     doneCheckboxEvent();
   });
-  // Click on the checkbox, twice.
-  view1.render().$el.find('input').trigger( 'change' );
-  view1.render().$el.find('input').trigger( 'change' );
+  // (Un)check on the checkbox, twice.
+  view1.render();
+  view1.$el.find('input').change();
+  view1.$el.find('input').change();
 
+  var doneClickEvent = assert.async( 1 ),
+      item2 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
+      view2 = new ArchibaldCurriculum.ItemView({ model: item2, editable: true });
+  view2.on( 'select', function() {
+    assert.ok( true, "The view triggers a select event on being clicked." );
+    doneClickEvent();
+  });
+  // Click on the element.
+  view2.render();
+  view2.$el.click();
+  // A click on the checkbox should not bubble up.
+  view2.$el.find('input').click();
 
+  var doneDblClickEvent = assert.async( 2 ),
+      item3 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], active: false }),
+      view3 = new ArchibaldCurriculum.ItemView({ model: item3, editable: true });
+  view3.on( 'active', function( state, itemModel, itemView ) {
+    assert.ok( true, "The view triggers a active event on being double-clicked." );
+    assert.equal( state, true, "The passed state is correct." );
+    assert.equal( itemModel.get( 'active'), true, "The model active state correctly changed." );
+    doneDblClickEvent();
+  });
+  view3.on( 'unactive', function( state, itemModel, itemView ) {
+    assert.ok( true, "The view triggers an unactive event on being double-clicked." );
+    assert.equal( state, false, "The passed state is correct." );
+    assert.equal( itemModel.get( 'active'), false, "The model active state correctly changed." );
+    doneDblClickEvent();
+  });
+  // Double-click on the element, twice.
+  view3.render();
+  view3.$el.dblclick();
+  view3.$el.dblclick();
 });

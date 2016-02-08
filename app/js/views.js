@@ -165,16 +165,23 @@ Archibald.ItemView = Backbone.View.extend({
   updateModel: function(e) {
     this.model.set('active', this.$(e.target).is(':checked'));
     this.trigger('model:change', this.model, this, e);
+    this.triggerActiveChange();
   },
   triggerSelect: function(e) {
     this.trigger('select', this.model, this, e);
   },
   doubleClick: function(e) {
+    e.stopPropagation();
     this.model.set('active', !this.$el.find('input').is(':checked'));
     this.trigger('model:change', this.model, this, e);
+    this.triggerActiveChange();
   },
   preventBubble: function(e) {
     e.stopPropagation();
+  },
+  triggerActiveChange: function() {
+    var state = this.model.get('active');
+    this.trigger(state ? 'active' : 'unactive', state, this.model, this);
   }
 });
 

@@ -1,6 +1,8 @@
 /assets/
 /css/
 /json/
+/coverage/
+/node_modules/
 
 *.sublime-*
 

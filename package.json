@@ -1,0 +1,17 @@
+{
+  "name": "coverage-qunit-istanbul-karma",
+  "description": "Example of code coverage of QUnit tests using Istanbul and Karma",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "devDependencies": {
+    "karma": "~0.10.2",
+    "karma-qunit": "~0.1.1",
+    "karma-coverage": "~0.1.0",
+    "karma-firefox-launcher": "^0.1.7"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/karma start karma.conf.js"
+  }
+}

@@ -91,7 +91,7 @@ Archibald.setItemDatabase = function(items) {
       Archibald.getItemDatabase().add(new Archibald.ItemModel({
         id: items[group][i].id,
         name: items[group][i].name,
-        hasChildren: typeof items[items[group][i].id] !== undefined && items[items[group][i].id].length,
+        hasChildren: !!(typeof items[items[group][i].id] !== undefined && items[items[group][i].id].length),
         data: items[group][i].data,
         parentId: group
       }));

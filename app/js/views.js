@@ -12,8 +12,8 @@
  * This will generate the documentation in the docs/ folder, in HTML format.
  */
 
+"use strict";
 ( function( Backbone, _, Archibald ) {
-  "use strict"
 
 // This defines the views used throughout the application. Almost all parts are
 // split into independent views, allowing for maximum flexibility and
@@ -126,7 +126,7 @@ Archibald.ItemView = Backbone.View.extend({
   className: 'archibald-column__wrapper__list__item',
 
   // It uses the `item` template from our templates list.
-  tpl: _.template(Archibald.templates.item),
+  tpl: _.template( Archibald.templates.item ),
 
   // The item view can react to multiple events, most notably, for *editable*
   // items, the (un)checking of the checkbox, resulting in a change of state
@@ -253,83 +253,146 @@ Archibald.ItemView = Backbone.View.extend({
   }
 });
 
-/**
- * Item list view.
- *
- * A column of items.
- */
+
+// Item list view
+// --------------
+//
+// This view represents a list of items. It requires a collection containing
+// all items in this list, usually a `ArchibaldCurriculum.ItemCollection`. See
+// `models.js` for more information.
 Archibald.ItemListView = Backbone.View.extend({
   className: 'archibald-column',
-  tpl: _.template(Archibald.templates.itemList),
+
+  // It uses the `itemList` template from our templates list.
+  tpl: _.template( Archibald.templates.itemList ),
+
+  // This array keeps track of all child views.
+  childViews: [],
+
+  // The item view can react to 2 events, which are related to navigating the
+  // application. Each list contains 2 buttons, a *Back* button, and a *Top*
+  // button. Both trigger a specific event.
   events: {
     "click .archibald-column__button--show-parent": "triggerGoBack",
     "click .archibald-column__button--show-root": "triggerGoToBeginning"
   },
-  initialize: function(args) {
-    if (!this.collection) {
+
+  // Upon initialization, the view checks if a usable collection is provided.
+  // If not, it will throw an exception.
+  initialize: function( args ) {
+    if ( !this.collection ) {
       throw "Cannot initialize an ItemListView without a collection.";
     }
 
-    this.editable = !!args.editable;
+    // Whether the child items are editable or not. Defaults to `false`.
+    this.editable = typeof args !== 'undefined' ? !!args.editable : false;
 
+    // The view will react on collection state changes, re-rendering itself
+    // every time. When such events are triggered by the collection, the view
+    // itself will trigger a corresponding `collection:*` event, which will
+    // allow events to bubble up the application hierarchy.
     var that = this;
     this.collection
-      .bind('add', function(model) {
-        that.trigger('collection:add', model, that.collection, that);
+      .bind( 'add', function( model ) {
+        that.trigger( 'collection:add', model, that.collection, that );
         that.render();
       })
-      .bind('remove', function(model) {
-        that.trigger('collection:remove', model, that.collection, that);
+      .bind( 'remove', function( model ) {
+        that.trigger( 'collection:remove', model, that.collection, that );
         that.render();
       });
   },
-  render: function() {
-    this.$el.empty();
-    this.$el.html(this.tpl());
 
-    var $ul = this.$el.find('ul'),
+  // Render the item list.
+  render: function() {
+    // Completely empty the wrapper; start with a blank slate.
+    if ( this.childViews.length ) {
+      for ( var i = this.childViews.length; i > 0; --i ) {
+        this.childViews[ i ].remove();
+      }
+    }
+    this.childViews = [];
+    this.$el.empty();
+    this.$el.html( this.tpl() );
+
+    var $ul = this.$el.find( 'ul' ),
         that = this;
-    this.collection.forEach(function(model) {
+
+    // Go through the collection, and create a new child view for each model.
+    this.collection.forEach( function( model ) {
+      // Prepare the child view, and register it with our view.
       var item = new Archibald.ItemView({ model: model, editable: that.editable });
+      that.childViews.push( item );
+
+      // Listen on certain events the child view can trigger. This will allow
+      // us to let them bubble up the hierarchy.
       item
-        .on('model:change', function(e) {
-          that.triggerItemEvent('change', model, e);
+        .on( 'model:change', function() {
+          that.triggerItemEvent( 'change', model );
         })
-        .on('select', function(e) {
-          that.triggerItemEvent('select', model, e);
+        .on( 'select', function() {
+          that.triggerItemEvent( 'select', model );
         });
-      item.render();
-      $ul.append(item.$el);
+
+      // Render the item and add it to our markup.
+      $ul.append( item.render().$el );
     });
 
-    this.trigger('render', this.collection, this);
+    // Trigger a `render` event, so other parts of the application can interact
+    // with it.
+    this.trigger( 'render', this.collection, this );
 
+    // Allow the chaining of method calls.
     return this;
   },
+
+  // Helper function to collapse the list.
   collapse: function() {
-    this.$el.addClass('archibald-column--collapsed');
-    this.trigger('column:collapse', this.collection, this);
+    this.$el.addClass( 'archibald-column--collapsed' );
+
+    // Trigger a `column:collapse` event.
+    this.trigger( 'column:collapse', this.collection, this );
+
+    // Allow the chaining of method calls.
     return this;
   },
+
+  // Helper function to expand the list.
   expand: function() {
-    this.$el.removeClass('archibald-column--collapsed');
-    this.trigger('column:expand', this.collection, this);
+    this.$el.removeClass( 'archibald-column--collapsed' );
+
+    // Trigger a `column:expand` event.
+    this.trigger( 'column:expand', this.collection, this );
+
+    // Allow the chaining of method calls.
     return this;
   },
+
+  // Helper function to check whether the list is collapsed.
   isCollapsed: function() {
-    return this.$el.hasClass('archibald-column--collapsed');
+    return this.$el.hasClass( 'archibald-column--collapsed' );
   },
+
+  // Helper function to check whether the list is expanded.
   isExpanded: function() {
     return !this.isCollapsed();
   },
-  triggerItemEvent: function(event, itemModel, e) {
-    this.trigger('item:' + event, itemModel, this.collection, this, e);
+
+  // Helper function to trigger an `item:*` event.
+  triggerItemEvent: function( event, itemModel ) {
+    this.trigger( 'item:' + event, itemModel, this.collection, this );
   },
-  triggerGoBack: function(e) {
-    this.trigger('column:go-back', this.collection, this, e);
+
+  // Event handler for when the *Back* button is clicked. Triggers a
+  // `column:go-back` event.
+  triggerGoBack: function() {
+    this.trigger( 'column:go-back', this.collection, this );
   },
-  triggerGoToBeginning: function(e) {
-    this.trigger('column:go-to-root', this.collection, this, e);
+
+  // Event handler for when the *Top* button is clicked. Triggers a
+  // `column:go-to-root` event.
+  triggerGoToBeginning: function() {
+    this.trigger( 'column:go-to-root', this.collection, this );
   }
 });
 

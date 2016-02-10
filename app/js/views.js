@@ -1,26 +1,60 @@
 /**
  * @file
- * ArchibaldCurriculum view definitions.
+ * Archibald Curriculum JS application views.
+ *
+ * This defines the views used throughout the application. Note that this file
+ * is written using Docco syntax. If Node is installed, you can generate this
+ * documentation by running:
+ *
+ *   npm install
+ *   npm run doc
+ *
+ * This will generate the documentation in the docs/ folder, in HTML format.
  */
 
-(function(Backbone, _, Archibald) {
+(function( Backbone, _, Archibald ) {
 
-// Define the default templates here.
+// This defines the views used throughout the application. Almost all parts are
+// split into independent views, allowing for maximum flexibility and
+// re-usability. It extends the global `ArchibaldCurriculum` namespace, aliased
+// to `Archibald` for readability.
+
+// A note on Backbone
+// ------------------
+//
+// As much of the application is extending *Backbone*, it is useful to see the
+// official documentation on [Backbone.View](http://backbonejs.org/#View).
+
+// Templates
+// ---------
+//
+// This defines the default templates used by the application. They can be
+// overridden in various cases, as needed. Archibald Curriculum strictly adheres
+// to *BEM* notation for the markup, and overrides should follow suit.
 Archibald.templates = {
 
+  // A single item.
+  //
+  // This template is mainly used by `ItemView`, and represents a single item
+  // in a list.
   item: '\
-<% if (editable) { %>\
-  <input type="checkbox"<% if (active) { %> checked<% } %>/>\
+<% if ( editable ) { %>\
+  <input type="checkbox"<% if ( active ) { %> checked<% } %>/>\
 <% } %>\
-<% for (var i in name) { %>\
-  <%= name[i] %>\
-  <% if (i < name.length - 1) {%><hr /><% } %>\
+<% for ( var i in name ) { %>\
+  <%= name[ i ] %>\
+  <% if ( i < name.length - 1 ) {%><hr /><% } %>\
 <% } %>\
-<% if (hasChildren) { %>\
+<% if ( hasChildren ) { %>\
   <i class="icon-chevron-right" />\
 <% } %>\
 ',
 
+  // A list of items.
+  //
+  // This template is mainly used by `ItemListView`, and represents a list of
+  // items, usually ItemViews. Note that it uses classes for the *nanoScroller*
+  // jQuery plugin for convenience.
   itemList: '\
 <div class="archibald-column__wrapper nano">\
   <ul class="archibald-column__wrapper__list nano-content"></ul>\
@@ -33,46 +67,43 @@ Archibald.templates = {
 </span>\
 ',
 
+  // Information about a specific item.
+  //
+  // Used to display more detailed information about an item. This is most
+  // certainly the best candidate for an override, as it greatly depends on
+  // context. It provides a sensible default template, with very little
+  // information other than a link. Mainly used by `ItemInfoView`.
   itemInfo: '\
-<div class="archibald-item-info__type">\
-  <span class="archibald-item-info__type__label"><%= typeLabel %>:</span>\
-  <% if (typeUrl) { %>\
-    <a class="archibald-item-info__type__url" target="_blank" href="<%= typeUrl %>">\
+<div class="archibald-item-info">\
+  <span class="archibald-item-info__label"><%= label %>:</span>\
+  <% if ( url ) { %>\
+    <a class="archibald-item-info__url" target="_blank" href="<%= url %>">\
   <% } %>\
-  <span class="archibald-item-info__type__value"><%= type %></span>\
-  <% if (typeUrl) { %>\
+  <span class="archibald-item-info__value"><%= type %></span>\
+  <% if ( url ) { %>\
     </a>\
-  <% } %>\
-  <% if (typeDescription) { %>\
-    <div class="archibald-item-info__type__description">\
-      <span class="archibald-item-info__type__description__label"><%= typeDescriptionLabel %>:</span>\
-      <span class="archibald-item-info__type__description__value"><%= typeDescription %></span>\
-    </div>\
-  <% } %>\
-</div>\
-<hr />\
-<div class="archibald-item-info__item">\
-  <h4><%= itemDescriptionLabel %></h4>\
-  <p><%= itemDescription %></p>\
-  <% if (itemUrl) { %>\
-    <a class="archibald-item-info__item__url" target="_blank" href="<%= itemUrl %>"><%= itemUrlLabel %></a>\
   <% } %>\
 </div>\
 ',
 
+  // Summary tree.
+  //
+  // This template is meant to be used recursively. It is used to construct a
+  // summary of the current application state. It is mainly used by
+  // `SummaryTreeView`.
   summaryList: '\
 <li\
   data-model-id="<%= id %>"\
   class="archibald-summary-tree__list__item\
-    <% if (hasCycle1) {%>has-cycle-1<% } %>\
-    <% if (hasCycle2) {%>has-cycle-2<% } %>\
-    <% if (hasCycle3) {%>has-cycle-3<% } %>\
+    <% if ( hasCycle1 ) {%>has-cycle-1<% } %>\
+    <% if ( hasCycle2 ) {%>has-cycle-2<% } %>\
+    <% if ( hasCycle3 ) {%>has-cycle-3<% } %>\
   "\
 >\
   <span>\
-    <% for (var i in name) { %>\
-      <%= name[i] %>\
-      <% if (i < name.length - 1) {%><hr /><% } %>\
+    <% for ( var i in name ) { %>\
+      <%= name[ i ] %>\
+      <% if ( i < name.length - 1 ) {%><hr /><% } %>\
     <% } %>\
   </span>\
   <%= children %>\
@@ -81,85 +112,95 @@ Archibald.templates = {
 
 };
 
-/**
- * Item view.
- *
- * This view represents a single item in a column.
- *
- * @see ArchibaldCurriculum.ItemModel
- */
+
+// Item view
+// ---------
+//
+// This view represents a single item in a column. It requires a model
+// representing the item, usually a `ArchibaldCurriculum.ItemModel`. See
+// `models.js` for more information.
 Archibald.ItemView = Backbone.View.extend({
+  // The item is rendered as a list item.
   tagName: 'li',
   className: 'archibald-column__wrapper__list__item',
+
+  // It uses the `item` template from our templates list.
   tpl: _.template(Archibald.templates.item),
+
+  // The item view can react to multiple events, most notably, for *editable*
+  // items, the (un)checking of the checkbox, resulting in a change of state
+  // of the linked model.
+  //
+  // Other events include the selecting of the item as a whole, or the
+  // double-click, which is a shortcut of (un)checking the checkbox for
+  // *editable* items.
   events: {
     "change input": "updateModel",
     "click": "triggerSelect",
     "dblclick": "doubleClick",
     "click input": "preventBubble"
   },
-  initialize: function(args) {
+
+  // Upon initialization, the view checks if a usable model is provided. If not,
+  // it will throw an exception.
+  initialize: function( args ) {
     var errors;
-    if (!this.model) {
+    if ( !this.model ) {
       throw "Cannot initialize an ItemView without a model.";
     }
-    else if (errors = this.model.validate()) {
-      throw "Cannot initialize an ItemView with an invalid model. Errors: " + errors.join(', ');
+    else if ( errors = this.model.validate() ) {
+      throw "Cannot initialize an ItemView with an invalid model. Errors: " + errors.join( ', ' );
     }
 
+    // Whether the item is editable or not. Defaults to `false`.
     this.editable = typeof args !== 'undefined' ? !!args.editable : false;
 
+    // The view will react on model state changes, either re-rendering itself
+    // or removing itself completely from the DOM. When such events are
+    // triggered by the model, the view itself will trigger a corresponding
+    // `model:*` event, which will allow events to bubble up the application
+    // hierarchy.
     var that = this;
     this.model
-      .bind('change', function() {
-        that.trigger('model:change', that.model, that);
+      .bind( 'change', function() {
+        that.trigger( 'model:change', that.model, that );
         that.render();
       })
-      .bind('destroy', function() {
-        that.trigger('model:destroy', that.model, that);
+      .bind( 'destroy', function() {
+        that.trigger( 'model:destroy', that.model, that );
         that.remove();
       });
   },
+
+  // Render the item.
   render: function() {
     this.$el.empty();
 
-    // We set many classes based on the model's values. However, we set these
-    // on our $el element itself. So we need to add these classes here instead
-    // of through the template.
-    this.$el.toggleClass('archibald-column__wrapper__list__item--active', !!this.model.get('active'));
-    this.$el.toggleClass('archibald-column__wrapper__list__item--has-children', !!this.model.get('hasChildren'));
-    this.$el.toggleClass('archibald-column__wrapper__list__item--expanded', !!this.model.get('expanded'));
-    this.$el.toggleClass('archibald-column__wrapper__list__item--highlighted', !!this.model.get('highlighted'));
+    // We set many modifier classes based on the model's values. However, we set
+    // these on our $el element itself, not its child elements. This means we
+    // have to set these classes here instead of through the template.
+    this.$el
+      .toggleClass( this.className + '--active', !!this.model.get( 'active' ) )
+      .toggleClass( this.className + '--has-children', !!this.model.get( 'hasChildren' ) )
+      .toggleClass( this.className + '--expanded', !!this.model.get( 'expanded' ) )
+      .toggleClass( this.className + '--highlighted', !!this.model.get( 'highlighted' )) ;
 
-    // Same thing for the ID.
-    this.$el.attr('id', 'archibald-column__wrapper__list__item-' + this.model.get('id'));
+    // Same thing for the ID, which is based on the model's ID.
+    this.$el.attr('id', this.className + '-' + this.model.get('id'));
 
-    // Same thing for the cycle data.
-    // @todo This should not depend on any structured data. Either render any
-    //       data in it, or let other code register the 'render' event and add
-    //       stuff to the DOM.
-    if (
-      typeof this.model.get('data') !== 'undefined' &&
-      typeof this.model.get('data').cycle !== 'undefined' &&
-      typeof this.model.get('data').cycle.indexOf !== 'undefined'
-    ) {
-      for (var i in { 1:1, 2:2, 3:3 }) {
-        this.$el.toggleClass('has-cycle-' + i, this.model.get('data').cycle.indexOf(i) !== -1);
-      }
-    }
+    // Prepare the template variables based on the model's values. We also pass
+    // some of our view's attributes.
+    var variables = this.model.toJSON();
+    variables.editable = this.editable;
 
-    if (this.model.has('name')) {
-      // Prepare the template variables.
-      var variables = this.model.toJSON();
-      variables.editable = this.editable;
+    // Render the template.
+    this.$el.html( this.tpl( variables ) );
 
-      this.$el.html(this.tpl(variables));
-    } else {
-      this.$el.html('');
-    }
-
+    // Trigger a `render` event, so other parts of the application can interact
+    // with it.
     this.trigger('render', this.model, this);
 
+    // Allow the chaining of method calls.
     return this;
   },
   updateModel: function(e) {

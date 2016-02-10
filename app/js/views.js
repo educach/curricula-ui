@@ -12,7 +12,8 @@
  * This will generate the documentation in the docs/ folder, in HTML format.
  */
 
-(function( Backbone, _, Archibald ) {
+( function( Backbone, _, Archibald ) {
+  "use strict"
 
 // This defines the views used throughout the application. Almost all parts are
 // split into independent views, allowing for maximum flexibility and
@@ -198,31 +199,57 @@ Archibald.ItemView = Backbone.View.extend({
 
     // Trigger a `render` event, so other parts of the application can interact
     // with it.
-    this.trigger('render', this.model, this);
+    this.trigger( 'render', this.model, this );
 
     // Allow the chaining of method calls.
     return this;
   },
-  updateModel: function(e) {
-    this.model.set('active', this.$(e.target).is(':checked'));
-    this.trigger('model:change', this.model, this, e);
+
+  // Event handler for when the checkbox is clicked. Based on the new checkbox
+  // state, the model's `active` attribute will be set to `true` (checked) or
+  // `false` (unchecked). The view will also trigger 2 more events:
+  // * a `model:change` event, which applies to the model.
+  // * either a `active` or `unactive` event, which applies to the view itself.
+  updateModel: function() {
+    this.model.set( 'active', this.$el.find( 'input' ).is( ':checked' ) );
+    this.trigger( 'model:change' , this.model, this );
     this.triggerActiveChange();
   },
-  triggerSelect: function(e) {
-    this.trigger('select', this.model, this, e);
+
+  // Event handler for when the view is clicked. This triggers a `select` event.
+  triggerSelect: function() {
+    this.trigger( 'select', this.model, this );
   },
-  doubleClick: function(e) {
+
+  // Event handler for when the view is double-clicked. This is a shortcut for
+  // toggling the state of the checkbox, and will trigger the same 2 events as
+  // `ItemView#updateModel()`:
+  // * a `model:change` event, which applies to the model.
+  // * either a `active` or `unactive` event, which applies to the view itself.
+  doubleClick: function( e ) {
+    // We stop the propagation immediately, in order to prevent triggering our
+    // handler more than once.
     e.stopPropagation();
-    this.model.set('active', !this.$el.find('input').is(':checked'));
-    this.trigger('model:change', this.model, this, e);
+
+    this.model.set( 'active', !this.$el.find( 'input' ).is( ':checked' ) );
+    this.trigger( 'model:change', this.model, this );
     this.triggerActiveChange();
   },
-  preventBubble: function(e) {
+
+  // Event handler for when the checkbox is clicked. Because clicking on the
+  // checkbox will trigger both the `change` event and a `click` event, it
+  // would bubble up and trigger the `select` event as well. However, this is
+  // undesirable, and could leed to confusion. This is why we stop the bubbling
+  // of this particular click.
+  preventBubble: function( e ) {
     e.stopPropagation();
   },
+
+  // Helper function to trigger an *active* state chance event. Will trigger
+  // either an `active` or an `unactive` event, based on the state of the model.
   triggerActiveChange: function() {
-    var state = this.model.get('active');
-    this.trigger(state ? 'active' : 'unactive', state, this.model, this);
+    var state = this.model.get( 'active' );
+    this.trigger( state ? 'active' : 'unactive', state, this.model, this );
   }
 });
 
@@ -448,4 +475,4 @@ Archibald.SummaryTreeView = Backbone.View.extend({
   }
 });
 
-})(Backbone, _, window.ArchibaldCurriculum || (window.ArchibaldCurriculum = {}));
+})( Backbone, _, window.ArchibaldCurriculum || ( window.ArchibaldCurriculum = {} ) );

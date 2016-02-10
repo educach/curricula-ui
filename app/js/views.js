@@ -23,7 +23,7 @@
 // A note on Backbone
 // ------------------
 //
-// As much of the application is extending *Backbone*, it is useful to see the
+// As all the views are extending *Backbone*, it is useful to see the
 // official documentation on [Backbone.View](http://backbonejs.org/#View).
 
 // Templates
@@ -122,7 +122,7 @@ Archibald.templates = {
 // `models.js` for more information.
 Archibald.ItemView = Backbone.View.extend({
   // The item is rendered as a list item.
-  tagName: 'li',
+  tagName:   'li',
   className: 'archibald-column__wrapper__list__item',
 
   // It uses the `item` template from our templates list.
@@ -137,19 +137,19 @@ Archibald.ItemView = Backbone.View.extend({
   // *editable* items.
   events: {
     "change input": "updateModel",
-    "click": "triggerSelect",
-    "dblclick": "doubleClick",
-    "click input": "preventBubble"
+    "click":        "triggerSelect",
+    "dblclick":     "doubleClick",
+    "click input":  "preventBubble"
   },
 
   // Upon initialization, the view checks if a usable model is provided. If not,
   // it will throw an exception.
   initialize: function( args ) {
-    var errors;
     if ( !this.model ) {
       throw "Cannot initialize an ItemView without a model.";
     }
-    else if ( errors = this.model.validate() ) {
+    var errors = this.model.validate();
+    if ( errors && errors.length ) {
       throw "Cannot initialize an ItemView with an invalid model. Errors: " + errors.join( ', ' );
     }
 
@@ -184,10 +184,10 @@ Archibald.ItemView = Backbone.View.extend({
       .toggleClass( this.className + '--active', !!this.model.get( 'active' ) )
       .toggleClass( this.className + '--has-children', !!this.model.get( 'hasChildren' ) )
       .toggleClass( this.className + '--expanded', !!this.model.get( 'expanded' ) )
-      .toggleClass( this.className + '--highlighted', !!this.model.get( 'highlighted' )) ;
+      .toggleClass( this.className + '--highlighted', !!this.model.get( 'highlighted' ) ) ;
 
     // Same thing for the ID, which is based on the model's ID.
-    this.$el.attr('id', this.className + '-' + this.model.get('id'));
+    this.$el.attr( 'id', this.className + '-' + this.model.get( 'id' ) );
 
     // Prepare the template variables based on the model's values. We also pass
     // some of our view's attributes.
@@ -212,7 +212,7 @@ Archibald.ItemView = Backbone.View.extend({
   // * either a `active` or `unactive` event, which applies to the view itself.
   updateModel: function() {
     this.model.set( 'active', this.$el.find( 'input' ).is( ':checked' ) );
-    this.trigger( 'model:change' , this.model, this );
+    this.trigger( 'model:change', this.model, this );
     this.triggerActiveChange();
   },
 
@@ -274,7 +274,7 @@ Archibald.ItemListView = Backbone.View.extend({
   // button. Both trigger a specific event.
   events: {
     "click .archibald-column__button--show-parent": "triggerGoBack",
-    "click .archibald-column__button--show-root": "triggerGoToBeginning"
+    "click .archibald-column__button--show-root":   "triggerGoToBeginning"
   },
 
   // Upon initialization, the view checks if a usable collection is provided.
@@ -307,7 +307,7 @@ Archibald.ItemListView = Backbone.View.extend({
   render: function() {
     // Completely empty the wrapper; start with a blank slate.
     if ( this.childViews.length ) {
-      for ( var i = this.childViews.length; i > 0; --i ) {
+      for ( var i = this.childViews.length - 1; i > 0; --i ) {
         this.childViews[ i ].remove();
       }
     }
@@ -412,12 +412,12 @@ Archibald.ItemInfoView = Backbone.View.extend({
   // Upon initialization, the view checks if a usable model is provided. If not,
   // it will throw an exception.
   initialize: function( args ) {
-    var errors;
     if ( !this.model ) {
       throw "Cannot initialize an ItemInfoView without a model.";
     }
-    else if ( errors = this.model.validate() ) {
-      throw "Cannot initialize an ItemInfoView with an invalid model. Errors: " + errors.join(', ');
+    var errors = this.model.validate();
+    if ( errors && errors.length ) {
+      throw "Cannot initialize an ItemInfoView with an invalid model. Errors: " + errors.join( ', ' );
     }
 
     // **Temporary hacks**. This needs work.
@@ -442,12 +442,12 @@ Archibald.ItemInfoView = Backbone.View.extend({
     variables.itemDescriptionLabel = this.itemDescriptionLabel;
     variables.itemUrlLabel = this.itemUrlLabel;
     variables.typeUrl = 'http://www.google.com';
-    variables.type = ([ 'Lorem ipsum', 'Dolor sit amet', 'Consectetur elit' ])[ Math.floor( Math.random() * 3 ) ];
-    variables.typeDescription = ([
+    variables.type = [ 'Lorem ipsum', 'Dolor sit amet', 'Consectetur elit' ][ Math.floor( Math.random() * 3 ) ];
+    variables.typeDescription = [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nisl tortor, mollis at ultrices et, cursus non libero. In lobortis pellentesque purus ac pellentesque.',
       'Lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non, sagittis.',
       'In lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non'
-    ])[ Math.floor( Math.random() * 3 ) ];
+    ][ Math.floor( Math.random() * 3 ) ];
     variables.itemUrl = 'http://www.goog.com';
     variables.itemDescription = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nisl tortor, mollis at ultrices et, cursus non libero. In lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non, sagittis et lacus. Suspendisse vel semper ex.';
 
@@ -479,80 +479,106 @@ Archibald.SummaryTreeView = Backbone.View.extend({
   // classes, which can be used to highlight structural information.
   events: {
     "mouseover li > span": "mouseOver",
-    "mouseout li > span": "mouseOut",
-    "click li": "triggerSelect"
+    "mouseout li > span":  "mouseOut",
+    "click li":            "triggerSelect"
   },
-  initialize: function(args) {
-    if (!this.collection) {
+
+  // Upon initialization, the view checks if a usable collection is provided.
+  // If not, it will throw an exception.
+  initialize: function() {
+    if ( !this.collection ) {
       throw "Cannot initialize an SummaryTreeView without a collection.";
     }
 
+    // The view will react on collection state changes, re-rendering itself
+    // every time.
     var that = this;
     this.collection
-      .bind('change remove add', function() {
+      .bind( 'change remove add', function() {
         that.render();
       });
   },
+
+  // Render the summary tree.
   render: function() {
+    // The `SummaryTreeView#render()` method can be called very often, sometimes
+    // several times per ms. We don't want that. So, we put  a little timeout
+    // and wait. If the render function hasn't been called again for a certain
+    // time, we proceed with the rendering. Otherwise, we cancel the render, and
+    // wait again.
     var that = this;
-
-    // Actual render call. See below for more information.
-    var render = function() {
-      that.$el.empty();
-      that.$el.append(recursiveRender('root'));
-    };
-
-    // Recursive tree-render function.
-    var recursiveRender = function(parentId) {
-      var children = that.collection.where({ parentId: parentId, active: true }),
-          html = '';
-
-      if (children.length) {
-        html = '<ul class="archibald-summary-tree__list">';
-        children.forEach(function(model) {
-          // Render a single item. Prepare its data.
-          var variables = model.toJSON();
-          if (typeof model.get('data').cycle.indexOf !== 'undefined') {
-            for (var i in { 1:1, 2:2, 3:3 }) {
-              variables['hasCycle' + i] = model.get('data').cycle.indexOf(i) !== -1;
-            }
-          }
-          variables.children = recursiveRender(model.get('id'));
-
-          html += that.tpl(variables);
-        });
-        html += '</ul>';
-      }
-
-      return html;
-    };
-
-    // The render function can be called very often, sometimes several times
-    // per ms. We don't want that. So, we put a little timeout and wait. If the
-    // render function hasn't been called again for a certain time, we proceed
-    // with the rendering. Otherwise, we cancel the render, and wait again.
-    if (typeof this.timeout !== 'undefined') {
-      this.timeout = clearTimeout(this.timeout);
+    if ( typeof this.timeout !== 'undefined' ) {
+      this.timeout = clearTimeout( this.timeout );
     }
-    this.timeout = setTimeout(function() {
-      render();
-      that.timeout = clearTimeout(that.timeout);
-    }, 10);
+    this.timeout = setTimeout( function() {
+      that.realRender();
+      that.timeout = clearTimeout( that.timeout );
+    }, 10 );
 
+    // Allow the chaining of method calls.
     return this;
   },
-  mouseOver: function(e) {
-    e.stopPropagation();
-    this.$(e.target).parent().addClass('hover').parents('li').addClass('child-hovered');
+
+
+  // Actual render callback.
+  realRender: function() {
+    this.$el.empty();
+    this.$el.append( this.recursiveRender( 'root' ) );
+
+    // Allow the chaining of method calls.
+    return this;
   },
-  mouseOut: function(e) {
-    this.$(e.target).parent().removeClass('hover').parents('li').removeClass('child-hovered');
+
+  // Helper function to recursively render the summary tree, starting at the
+  // passed parent ID.
+  recursiveRender: function( parentId ) {
+    var that = this,
+        children = this.collection.where({ parentId: parentId, active: true }),
+        html = '';
+
+    if ( children.length ) {
+      // Render a list of child items.
+      html = '<ul class="archibald-summary-tree__list">';
+      children.forEach( function( model ) {
+        // Render a single item. Recursively get the child markup by calling
+        //  `SummaryTreeView#recursiveRender()` again.
+        var variables = model.toJSON();
+        variables.children = recursiveRender( model.get( 'id' ) );
+        html += that.tpl( variables );
+      });
+      html += '</ul>';
+    }
+
+    return html;
   },
-  triggerSelect: function(e) {
+
+  // Event handler for `mouseover` events. Stop the bubbling up of the event,
+  // so we can distinguish which exact (sub)tree got hovered.
+  mouseOver: function( e ) {
     e.stopPropagation();
-    var itemModel = this.collection.get(this.$(e.currentTarget).attr('data-model-id'));
-    this.trigger('summary:select-item', itemModel, this.collection, this, e);
+    this.$( e.target )
+      .parent().addClass( 'hover' )
+        .parents( 'li' ).addClass( 'child-hovered' );
+  },
+
+  // Event handler for `mouseout` events. Undo the modifications done by the
+  // `mouseover` event.
+  mouseOut: function( e ) {
+    this.$( e.target )
+      .parent().removeClass( 'hover' )
+        .parents( 'li' ).removeClass( 'child-hovered' );
+  },
+
+  // Event handler for clicking on an item in the tree. Stop the bubbling up
+  // of the event, and trigger a `summary:select-item` event, so other parts
+  // of the application can react to it.
+  triggerSelect: function( e ) {
+    e.stopPropagation();
+    var itemModel = this.collection.get(
+      this.$( e.currentTarget ).attr( 'data-model-id' )
+    );
+    this.trigger( 'summary:select-item', itemModel, this.collection, this );
   }
 });
 
-})( Backbone, _, window.ArchibaldCurriculum || ( window.ArchibaldCurriculum = {} ) );
+})( Backbone, _, window.ArchibaldCurriculum || ( window.ArchibaldCurriculum = new Object() ) );

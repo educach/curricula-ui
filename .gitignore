@@ -3,6 +3,7 @@
 /json/
 /coverage/
 /node_modules/
+/docs/
 
 *.sublime-*
 

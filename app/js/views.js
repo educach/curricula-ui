@@ -396,70 +396,87 @@ Archibald.ItemListView = Backbone.View.extend({
   }
 });
 
-/**
- * Item info view.
- *
- * This view represents a single item's information.
- *
- * @see ArchibaldCurriculum.ItemModel
- */
+
+// Item info view
+// --------------
+//
+// This view represents information about an item.  It requires a model
+// representing the item, usually a `ArchibaldCurriculum.ItemModel`. See
+// `models.js` for more information.
 Archibald.ItemInfoView = Backbone.View.extend({
   className: 'archibald-item-info__wrapper',
-  tpl: _.template(Archibald.templates.itemInfo),
-  initialize: function(args) {
+
+  // It uses the `itemList` template from our templates list.
+  tpl: _.template( Archibald.templates.itemInfo ),
+
+  // Upon initialization, the view checks if a usable model is provided. If not,
+  // it will throw an exception.
+  initialize: function( args ) {
     var errors;
-    if (!this.model) {
+    if ( !this.model ) {
       throw "Cannot initialize an ItemInfoView without a model.";
     }
-    else if (errors = this.model.validate()) {
+    else if ( errors = this.model.validate() ) {
       throw "Cannot initialize an ItemInfoView with an invalid model. Errors: " + errors.join(', ');
     }
 
+    // **Temporary hacks**. This needs work.
     this.typeLabel = typeof args.typeLabel !== 'undefined' ? args.typeLabel : "Type";
     this.typeDescriptionLabel = typeof args.typeDescriptionLabel !== 'undefined' ? args.typeDescriptionLabel : "Type description";
     this.itemDescriptionLabel = typeof args.itemDescriptionLabel !== 'undefined' ? args.itemDescriptionLabel : "Description and usage";
     this.itemUrlLabel = typeof args.itemUrlLabel !== 'undefined' ? args.itemUrlLabel : "More information";
 
   },
+
+  // Render the item information.
   render: function() {
+    // Start with a blank slate.
     this.$el.empty();
 
-    if (this.model.has('name')) {
-      // Prepare the template variables.
-      var variables = this.model.toJSON();
-      variables.typeLabel = this.typeLabel;
-      variables.typeDescriptionLabel = this.typeDescriptionLabel;
-      variables.itemDescriptionLabel = this.itemDescriptionLabel;
-      variables.itemUrlLabel = this.itemUrlLabel;
+    // Prepare the template variables.
+    var variables = this.model.toJSON();
 
-      // Dummy data. This is needed until the JSON structure is completed.
-      variables.typeUrl = 'http://www.google.com';
-      variables.type = (['Lorem ipsum', 'Dolor sit amet', 'Consectetur elit'])[Math.floor(Math.random() * 3)];
-      variables.typeDescription = ([
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nisl tortor, mollis at ultrices et, cursus non libero. In lobortis pellentesque purus ac pellentesque.',
-        'Lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non, sagittis.',
-        'In lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non'
-      ])[Math.floor(Math.random() * 3)];
-      variables.itemUrl = 'http://www.goog.com';
-      variables.itemDescription = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nisl tortor, mollis at ultrices et, cursus non libero. In lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non, sagittis et lacus. Suspendisse vel semper ex.';
+    // **Temporary hacks**. This needs work.
+    variables.typeLabel = this.typeLabel;
+    variables.typeDescriptionLabel = this.typeDescriptionLabel;
+    variables.itemDescriptionLabel = this.itemDescriptionLabel;
+    variables.itemUrlLabel = this.itemUrlLabel;
+    variables.typeUrl = 'http://www.google.com';
+    variables.type = ([ 'Lorem ipsum', 'Dolor sit amet', 'Consectetur elit' ])[ Math.floor( Math.random() * 3 ) ];
+    variables.typeDescription = ([
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nisl tortor, mollis at ultrices et, cursus non libero. In lobortis pellentesque purus ac pellentesque.',
+      'Lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non, sagittis.',
+      'In lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non'
+    ])[ Math.floor( Math.random() * 3 ) ];
+    variables.itemUrl = 'http://www.goog.com';
+    variables.itemDescription = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nisl tortor, mollis at ultrices et, cursus non libero. In lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non, sagittis et lacus. Suspendisse vel semper ex.';
 
-      this.$el.html(this.tpl(variables));
-    } else {
-      this.$el.html('');
-    }
+    this.$el.html( this.tpl( variables ) );
 
+    // Allow the chaining of method calls.
     return this;
   }
 });
 
-/**
- * Summary tree view.
- *
- * A tree of currently active items.
- */
+
+// Summary tree view
+// -----------------
+//
+// This view represents information about the state of the application. When
+// items are selected, their `active` attribute is set to `true`. Based on this
+// information, we can construct a summary of all active items. As the data is
+// a hierarchy, we display it as a recursively rendered tree.
 Archibald.SummaryTreeView = Backbone.View.extend({
   className: 'archibald-summary-tree',
-  tpl: _.template(Archibald.templates.summaryList),
+
+  // It uses the `summaryList` template from our templates list.
+  tpl: _.template( Archibald.templates.summaryList ),
+
+  // The summary view can react to multiple events, most importantly the `click`
+  // event. This will trigger a `summary:select-item` event, which will allow
+  // other parts of the application to react accordingly. Other events are
+  // `mouseover` and `mouseout`  events. These trigger the toggling of CSS
+  // classes, which can be used to highlight structural information.
   events: {
     "mouseover li > span": "mouseOver",
     "mouseout li > span": "mouseOut",

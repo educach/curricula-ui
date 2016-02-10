@@ -7,6 +7,7 @@
   },
   "devDependencies": {
     "docco": "^0.7.0",
+    "eslint": "^1.10.3",
     "karma": "~0.10.2",
     "karma-coverage": "~0.1.0",
     "karma-firefox-launcher": "^0.1.7",
@@ -14,6 +15,7 @@
   },
   "scripts": {
     "test": "node_modules/.bin/karma start karma.conf.js",
-    "doc": "node_modules/.bin/docco app/js/*.js"
+    "doc": "node_modules/.bin/docco app/js/*.js",
+    "lint": "node_modules/.bin/eslint app/js/*.js tests/**/*.js"
   }
 }

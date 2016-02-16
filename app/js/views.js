@@ -76,11 +76,15 @@ Archibald.templates = {
   // information other than a link. Mainly used by `ItemInfoView`.
   itemInfo: '\
 <div class="archibald-item-info">\
-  <span class="archibald-item-info__label"><%= label %>:</span>\
   <% if ( url ) { %>\
     <a class="archibald-item-info__url" target="_blank" href="<%= url %>">\
   <% } %>\
-  <span class="archibald-item-info__value"><%= type %></span>\
+  <span class="archibald-item-info__value">\
+  <% for ( var i in name ) { %>\
+    <%= name[ i ] %>\
+    <% if ( i < name.length - 1 ) {%><hr /><% } %>\
+  <% } %>\
+  </span>\
   <% if ( url ) { %>\
     </a>\
   <% } %>\
@@ -420,12 +424,7 @@ Archibald.ItemInfoView = Backbone.View.extend({
       throw "Cannot initialize an ItemInfoView with an invalid model. Errors: " + errors.join( ', ' );
     }
 
-    // **Temporary hacks**. This needs work.
-    this.typeLabel = typeof args.typeLabel !== 'undefined' ? args.typeLabel : "Type";
-    this.typeDescriptionLabel = typeof args.typeDescriptionLabel !== 'undefined' ? args.typeDescriptionLabel : "Type description";
-    this.itemDescriptionLabel = typeof args.itemDescriptionLabel !== 'undefined' ? args.itemDescriptionLabel : "Description and usage";
-    this.itemUrlLabel = typeof args.itemUrlLabel !== 'undefined' ? args.itemUrlLabel : "More information";
-
+    args = args || {};
   },
 
   // Render the item information.
@@ -433,25 +432,14 @@ Archibald.ItemInfoView = Backbone.View.extend({
     // Start with a blank slate.
     this.$el.empty();
 
-    // Prepare the template variables.
+    // Prepare the template variables and render the template.
     var variables = this.model.toJSON();
-
-    // **Temporary hacks**. This needs work.
-    variables.typeLabel = this.typeLabel;
-    variables.typeDescriptionLabel = this.typeDescriptionLabel;
-    variables.itemDescriptionLabel = this.itemDescriptionLabel;
-    variables.itemUrlLabel = this.itemUrlLabel;
-    variables.typeUrl = 'http://www.google.com';
-    variables.type = [ 'Lorem ipsum', 'Dolor sit amet', 'Consectetur elit' ][ Math.floor( Math.random() * 3 ) ];
-    variables.typeDescription = [
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nisl tortor, mollis at ultrices et, cursus non libero. In lobortis pellentesque purus ac pellentesque.',
-      'Lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non, sagittis.',
-      'In lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non'
-    ][ Math.floor( Math.random() * 3 ) ];
-    variables.itemUrl = 'http://www.goog.com';
-    variables.itemDescription = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nisl tortor, mollis at ultrices et, cursus non libero. In lobortis pellentesque purus ac pellentesque. Etiam purus mauris, blandit sit amet tincidunt non, sagittis et lacus. Suspendisse vel semper ex.';
-
+    variables.url = variables.url || null;
     this.$el.html( this.tpl( variables ) );
+
+    // Trigger a `render` event, so other parts of the application can interact
+    // with it.
+   this.trigger( 'render', this.model, this );
 
     // Allow the chaining of method calls.
     return this;

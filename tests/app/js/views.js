@@ -228,6 +228,43 @@ QUnit.test( "view events", function( assert ) {
 
 QUnit.module( "ItemInfoView" );
 
+/**
+ * Test initialization logic. It should not be possible to initialize an
+ * ItemInfoView without a model, or with an invalid model.
+ */
+QUnit.test( "initialize", function( assert ) {
+  assert.throws(
+    function() {
+      var view = new ArchibaldCurriculum.ItemInfoView();
+    },
+    "Initializing a view without any model throws an error."
+  );
+
+  assert.throws(
+    function() {
+      var item = new ArchibaldCurriculum.ItemModel(),
+          view = new ArchibaldCurriculum.ItemInfoView({ model: item });
+    },
+    "Initializing a view with an invalid model throws an error."
+  );
+});
+
+/**
+ * Test view events. ItemInfoViews trigger several events.
+ */
+QUnit.test( "view events", function( assert ) {
+  assert.expect( 1 );
+
+  var doneRenderEvent = assert.async(),
+      model1 = new ArchibaldCurriculum.ItemModel({ name: [ "Some name" ] }),
+      view1 = new ArchibaldCurriculum.ItemInfoView({ model: model1 });
+  view1.on( 'render', function() {
+    assert.ok( true, "The view triggers a render event when rendered." );
+    doneRenderEvent();
+  });
+  view1.render();
+});
+
 
 
 

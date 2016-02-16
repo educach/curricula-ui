@@ -11,11 +11,16 @@
     "karma": "~0.10.2",
     "karma-coverage": "~0.1.0",
     "karma-firefox-launcher": "^0.1.7",
-    "karma-qunit": "~0.1.1"
+    "karma-qunit": "~0.1.1",
+    "minifier": "~0.7.1"
   },
   "scripts": {
     "test": "node_modules/.bin/karma start karma.conf.js",
     "doc": "node_modules/.bin/docco app/js/*.js",
-    "lint": "node_modules/.bin/eslint app/js/*.js tests/**/*.js"
+    "lint": "node_modules/.bin/eslint app/js/*.js tests/**/*.js",
+    "build": "npm run build:css && npm run build:js && cp app/img/* build/img/",
+    "build:css": "node_modules/.bin/minify --output build/app.min.css app/css/*.css",
+    "build:js": "node_modules/.bin/minify --no-comments --output build/app.min.js app/js/*.js",
+    "clean": "rm -rf docs/* coverage/* build/*"
   }
 }

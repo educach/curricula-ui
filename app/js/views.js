@@ -423,8 +423,6 @@ Archibald.ItemInfoView = Backbone.View.extend({
     if ( errors && errors.length ) {
       throw "Cannot initialize an ItemInfoView with an invalid model. Errors: " + errors.join( ', ' );
     }
-
-    args = args || {};
   },
 
   // Render the item information.

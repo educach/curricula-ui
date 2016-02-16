@@ -55,6 +55,25 @@ QUnit.test( "model events", function( assert ) {
 });
 
 /**
+ * Test ItemView rendering. ItemViews render differently based on passed
+ * arguments.
+ */
+QUnit.test( "rendering", function( assert ) {
+  var item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
+      view1 = new ArchibaldCurriculum.ItemView({ model: item1, editable: true }),
+      view2 = new ArchibaldCurriculum.ItemView({ model: item1, editable: false }),
+      view3 = new ArchibaldCurriculum.ItemView({ model: item1 });
+
+  view1.render();
+  view2.render();
+  view3.render();
+
+  assert.ok( view1.$el.find( 'input' ).length, "An editable view has an input." );
+  assert.notOk( view2.$el.find( 'input' ).length, "A non-editable (explicit) view has no input." );
+  assert.notOk( view3.$el.find( 'input' ).length, "A non-editable (implicit) view has no input." );
+});
+
+/**
  * Test ItemView events. ItemViews trigger several events, as well as react to
  * multiple DOM events.
  */
@@ -138,9 +157,12 @@ QUnit.test( "collection events", function( assert ) {
 
   var doneAddRemoveEvent = assert.async( 2 ),
       doneRenderEvent = assert.async( 2 ),
-      collection1 = new ArchibaldCurriculum.ItemCollection(),
+      collection1 = new ArchibaldCurriculum.ItemCollection([ { name: [ "First item " ] }]),
       view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1 }),
       addedItem = new ArchibaldCurriculum.ItemModel({ name: [ "Some name "] });
+  // Render it a first time BEFORE attaching event listeners. This will allow us
+  // to cover the childViews[] array.
+  view1.render();
   view1.on( 'collection:add', function( item, collection, view ) {
     assert.ok( true, "The view triggers a collection:add event on adding a model." );
     assert.equal( item, addedItem, "The view passes the added item to the event handler." );

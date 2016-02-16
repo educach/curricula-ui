@@ -198,6 +198,14 @@ Archibald.ItemView = Backbone.View.extend({
     var variables = this.model.toJSON();
     variables.editable = this.editable;
 
+    // Preprocess the name, as it can contain newlines, which have to be
+    // translated to <br> tags.
+    if ( typeof variables.name !== 'undefined' ) {
+      for ( var i in variables.name ) {
+        variables.name[ i ] = variables.name[ i ].trim().replace( /(?:\r\n|\r|\n)/g, '<br />' );
+      }
+    }
+
     // Render the template.
     this.$el.html( this.tpl( variables ) );
 
@@ -222,7 +230,19 @@ Archibald.ItemView = Backbone.View.extend({
 
   // Event handler for when the view is clicked. This triggers a `select` event.
   triggerSelect: function() {
-    this.trigger( 'select', this.model, this );
+    // Double clicking an element will also trigger the click event twice. This
+    // can lead to confusing behavior. It is not possible to cleanly distinguish
+    // between the 2 events, but we can trick it (kind of...). We add a time out
+    // for a single click. If a second click occurs before the timeout ends, we
+    // clear the timeout and set it again. If the double-click event is
+    // triggered, we clear the timeout as well (see `ItemView#doubleClick()`).
+    var that = this;
+    if ( typeof this.clickTimeout !== 'undefined' ) {
+      clearTimeout( this.clickTimeout );
+    }
+    this.clickTimeout = setTimeout( function() {
+      that.trigger( 'select', that.model, that );
+    }, 200 );
   },
 
   // Event handler for when the view is double-clicked. This is a shortcut for
@@ -234,6 +254,11 @@ Archibald.ItemView = Backbone.View.extend({
     // We stop the propagation immediately, in order to prevent triggering our
     // handler more than once.
     e.stopPropagation();
+
+    // If necessary, prevent the triggering of the "single" click event.
+    if ( typeof this.clickTimeout !== 'undefined' ) {
+      clearTimeout( this.clickTimeout );
+    }
 
     this.model.set( 'active', !this.$el.find( 'input' ).is( ':checked' ) );
     this.trigger( 'model:change', this.model, this );

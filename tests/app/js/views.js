@@ -124,6 +124,9 @@ QUnit.test( "view events", function( assert ) {
     assert.equal( itemModel.get( 'active'), false, "The model active state correctly changed." );
     doneDblClickEvent();
   });
+  view3.on( 'select', function( state, itemModel, itemView ) {
+    assert.ok( false, "The view should not trigger a click event when double-clicked." );
+  });
   // Double-click on the element, twice.
   view3.render();
   view3.$el.dblclick();

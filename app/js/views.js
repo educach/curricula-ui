@@ -75,19 +75,8 @@ Archibald.templates = {
   // context. It provides a sensible default template, with very little
   // information other than a link. Mainly used by `ItemInfoView`.
   itemInfo: '\
-<div class="archibald-item-info">\
-  <% if ( url ) { %>\
-    <a class="archibald-item-info__url" target="_blank" href="<%= url %>">\
-  <% } %>\
-  <span class="archibald-item-info__value">\
-  <% for ( var i in name ) { %>\
-    <%= name[ i ] %>\
-    <% if ( i < name.length - 1 ) {%><hr /><% } %>\
-  <% } %>\
-  </span>\
-  <% if ( url ) { %>\
-    </a>\
-  <% } %>\
+<div class="archibald-item-info-view">\
+  Todo\
 </div>\
 ',
 
@@ -96,13 +85,14 @@ Archibald.templates = {
   // This template is meant to be used recursively. It is used to construct a
   // summary of the current application state. It is mainly used by
   // `SummaryTreeView`.
+  // @todo Remove hasCycle information.
   summaryList: '\
 <li\
   data-model-id="<%= id %>"\
   class="archibald-summary-tree__list__item\
-    <% if ( hasCycle1 ) {%>has-cycle-1<% } %>\
-    <% if ( hasCycle2 ) {%>has-cycle-2<% } %>\
-    <% if ( hasCycle3 ) {%>has-cycle-3<% } %>\
+    <% if ( typeof hasCycle1 !== "undefined" && hasCycle1 ) {%>has-cycle-1<% } %>\
+    <% if ( typeof hasCycle2 !== "undefined" && hasCycle2 ) {%>has-cycle-2<% } %>\
+    <% if ( typeof hasCycle3 !== "undefined" && hasCycle3 ) {%>has-cycle-3<% } %>\
   "\
 >\
   <span>\
@@ -168,7 +158,6 @@ Archibald.ItemView = Backbone.View.extend({
     var that = this;
     this.model
       .bind( 'change', function() {
-        that.trigger( 'model:change', that.model, that );
         that.render();
       })
       .bind( 'destroy', function() {
@@ -232,7 +221,7 @@ Archibald.ItemView = Backbone.View.extend({
   triggerSelect: function() {
     // Double clicking an element will also trigger the click event twice. This
     // can lead to confusing behavior. It is not possible to cleanly distinguish
-    // between the 2 events, but we can trick it (kind of...). We add a time out
+    // between the 2 events, but we can trick it (kind of...). We add a timeout
     // for a single click. If a second click occurs before the timeout ends, we
     // clear the timeout and set it again. If the double-click event is
     // triggered, we clear the timeout as well (see `ItemView#doubleClick()`).
@@ -409,6 +398,7 @@ Archibald.ItemListView = Backbone.View.extend({
 
   // Helper function to trigger an `item:*` event.
   triggerItemEvent: function( event, itemModel ) {
+    console.log('event', event)
     this.trigger( 'item:' + event, itemModel, this.collection, this );
   },
 
@@ -558,7 +548,7 @@ Archibald.SummaryTreeView = Backbone.View.extend({
         // Render a single item. Recursively get the child markup by calling
         //  `SummaryTreeView#recursiveRender()` again.
         var variables = model.toJSON();
-        variables.children = recursiveRender( model.get( 'id' ) );
+        variables.children = that.recursiveRender( model.get( 'id' ) );
         html += that.tpl( variables );
       });
       html += '</ul>';

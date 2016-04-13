@@ -24,7 +24,7 @@
 //    The jQuery object that serves as a wrapper for the application.
 // @param {Object} settings
 //    The settings object. @todo
-var Core = function( settings, items, wrapper ) {
+var Core = function( items, wrapper, settings ) {
   // Initialize the item database. This parses the raw data items and
   // initializes them as reusable models.
   this.setItemDatabase( items );
@@ -241,7 +241,7 @@ Core.prototype = {
     if ( item.get( 'active' ) ) {
       var parentId = item.get( 'parentId' ),
           parentItem;
-      while ( parentId !== 'window' ) {
+      while ( parentId !== 'root' ) {
         parentItem = this.itemDatabase.get( parentId );
         parentItem.set( 'active', true );
         parentId = parentItem.get( 'parentId' );
@@ -253,9 +253,10 @@ Core.prototype = {
       if ( !prompt || confirm( promptMessage ) ) {
         // Helper function for recursively looking up selected child
         // items.
+        var that = this;
         var recursiveUnselect = function( item ) {
           item.set( 'active', false );
-          var childItems = this.itemDatabase.where({
+          var childItems = that.itemDatabase.where({
             parentId: item.get( 'id' ),
             active:   true
           });

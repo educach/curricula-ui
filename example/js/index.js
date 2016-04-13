@@ -4,25 +4,25 @@
 Backbone.$ = $;
 
 var appInit = function() {
-  var variant = window.location.search.replace("?", "") || 'lp21';
+  var variant = window.location.search.replace( "?", "" ) || 'lp21';
   $.ajax({
     url: 'json/' + variant + '_full.json',
     dataType: 'json',
-    success: function(items) {
+    success: function( items ) {
       // First, create a large database of all items.
-      ArchibaldCurriculum.setItemDatabase(items);
-      var itemDatabase = ArchibaldCurriculum.getItemDatabase();
+      var app = new ArchibaldCurriculum.Core( items );
+      var itemDatabase = app.getItemDatabase();
 
       // Fetch the row and pass it to the application as the DOM wrapper.
-      ArchibaldCurriculum.setWrapper($('#archibald-editor-content'));
+      app.setWrapper($('#archibald-editor-content'));
 
       // Max columns and width logic.
       var $style = $('<style type="text/css" />').appendTo('head'),
           maxCols = 0;
 
       // Prepare a re-usable function.
-      var onResize = function() {
-        var width = ArchibaldCurriculum.getWrapper().width(),
+      var onResize = function(newWidth) {
+        var width = typeof newWidth === 'number' ? newWidth : app.getWrapper().width(),
             oldMaxCols = maxCols;
 
         maxCols = width < 600 ? 1 : (width < 900 ? 2 : (width < 1200 ? 3 : 4));
@@ -32,15 +32,25 @@ var appInit = function() {
         $style.text('.archibald-column__wrapper, .archibald-column { width: ' + colWidth + 'px; }');
 
         // Did we have more cols previously? If so, we need to collapse an
-        // appropriate amount of columns on the left.
+        // appropriate amount of columns on the left. If we have room for
+        // more, we need to expand.
         // @todo Don't rely on the DOM selector we use here!
-        if (oldMaxCols > maxCols && $('.archibald-column:not(.archibald-column--collapsed)').length > maxCols) {
-          var diff = oldMaxCols - maxCols,
-              columnDatabase = ArchibaldCurriculum.getColumnDatabase();
+        var numExpanded = $('.archibald-column:not(.archibald-column--collapsed)').length,
+            diff = Math.abs(oldMaxCols - maxCols),
+            columnDatabase = app.getColumnDatabase();
 
+        if (oldMaxCols > maxCols && numExpanded > maxCols) {
           columnDatabase.forEach(function(model) {
             if (diff && model.get('column').isExpanded()) {
               model.get('column').collapse();
+              diff--;
+            }
+          });
+        }
+        else if (oldMaxCols < maxCols && numExpanded < maxCols) {
+          _.forEach(columnDatabase.toArray().reverse(), function(model) {
+            if (diff && !model.get('column').isExpanded()) {
+              model.get('column').expand();
               diff--;
             }
           });
@@ -77,7 +87,7 @@ var appInit = function() {
       // It is possible some items were highlighted. Whenever we click
       // somewhere, we want to remove all highlighting.
       var unhighlight = function() {
-        var highlightedItems = ArchibaldCurriculum.getItemDatabase().where({ highlighted: true });
+        var highlightedItems = app.getItemDatabase().where({ highlighted: true });
         for (var i in highlightedItems) {
           highlightedItems[i].set('highlighted', false);
         }
@@ -85,7 +95,7 @@ var appInit = function() {
 
       // Re-usable function for disabling all expands.
       var unexpand = function() {
-        var expandedItems = ArchibaldCurriculum.getItemDatabase().where({ expanded: true });
+        var expandedItems = app.getItemDatabase().where({ expanded: true });
         for (var i in expandedItems) {
           expandedItems[i].set('expanded', false);
         }
@@ -107,8 +117,8 @@ var appInit = function() {
 
         // We first need to collapse all sibling *columns* to the right,
         // if any. Simply remove them.
-        ArchibaldCurriculum.getColumnDatabase().remove(
-          ArchibaldCurriculum.getColumnRightSiblings(column)
+        app.getColumnDatabase().remove(
+          app.getColumnRightSiblings(column)
         );
 
         // It is possible some items were highlighted. Unhighlight them.
@@ -127,7 +137,7 @@ var appInit = function() {
         itemModel.set('expanded', true);
 
         // Create the new column, collapsed by default.
-        var newColumn = ArchibaldCurriculum.createColumn(itemDatabase.where({ parentId: itemModel.get('id') }), true, true);
+        var newColumn = app.createColumn(itemDatabase.where({ parentId: itemModel.get('id') }), true, true);
 
         // Make sure none of its children are "expanded".
         var expandedItems = itemDatabase.where({ parentId: itemModel.get('id'), expanded: true });
@@ -144,7 +154,7 @@ var appInit = function() {
 
         // If there are more than maxCols columns visible, hide the
         // first ones. Expand the others, as a failsafe.
-        var leftSiblings = ArchibaldCurriculum.getColumnLeftSiblings(newColumn),
+        var leftSiblings = app.getColumnLeftSiblings(newColumn),
             leftSiblingsCount = leftSiblings.length;
         if (leftSiblingsCount >= maxCols) {
           _.each(leftSiblings, function(element, i) {
@@ -182,9 +192,9 @@ var appInit = function() {
       // parents and children items, respectively, upon changing the state
       // of one item.
       var updateHierarchy = function(itemModel, columnCollection, column, e) {
-        ArchibaldCurriculum.recursiveCheck(
+        app.recursiveCheck(
           itemModel,
-          true,
+          $('#archibald-confirm-opt-out').is(':checked'),
           "This will also uncheck all child items. Are you sure you want to continue?"
         );
       };
@@ -200,19 +210,19 @@ var appInit = function() {
         updateItemInfo();
 
         // If there's a previous column, show it, and collapse the last one.
-        var prev = _.last(ArchibaldCurriculum.getColumnLeftSiblings(column)),
-            last = _.last(ArchibaldCurriculum.getColumnRightSiblings(column));
+        var prev = _.last(app.getColumnLeftSiblings(column)),
+            last = _.last(app.getColumnRightSiblings(column));
 
         if (prev) {
           prev.get('column').expand();
         }
 
         if (last) {
-          ArchibaldCurriculum.getColumnDatabase().remove(last);
+          app.getColumnDatabase().remove(last);
         }
 
         // Remove the expanded attribute on the new last column items.
-        last = ArchibaldCurriculum.getColumnDatabase().last();
+        last = app.getColumnDatabase().last();
         var expandedItems = last.get('column').collection.where({ expanded: true });
         for (var i in expandedItems) {
           expandedItems[i].set('expanded', false);
@@ -232,9 +242,9 @@ var appInit = function() {
         updateItemInfo();
 
         // Fetch the first column, and collapse all others.
-        var firstColumn = ArchibaldCurriculum.getColumnDatabase().first();
-        ArchibaldCurriculum.getColumnDatabase().remove(
-          ArchibaldCurriculum.getColumnRightSiblings(firstColumn.get('column'))
+        var firstColumn = app.getColumnDatabase().first();
+        app.getColumnDatabase().remove(
+          app.getColumnRightSiblings(firstColumn.get('column'))
         );
 
         // Make sure the first column is expanded.
@@ -242,26 +252,26 @@ var appInit = function() {
       };
 
       // Create the initial column.
-      var column = ArchibaldCurriculum.createColumn(itemDatabase.where({ parentId: "root" }));
+      var column = app.createColumn(itemDatabase.where({ parentId: "root" }));
       column.on('item:select', addColumn);
       column.on('item:select', updateItemInfo);
       column.on('item:change', updateHierarchy);
 
       // Summary logic.
       // Set the summary DOM wrapper.
-      ArchibaldCurriculum.setSummaryWrapper($('#archibald-summary-content'));
-      var summary = ArchibaldCurriculum.getSummary();
+      app.setSummaryWrapper($('#archibald-summary-content'));
+      var summary = app.getSummary();
       summary.on('summary:select-item', function(itemModel, collection, summaryView, e) {
         // First, fully collapse all the columns, except the "root" one. Get
         // the first column element from the database.
-        var column = ArchibaldCurriculum.getColumnDatabase().first().get('column');
+        var column = app.getColumnDatabase().first().get('column');
 
         // Expand it.
         column.expand();
 
         // Remove all other columns on the right.
-        ArchibaldCurriculum.getColumnDatabase().remove(
-          ArchibaldCurriculum.getColumnRightSiblings(column)
+        app.getColumnDatabase().remove(
+          app.getColumnRightSiblings(column)
         );
 
         // Construct the hierarchy as an array.
@@ -279,7 +289,7 @@ var appInit = function() {
 
         // Make sure none of the items in the database are "expanded" or
         // "highlighted".
-        var expandedItems = ArchibaldCurriculum.getItemDatabase().where({ expanded: true });
+        var expandedItems = app.getItemDatabase().where({ expanded: true });
         for (var i in expandedItems) {
           expandedItems[i].set('expanded', false);
         }
@@ -297,7 +307,7 @@ var appInit = function() {
 
           // Update the column reference, so we trigger it on the correct one
           // on the next pass.
-          column = ArchibaldCurriculum.getColumnDatabase().last().get('column');
+          column = app.getColumnDatabase().last().get('column');
         }
 
         // Finally, highlight the selected item, and scroll to it, both in the
@@ -306,7 +316,7 @@ var appInit = function() {
         // @todo Make this a method of the View itself!
         column.$el.find('.nano').nanoScroller({ scrollTo: $('#archibald-column__wrapper__list__item-' + itemModel.get('id')) });
         $('body, html').stop().animate({
-          scrollTop: (ArchibaldCurriculum.getWrapper().offset().top - 50) + 'px'
+          scrollTop: (app.getWrapper().offset().top - 50) + 'px'
         });
       });
 
@@ -324,9 +334,119 @@ var appInit = function() {
       $('#archibald-item-info-collapse').click(function() {
         $(this).find('i').toggleClass('icon-plus').toggleClass('icon-minus');
         $('#archibald-item-info').toggleClass('archibald-item-info--expanded');
-        onResize();
+
+        // Pass the new width to the resize function. This will allow us to
+        // still have CSS transitions, without relying on complex JS events,
+        // which are hard to control and could slow down the application.
+        // WARNING: this width is hard coded!! See CSS file!!
+        // We use the total expanded width minus the collapsed width, which
+        // gives us the difference in width for the wrapper.
+        var itemInfoWidth = 270; // 300 - 30;
+        if ($('#archibald-item-info').hasClass('archibald-item-info--expanded')) {
+          onResize(app.getWrapper().width() - itemInfoWidth);
+        }
+        else {
+          onResize(app.getWrapper().width() + itemInfoWidth);
+        }
       });
 
+      // Opt out of confirm dialog logic.
+      // Careful, cookies don't like Booleans... and jQuery.cookie() has a
+      // really hard time returning data that can be cast to a boolean. Use
+      // integer casting and strict comparison instead.
+      $('#archibald-confirm-opt-out').change(function() {
+        $.cookie('archibald_confirm_opt_out', $(this).is(':checked') ? 0 : 1, { expires: 7, path: '/' });
+      }).attr('checked', parseInt($.cookie('archibald_confirm_opt_out')) === 0);
+
+      // Full screen logic.
+      if (
+        document.fullscreenEnabled ||
+        document.webkitFullscreenEnabled ||
+        document.mozFullScreenEnabled ||
+        document.msFullscreenEnabled
+      ) {
+        $('#archibald-curriculum-display').addClass('has-fullscreen');
+
+        // @todo this is fragile. Probably better to use some other mechanic.
+        var originalWidth = app.getWrapper().width();
+
+        var isFullScreen = function() {
+          return document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement;
+        };
+
+        var fullScreenHandler = function() {
+          if (isFullScreen()) {
+            // @todo this is not very clean, with the toggleClass() inside
+            // the click handler as well...
+            $('#archibald-full-screen').find('i[class^="icon"]')
+              .removeClass('icon-fullscreen')
+              .addClass('icon-not-fullscreen');
+            onResize();
+          }
+          else {
+            // @todo this is not very clean, with the toggleClass() inside
+            // the click handler as well...
+            $('#archibald-full-screen').find('i[class^="icon"]')
+              .addClass('icon-fullscreen')
+              .removeClass('icon-not-fullscreen');
+            onResize(originalWidth);
+          }
+        };
+
+        var goFullScreen = function(element) {
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          }
+          else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+          }
+          else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+          }
+          else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+          }
+        };
+
+        var cancelFullScreen = function(element) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+          else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          }
+          else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          }
+          else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        };
+
+        document.addEventListener('fullscreenchange', fullScreenHandler, false);
+        document.addEventListener('webkitfullscreenchange', fullScreenHandler, false);
+        document.addEventListener('mozfullscreenchange', fullScreenHandler, false);
+        document.addEventListener('MSFullscreenChange', fullScreenHandler, false);
+
+        $('#archibald-full-screen').click(function() {
+          var mustGoFullScreen = $(this).find('i[class^="icon"]')
+                                    .toggleClass('icon-fullscreen')
+                                    .toggleClass('icon-not-fullscreen')
+                                    .hasClass('icon-not-fullscreen');
+
+          var element = $('#archibald-curriculum-display')[0];
+
+          if (mustGoFullScreen) {
+            goFullScreen(element);
+          }
+          else {
+            cancelFullScreen(element);
+          }
+        });
+      }
 
       // LP21 logic.
       // Allow the filtering of items based on cycle data.

@@ -1,5 +1,33 @@
+.archibald-confirm-opt-out {
+  float: right;
+  font-size: .9em;
+  margin-top: 2em;
+}
+.archibald-confirm-opt-out label {
+  font-weight: normal;
+}
+.archibald-full-screen {
+  padding: 3px;
+  display: none;
+  cursor: pointer;
+  float: right;
+  font-size: .9em;
+  margin-top: 2.1em;
+  margin-right: 2em;
+}
+.has-fullscreen .archibald-full-screen {
+  display: inline-block;
+}
+.archibald-full-screen:hover {
+  background-color: #eee;
+}
 .archibald-curriculum-display {
   overflow: auto;
+  background: white;
+  width: 100%;
+  padding: 0 5px;
+  box-sizing: border-box;
+  margin: 0 auto;
 }
 .archibald-curriculum-display hr {
   margin: 10px 0;
@@ -83,6 +111,23 @@
 .archibald-column__wrapper__list__item--active {
   background-color: #ccc;
 }
+.archibald-column__wrapper__list__item--level-2 {
+  padding-left: 60px;
+}
+.archibald-column__wrapper__list__item--level-3 {
+  padding-left: 90px;
+}
+.archibald-column__wrapper__list__item--is-group {
+  border-bottom: 2px solid #555;
+}
+.archibald-column__wrapper__list__item--is-not-selectable-group {
+  font-size: 1.1em;
+  font-weight: bold;
+  background: #eee;
+}
+.archibald-column__wrapper__list__item--is-not-selectable-group input {
+  display: none !important;
+}
 @keyframes archibald-column__wrapper__list__item--highlighted {
   0%, 100% {
     background-color: #F0F567;
@@ -139,25 +184,77 @@
   border: 5px solid white;
   cursor: pointer;
 }
+.archibald-summary__cycles {
+  display: none;
+  margin-bottom: 1em;
+}
+.lp21 .archibald-summary__cycles {
+  display: table;
+  width: 100%;
+}
+.archibald-summary__cycles__label {
+  display: none;
+}
+.archibald-summary__cycles__cycle {
+  display: none;
+  height: .5em;
+  text-indent: -9999px;
+  overflow: hidden;
+  color: white;
+}
+.has-cycle-1 .archibald-summary__cycles__cycle--cycle-1,
+.has-cycle-1 .archibald-summary__cycles__label,
+.has-cycle-2 .archibald-summary__cycles__cycle--cycle-2,
+.has-cycle-2 .archibald-summary__cycles__label,
+.has-cycle-3 .archibald-summary__cycles__cycle--cycle-3,
+.has-cycle-3 .archibald-summary__cycles__label {
+  display: table-cell;
+}
 .archibald-summary-tree__list {
-  padding-left: 2em;
+  padding-left: 0;
   list-style: none;
   max-width: 90%;
 }
 .archibald-summary-tree__list .archibald-summary-tree__list {
+  padding-left: 2em;
   max-width: 100%;
-  border-left: 1px dashed #ccc
+}
+.archibald-summary-tree__list__item {
+  position: relative;
+}
+.archibald-summary-tree__list__item::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: -2em;
+  border-left: 1px dashed #CCC;
+}
+.archibald-summary-tree__list__item:last-child::before {
+  bottom: auto;
+  top: 0;
+  height: 1em;
+}
+.archibald-summary-tree__list__item::after {
+  content: "";
+  position: absolute;
+  width: 2em;
+  top: 1em;
+  left: -2em;
+  border-top: 1px dashed #CCC;
 }
 .archibald-summary-tree__list__item span {
   position: relative;
   display: block;
   padding: .5em 3em .5em 2em;
-  border-left: 5px solid;
+  border-left: 4px solid #eee;
+  border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
   font-size: .8em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  max-height: 2.5em;
 }
 .archibald-summary-tree__list__item.hover span {
   background: #eee;
@@ -172,6 +269,7 @@
   cursor: pointer;
   background: #ddd;
   white-space: normal;
+  max-height: none;
 }
 .archibald-summary-tree__list__item.child-hovered > span {
   background: #ddd;
@@ -182,11 +280,22 @@
 .archibald-item-info {
   height: 300px; /* Warning! Same as .archibald-column! */
   position: relative;
-  width: 30px;
+  width: 30px; /* Warning! This is also referenced in JS, see $('#archibald-item-info-collapse').click(). */
   float: right;
+  -webkit-transition: width .5s;
+  -moz-transition: width .5s;
+  -ms-transition: width .5s;
+  -o-transition: width .5s;
+  transition: width .5s;
 }
 .archibald-item-info--expanded {
-  width: 300px;
+  width: 300px; /* Warning! This is also referenced in JS, see $('#archibald-item-info-collapse').click(). */
+}
+.archibald-item-info h4 {
+  height: 1em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .archibald-item-info__label {
   transform: rotate(-90deg);
@@ -218,42 +327,95 @@
 .archibald-item-info__type__description__label {
   font-weight: bold;
 }
+.archibald-cycle-selection {
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  background: #eee;
+  overflow: hidden;
+}
+.lp21 .archibald-cycle-selection/*,
+.per .archibald-cycle-selection */ {
+  display: block;
+}
+.archibald-cycle-selection__warning {
+  display: none;
+  font-style: italic;
+  font-size: .9em;
+}
+.archibald-cycle-selection--has-implicit .archibald-cycle-selection__warning {
+  display: block;
+}
+.archibald-cycle-selection__warning .is {
+  display: inline;
+}
+.archibald-cycle-selection__warning .are {
+  display: none;
+}
+.archibald-cycle-selection__warning .selected + .selected ~ .is {
+  display: none;
+}
+.archibald-cycle-selection__warning .selected + .selected ~ .are {
+  display: inline;
+}
+.archibald-cycle-selection__wrapper {
+
+}
+.archibald-cycle-selection__filter {
+  position: relative;
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-style: dashed;
+  border-color: #ccc;
+  border-width: 1px;
+  cursor: pointer;
+}
+.archibald-cycle-selection__filter:hover {
+  background-color: #ddd;
+}
+.archibald-cycle-selection__filter + .archibald-cycle-selection__filter {
+  margin-left: 1em;
+}
+
+/**
+ * PER specific styles.
+ */
+.archibald-per-school-year-selection {
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  background: #eee;
+  overflow: hidden;
+}
+.per .archibald-per-school-year-selection {
+  display: block;
+}
+.archibald-per-school-year-selection__filter {
+  position: relative;
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-style: dashed;
+  border-color: #ccc;
+  border-width: 1px;
+  cursor: pointer;
+}
+.archibald-per-school-year-selection__filter:hover {
+  background-color: #ddd;
+}
+.archibald-per-school-year-selection__filter + .archibald-per-school-year-selection__filter {
+  margin-left: 1em;
+}
 
 /**
  * Lehrplan 21 specific styles.
  * lp21 requires a color code, which we represent on the left side of an item
  * using borders.
  */
-.archibald-lp21-filters {
-  margin-top: 10px;
-  padding: 10px;
-  background: #eee;
-  overflow: hidden;
-}
-.archibald-lp21-filters__wrapper {
-  float: left;
-  width: 350px;
-}
-.archibald-lp21-filters__message {
-  float: right;
-  max-width: 65%;
-}
-.archibald-lp21-filters__filter {
-  position: relative;
-  margin-left: 10px;
-  padding: 5px 10px;
-  border-style: dashed;
-  border-color: #ccc;
+.lp21 .archibald-cycle-selection__filter {
   border-width: 1px 1px 1px 0;
-  cursor: pointer;
 }
-.archibald-lp21-filters__filter:hover {
-  background-color: #ddd;
-}
-.archibald-lp21-filters__filter + .archibald-lp21-filters__filter {
-  margin-left: 1em;
-}
-.archibald-lp21-filters__filter::before {
+.lp21 .archibald-cycle-selection__filter::before,
+.lp21 .archibald-summary__cycles__cycle::before {
   content: '';
   position: absolute;
   left: -10px;
@@ -261,73 +423,121 @@
   bottom: -1px;
   border-left: 10px solid gray;
 }
-.lp21 .archibald-column__wrapper__list__item {
-  border-left: 5px solid gray;
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-1,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-2,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-3 {
+  border-left: 12px solid gray;
 }
-.lp21 .archibald-column__wrapper__list__item::before,
-.lp21 .archibald-column__wrapper__list__item::after,
-.archibald-summary-tree__list__item span::before,
-.archibald-summary-tree__list__item span::after {
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-12,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-13,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-23 {
+  border-left: 6px solid gray;
+}
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123 {
+  border-left: 4px solid gray;
+}
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-12::before,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-13::before,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-23::before,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after/*,
+.lp21 .archibald-summary-tree__list__item span::before,
+.lp21 .archibald-summary-tree__list__item span::after*/ {
   content: '';
-  border-left: 5px solid gray;
+  border-left: 6px solid gray;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
 }
-.lp21 .archibald-column__wrapper__list__item::after,
-.archibald-summary-tree__list__item span::after {
-  left: 5px;
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after/*,
+.lp21 .archibald-summary-tree__list__item span::after*/ {
+  border-left-width: 4px;
 }
-/* Show only the desired cycle elements and borders. */
-.lp21-show-cycle-1 .has-cycle-1 { display: block; }
-.lp21-show-cycle-2 .has-cycle-2 { display: block; }
-.lp21-show-cycle-3 .has-cycle-3 { display: block; }
-.has-cycle-1, .has-cycle-2, .has-cycle-3 {
-  display: none;
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after {
+  left: 4px;
 }
-/* For the left border, 3 takes precedence, so is last. */
-.archibald-column__wrapper__list__item.has-cycle-1,
-.archibald-summary-tree__list__item.has-cycle-1 > span {
+/* Let's coloooor!!! */
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-13::before,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-12::before,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-1 {
   border-left-color: #E39B2D;
 }
-.archibald-column__wrapper__list__item.has-cycle-2,
-.archibald-summary-tree__list__item.has-cycle-2 > span {
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-23::before,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-2 {
   border-left-color: #2F8FCE;
 }
-.archibald-column__wrapper__list__item.has-cycle-3,
-.archibald-summary-tree__list__item.has-cycle-3 > span {
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-3 {
   border-left-color: #97C941;
 }
-/* For the middle border, 2 takes precedence, so is last. */
-.archibald-lp21-filters__filter--cycle-3::before,
-.archibald-column__wrapper__list__item.has-cycle-3::before,
-.archibald-summary-tree__list__item.has-cycle-3 > span::before {
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-12 {
+  border-left-color: #2F8FCE;
+}
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-13,
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-23 {
   border-left-color: #97C941;
 }
-.archibald-lp21-filters__filter--cycle-1::before,
-.archibald-column__wrapper__list__item.has-cycle-1::before,
-.archibald-summary-tree__list__item.has-cycle-1 > span::before {
+.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123 {
+  border-left-color:  #97C941;
+}
+.lp21 .archibald-summary__cycles__cycle--cycle-1 {
+  background-color: #E39B2D;
+}
+.lp21 .archibald-summary__cycles__cycle--cycle-2 {
+  background-color: #2F8FCE;
+}
+.lp21 .archibald-summary__cycles__cycle--cycle-3 {
+  background-color: #97C941;
+}
+/* For the left border, 3 takes precedence, so is last. */
+/*
+.lp21 .archibald-column__wrapper__list__item.has-cycle-1,
+.lp21 .archibald-summary-tree__list__item.has-cycle-1 > span {
   border-left-color: #E39B2D;
 }
-.archibald-lp21-filters__filter--cycle-2::before,
-.archibald-column__wrapper__list__item.has-cycle-2::before,
-.archibald-summary-tree__list__item.has-cycle-2 > span::before {
+.lp21 .archibald-column__wrapper__list__item.has-cycle-2,
+.lp21 .archibald-summary-tree__list__item.has-cycle-2 > span {
+  border-left-color: #2F8FCE;
+}
+.lp21 .archibald-column__wrapper__list__item.has-cycle-3,
+.lp21 .archibald-summary-tree__list__item.has-cycle-3 > span {
+  border-left-color: #97C941;
+}
+*/
+/* For the middle border, 2 takes precedence, so is last. */
+.lp21 .archibald-cycle-selection__filter--cycle-3::before/*,
+.lp21 .archibald-column__wrapper__list__item.has-cycle-3::before,
+.lp21 .archibald-summary-tree__list__item.has-cycle-3 > span::before*/ {
+  border-left-color: #97C941;
+}
+.lp21 .archibald-cycle-selection__filter--cycle-1::before/*,
+.lp21 .archibald-column__wrapper__list__item.has-cycle-1::before,
+.lp21 .archibald-summary-tree__list__item.has-cycle-1 > span::before*/ {
+  border-left-color: #E39B2D;
+}
+.lp21 .archibald-cycle-selection__filter--cycle-2::before/*,
+.lp21 .archibald-column__wrapper__list__item.has-cycle-2::before,
+.lp21 .archibald-summary-tree__list__item.has-cycle-2 > span::before*/ {
   border-left-color: #2F8FCE;
 }
 /* For the right border, 3 takes precedence, so is last. */
-.archibald-column__wrapper__list__item.has-cycle-3::after,
-.archibald-summary-tree__list__item.has-cycle-3 > span::after {
+/*
+.lp21 .archibald-column__wrapper__list__item.has-cycle-3::after,
+.lp21 .archibald-summary-tree__list__item.has-cycle-3 > span::after {
   border-left-color: #97C941;
 }
-.archibald-column__wrapper__list__item.has-cycle-2::after,
-.archibald-summary-tree__list__item.has-cycle-2 > span::after {
+.lp21 .archibald-column__wrapper__list__item.has-cycle-2::after,
+.lp21 .archibald-summary-tree__list__item.has-cycle-2 > span::after {
   border-left-color: #2F8FCE;
 }
-.archibald-column__wrapper__list__item.has-cycle-1::after,
-.archibald-summary-tree__list__item.has-cycle-1 > span::after {
+.lp21 .archibald-column__wrapper__list__item.has-cycle-1::after,
+.lp21 .archibald-summary-tree__list__item.has-cycle-1 > span::after {
   border-left-color: #E39B2D;
 }
+*/
 
 /**
  * Icon classes.
@@ -356,4 +566,14 @@
 }
 .icon-minus {
   background-position: -433px -96px;
+}
+.icon-fullscreen {
+  width: 14px;
+  height: 14px;
+  background-position: -360px -96px;
+}
+.icon-not-fullscreen {
+  width: 14px;
+  height: 14px;
+  background-position: -385px -96px;
 }

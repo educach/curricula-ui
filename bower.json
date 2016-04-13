@@ -15,6 +15,7 @@
   ],
   "dependencies": {
     "jquery": "1.7.2",
+    "jquery.cookie": "1.4.1",
     "underscore": "^1.8.3",
     "backbone": "^1.2.3",
     "nanoscroller": "^0.8.7"

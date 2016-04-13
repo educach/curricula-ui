@@ -162,7 +162,7 @@ QUnit.test( "collection events", function( assert ) {
       doneRenderEvent = assert.async( 2 ),
       collection1 = new ArchibaldCurriculum.ItemCollection([ { name: [ "First item " ] }]),
       view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1 }),
-      addedItem = new ArchibaldCurriculum.ItemModel({ name: [ "Some name "] });
+      addedItem = new ArchibaldCurriculum.ItemModel({ name: [ "Some name" ] });
   // Render it a first time BEFORE attaching event listeners. This will allow us
   // to cover the childViews[] array.
   view1.render();
@@ -294,3 +294,47 @@ QUnit.test( "view events", function( assert ) {
 
 
 QUnit.module( "SummaryTreeView" );
+
+/**
+ * Test initialization logic. It should not be possible to initialize a
+ * SummaryTreeView without a collection.
+ */
+QUnit.test( "initialize", function( assert ) {
+  assert.throws(
+    function() {
+      var view = new ArchibaldCurriculum.SummaryTreeView();
+    },
+    "Initializing a view without any model throws an error."
+  );
+});
+
+/**
+ * Test collection event binding. SummaryTreeViews should react on several
+ * collection events.
+ */
+QUnit.test( "collection events", function( assert ) {
+  assert.expect( 3 );
+
+  var doneRenderEvent = assert.async( 3 ),
+      collection = new ArchibaldCurriculum.ItemCollection(),
+      view = new ArchibaldCurriculum.SummaryTreeView({ collection: collection }),
+      addedItem1 = new ArchibaldCurriculum.ItemModel({ name: [ "Some name" ] }),
+      addedItem2 = new ArchibaldCurriculum.ItemModel({ name: [ "Some name" ] });
+  view.on( 'render', function() {
+    assert.ok( true, "The view is re-rendered whenever an item is changed, removed or added to the collection." );
+    doneRenderEvent();
+  });
+  collection.add( addedItem1 );
+  // SummaryTreeViews have a protection mechanism against too many render calls.
+  // In order for our second and third events to actually trigger a re-rendering
+  // we must wait a little. However, if we trigger some in quick succession on
+  // purpose, we should not have more render calls than we expect.
+  collection.add( addedItem2 );
+  addedItem2.set({ 'name': [ "Some new name" ] });
+  setTimeout(function() {
+    addedItem1.set({ 'name': [ "Some new name" ] });
+    setTimeout(function() {
+      collection.remove( addedItem1 );
+    }, 100);
+  }, 100);
+});

@@ -536,6 +536,10 @@ Archibald.SummaryTreeView = Backbone.View.extend({
     this.$el.empty();
     this.$el.append( this.recursiveRender( 'root' ) );
 
+    // Trigger a `render` event, so other parts of the application can interact
+    // with it.
+    this.trigger( 'render', this.collection, this );
+
     // Allow the chaining of method calls.
     return this;
   },

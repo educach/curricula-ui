@@ -25,15 +25,11 @@ QUnit.test( "initialize", function( assert ) {
  * Test model event binding. ItemViews should react on several model events.
  */
 QUnit.test( "model events", function( assert ) {
-  assert.expect( 5 );
+  assert.expect( 4 );
 
-  var doneChangeEvent = assert.async( 2 ),
+  var doneChangeEvent = assert.async(),
       item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
       view1 = new ArchibaldCurriculum.ItemView({ model: item1 });
-  view1.on( 'model:change', function() {
-    assert.ok( true, "The view triggers a model:change event on updating its model." );
-    doneChangeEvent();
-  });
   view1.on( 'render', function() {
     assert.ok( true, "The view re-renders itself on updating its model." );
     doneChangeEvent();
@@ -189,17 +185,12 @@ QUnit.test( "collection events", function( assert ) {
  * child view events.
  */
 QUnit.test( "child view events", function( assert ) {
-  assert.expect( 2 );
+  assert.expect();
 
-  var doneChangeEvent = assert.async(),
-      doneSelectEvent = assert.async(),
+  var doneSelectEvent = assert.async(),
       item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
       collection1 = new ArchibaldCurriculum.ItemCollection([ item1 ]),
       view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1 });
-  view1.on( 'item:change', function() {
-    assert.ok( true, "The view triggers a item:change event on updating a model in the collection." );
-    doneChangeEvent();
-  });
   view1.on( 'item:select', function() {
     assert.ok( true, "The view triggers a item:select event on clicking on a child view." );
     doneSelectEvent();

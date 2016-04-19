@@ -206,6 +206,73 @@ QUnit.test( "recursive (un)checking logic", function( assert ) {
 });
 
 /**
+ * Test the responsive logic helpers.
+ */
+QUnit.test( "responsive logic helpers", function( assert ) {
+  var done = assert.async();
+
+  var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
+      column, model, i;
+
+  // Activate the responsive logic. In order to have full control over our test
+  // environment, we do this before we add any columns.
+  app.activateResponsiveLogic();
+
+  // Because the responsive activation will trigger a resize in 100ms, we wait
+  // for it to finish, and then trigger our test code.
+  setTimeout( function() {
+    // Create 5 dummy columns, all expanded.
+    for ( i = 5; i > 0; --i ) {
+      column = app.createColumn( _testGetJSONItems()[ 'root' ] );
+      column.expand();
+      console.log( column, column.isExpanded() );
+    }
+    // Make the application think we are showing all 5.
+    app.maxCols = 5;
+
+    // Trigger a resize. A width of 900 should allow for 3 columns.
+    app.resize( 900 );
+    assert.equal( 3, app.maxCols, "A width of 900 allows the application to show 3 columns." );
+
+    // Check the columns. Only the last 3 should still be expanded.
+    for ( i in { 0: 0, 1: 1 } ) {
+      assert.ok(
+        app.getColumnDatabase().at( i ).get( 'column' ).isCollapsed(),
+        "Column " + i + " is correctly collapsed."
+      );
+    }
+    for ( i in { 2: 2, 3: 3, 4: 4 } ) {
+      assert.ok(
+        app.getColumnDatabase().at( i ).get( 'column' ).isExpanded(),
+        "Column " + i + " is correctly expanded."
+      );
+    }
+
+    // Now do the inverse. Resize to 1200, which should show 1 more column.
+    app.resize( 1200 );
+    assert.equal( 4, app.maxCols, "A width of 1200 allows the application to show 4 columns." );
+
+    // Check the columns. Only the 1st one should be collapsed.
+    assert.ok(
+      app.getColumnDatabase().at( 0 ).get( 'column' ).isCollapsed(),
+      "Column 0 is correctly collapsed."
+    );
+    for ( i in { 1: 1, 2: 2, 3: 3, 4: 4 } ) {
+      assert.ok(
+        app.getColumnDatabase().at( i ).get( 'column' ).isExpanded(),
+        "Column " + i + " is correctly expanded."
+      );
+    }
+
+    // Clean up.
+    app.$style.remove();
+    $( 'iframe.__archibald-curricula-ui--hacky-scrollbar-resize-listener__' ).remove();
+
+    done();
+  }, 200 );
+});
+
+/**
  * Define a test item database, mimicking the structure a JSON file would
  * contain.
  */

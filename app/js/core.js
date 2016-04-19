@@ -167,8 +167,8 @@ Core.prototype = {
           data:        items[ group ][ i ].data,
           parentId:    group,
           hasChildren: !!(
-            typeof items[items[ group ][ i ].id] !== 'undefined' &&
-            items[items[ group ][ i ].id].length
+            typeof items[ items[ group ][ i ].id ] !== 'undefined' &&
+            items[ items[ group ][ i ].id ].length
           )
         }) );
       }

@@ -18,77 +18,6 @@ var appInit = function() {
 
       app.activateResponsiveLogic();
 
-      // Re-usable function for handling "select" events.
-      // This callback will handle the "collapsing" of existing columns (if
-      // needed) and add new columns.
-      var addColumn = function(itemModel, columnCollection, column, e) {
-        // If this item has no children, we don't add a new column.
-        if (!itemModel.get('hasChildren')) {
-          return;
-        }
-
-        // If this item is already expanded, we don't add a new column.
-        if (itemModel.get('expanded')) {
-          return;
-        }
-
-        // We first need to collapse all sibling *columns* to the right,
-        // if any. Simply remove them.
-        app.getColumnDatabase().remove(
-          app.getColumnRightSiblings(column)
-        );
-
-        // It is possible some items were highlighted. Unhighlight them.
-        app.unhighlightItems();
-
-        // Get all expanded sibling *items* in the column (should only be one,
-        // but we use a failsafe logic and treat it as an array) and update
-        // their "expanded" property.
-        var siblingExpandedItems = columnCollection.where({ expanded: true });
-        for (var i in siblingExpandedItems) {
-          siblingExpandedItems[i].set('expanded', false);
-        }
-
-        // Get the item that was clicked and set its "expanded" property to
-        // true.
-        itemModel.set('expanded', true);
-
-        // Create the new column, collapsed by default.
-        var newColumn = app.createColumn(itemDatabase.where({ parentId: itemModel.get('id') }), true, true);
-
-        // Make sure none of its children are "expanded".
-        var expandedItems = itemDatabase.where({ parentId: itemModel.get('id'), expanded: true });
-        for (var i in expandedItems) {
-          expandedItems[i].set('expanded', false);
-        }
-
-        // Bind to the item:select and item:change events.
-        newColumn.on('item:select', addColumn);
-        newColumn.on('item:select', updateItemInfo);
-        newColumn.on('item:change', updateHierarchy);
-        newColumn.on('column:go-back', goBack);
-        newColumn.on('column:go-to-root', goToRoot);
-
-        // If there are more than app.maxCols columns visible, hide the
-        // first ones. Expand the others, as a failsafe.
-        var leftSiblings = app.getColumnLeftSiblings(newColumn),
-            leftSiblingsCount = leftSiblings.length;
-        if (leftSiblingsCount >= app.maxCols) {
-          _.each(leftSiblings, function(element, i) {
-            var column = element.get('column');
-            if (leftSiblingsCount - i >= app.maxCols) {
-              column.collapse();
-            }
-            else {
-              column.expand();
-            }
-          });
-        }
-
-        // Show the new column.
-        newColumn.expand();
-      };
-
       // Re-usable function for updating the item information.
       var updateItemInfo = function(itemModel, columnCollection, column, e) {
         if (typeof updateItemInfo.view !== 'undefined') {
@@ -170,7 +99,6 @@ var appInit = function() {
 
       // Create the initial column.
       var column = app.createColumn(itemDatabase.where({ parentId: "root" }), true);
-      column.on('item:select', addColumn);
       column.on('item:select', updateItemInfo);
       column.on('item:change', updateHierarchy);
 

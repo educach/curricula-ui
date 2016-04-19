@@ -103,6 +103,9 @@ Core.prototype = {
     if ( typeof this.$el[ 0 ].id === 'undefined' || this.$el[ 0 ].id === '' ) {
       this.$el[ 0 ].id = 'archibald-curriculum-ui-core-' + this.id;
     }
+
+    // Recompute the amount of columns we can show.
+    this.computeMaxCols();
   },
 
   // Get the application DOM wrapper.
@@ -114,19 +117,118 @@ Core.prototype = {
 
   // Set or refresh the application settings.
   //
+  // Warning: this will detach all event listeners! Make sure to re-attach
+  // custom event listeners after this method gets called.
+  //
   // @param {Object} settings
   //    The settings hash. Will extend with the application defaults.
   setSettings: function( settings ) {
-    this.settings = _.extend( {
-      // View classes.
-      itemView:     Archibald.ItemView,
-      itemListView: Archibald.ItemListView,
-      itemInfoView: Archibald.ItemInfoView,
-      summaryView:  Archibald.SummaryTreeView,
+    var that = this,
+        defaults = {
+          // View classes.
+          itemView:     Archibald.ItemView,
+          itemListView: Archibald.ItemListView,
+          itemInfoView: Archibald.ItemInfoView,
+          summaryView:  Archibald.SummaryTreeView,
 
-      // Behavior settings.
-      recursiveCheckPromptMessage: "This will also uncheck all child items. Are you sure you want to continue?",
-    }, settings || {} );
+          // Behavior settings.
+          recursiveCheckPromptMessage: "This will also uncheck all child items. Are you sure you want to continue?",
+
+          // Event callbacks.
+          events: {
+            // On selecting an item, check if a new column must be spawned. This
+            // only applies to an item that actually has children. If a new column
+            // is to be created, collapse all sibling columns to the "right".
+            "item:select": function( item, columnCollection, column ) {
+              // If this item has no children, or it is "expanded", we don't add a
+              // new column.
+              if ( !item.get( 'hasChildren' ) || item.get( 'expanded' ) ) {
+                return;
+              }
+
+              // We first need to collapse all sibling *columns* to the right,
+              // if any. Simply remove them.
+              that.columnDatabase.remove(
+                that.getColumnRightSiblings( column )
+              );
+
+              // It is possible some items were highlighted. Unhighlight them.
+              that.unhighlightItems();
+
+              // Get all expanded sibling *items* in the column (should only be one,
+              // but we use a failsafe logic and treat it as an array) and update
+              // their "expanded" property.
+              var siblingExpandedItems = columnCollection.where({ expanded: true });
+              if ( siblingExpandedItems.length ) {
+                for ( var i in siblingExpandedItems ) {
+                  siblingExpandedItems[ i ].set( 'expanded', false );
+                }
+              }
+
+              // Get the item that was clicked and set its "expanded" property to
+              // true.
+              item.set( 'expanded', true );
+
+              // Create the new column, collapsed and editable by default.
+              var newColumn = that.createColumn(
+                that.itemDatabase.where({ parentId: item.get( 'id' ) }),
+                true,
+                true
+              );
+
+              // Bind to the item:select events.
+              newColumn.on( 'item:select', defaults.events[ 'item:select' ] );
+
+              // @todo Code these other events!!
+              /*
+              newColumn.on('item:select', updateItemInfo);
+              newColumn.on('item:change', updateHierarchy);
+              newColumn.on('column:go-back', goBack);
+              newColumn.on('column:go-to-root', goToRoot);
+              */
+
+              // Make sure none of its children are "expanded".
+              var expandedItems = that.itemDatabase.where({
+                parentId: item.get( 'id' ),
+                expanded: true
+              });
+              if ( expandedItems.length ) {
+                for ( var i in expandedItems ) {
+                  expandedItems[ i ].set( 'expanded', false );
+                }
+              }
+
+              // If there are more than maxCols columns visible, hide the
+              // first ones. Expand the others, as a failsafe.
+              if ( that.maxCols ) {
+                var leftSiblings = that.getColumnLeftSiblings( newColumn ),
+                    leftSiblingsCount = leftSiblings.length;
+                if ( leftSiblingsCount >= that.maxCols ) {
+                  _.each( leftSiblings, function( element, i ) {
+                    var column = element.get( 'column' );
+                    if ( leftSiblingsCount - i >= that.maxCols ) {
+                      column.collapse();
+                    }
+                    else {
+                      column.expand();
+                    }
+                  });
+                }
+              }
+
+              // Show the new column.
+              newColumn.expand();
+            }
+          }
+        };
+
+    this.settings = _.extend( defaults, settings || {} );
+
+    // Make sure all event listeners are re-attached.
+    this.off();
+    for ( var event in this.settings.events ) {
+      this.on( event, this.settings.events[ event ] );
+    }
   },
 
   // Get the application settings.
@@ -247,6 +349,11 @@ Core.prototype = {
 
     // Add our new column to our column database.
     this.columnDatabase.add({ column: column });
+
+    // Bind our event listener, if it exists.
+    if ( typeof this.settings.events[ 'item:select' ] !== 'undefined' ) {
+      column.on( 'item:select', this.settings.events[ 'item:select' ] );
+    }
 
     return column;
   },
@@ -385,15 +492,33 @@ Core.prototype = {
     }, 100 );
   },
 
-  // Resize helper.
+  // Method to compute how many columns can be visible.
   //
-  // This method computes the new amount of columns that are to be shown, and
-  // updates the CSS rules accordingly. It is possible to pass the expected new
-  // width to the function, which will then skip the computing of the current
-  // width. This is very useful when using CSS animations: the JS may trigger
+  // This method computes the new amount of columns that are to be shown. It is
+  // possible to pass the expected new width to the function, which will then
+  // skip the computing of the current application wrapper's width. This is
+  // very useful when using CSS animations: the JS may trigger
   // immediately, but the CSS is still animating. By passing the expected width,
   // the JS can compute the correct sizes without interfering with the CSS
   // animations, or having to listen to animation events, which are complex.
+  //
+  // @param {Number} width
+  //    (optional) The width of the application wrapper. If not given the width
+  //    will be computed based on the application wrapper's current width.
+  computeMaxCols: function( width ) {
+    width = typeof width === 'number' ? width : this.$el.width();
+
+    // Recompute the amount of columns we can show. For widths less than 600,
+    // we only show 1. For widths between 600 and 900, we show 2; between 900
+    // and 1200, we show 3, and above that, we show 4.
+    this.maxCols = width < 600 ? 1 : ( width < 900 ? 2 : ( width < 1200 ? 3 : 4 ) );
+  },
+
+  // Resize helper.
+  //
+  // This method computes the new amount of columns that are to be shown, and
+  // updates the CSS rules accordingly. See
+  // `ArchibaldCurriculum#computeMaxCols()` for more information.
   //
   // @param {Number} newWidth
   //    (optional) The width of the application wrapper. If not given the width
@@ -406,10 +531,8 @@ Core.prototype = {
     var width = typeof newWidth === 'number' ? newWidth : this.$el.width(),
         oldMaxCols = this.maxCols;
 
-    // Recompute the amount of columns we can show. For widths less than 600,
-    // we only show 1. For widths between 600 and 900, we show 2; between 900
-    // and 1200, we show 3, and above that, we show 4.
-    this.maxCols = width < 600 ? 1 : ( width < 900 ? 2 : ( width < 1200 ? 3 : 4 ) );
+    // Recompute the amount of columns we can show.
+    this.computeMaxCols( width );
 
     // Take 1px off, in case of rounding errors (we're looking at you, IE).
     var colWidth = Math.floor( width / this.maxCols ) - 1;

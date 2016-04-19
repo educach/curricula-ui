@@ -200,7 +200,8 @@ Core.prototype = {
     editable = typeof editable !== 'undefined' ? editable : true;
     var column = new this.settings.itemListView({
       collection: new Archibald.ItemCollection( items ),
-      editable:   editable
+      editable:   editable,
+      childView:  this.settings.itemView
     });
 
     // Must the column be collapsed by default?

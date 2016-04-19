@@ -305,6 +305,11 @@ Archibald.ItemListView = Backbone.View.extend({
     // Whether the child items are editable or not. Defaults to `false`.
     this.editable = typeof args !== 'undefined' ? !!args.editable : false;
 
+    // What View to use for the child view. Defaults to `Archibald.ItemView`.
+    this.childView = typeof args !== 'undefined' && typeof args.childView !== 'undefined' ?
+      args.childView :
+      Archibald.ItemView;
+
     // The view will react on collection state changes, re-rendering itself
     // every time. When such events are triggered by the collection, the view
     // itself will trigger a corresponding `collection:*` event, which will
@@ -339,7 +344,7 @@ Archibald.ItemListView = Backbone.View.extend({
     // Go through the collection, and create a new child view for each model.
     this.collection.forEach( function( model ) {
       // Prepare the child view, and register it with our view.
-      var item = new Archibald.ItemView({ model: model, editable: that.editable });
+      var item = new that.childView({ model: model, editable: that.editable });
       that.childViews.push( item );
 
       // Listen on certain events the child view can trigger. This will allow

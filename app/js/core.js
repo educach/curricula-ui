@@ -452,8 +452,16 @@ Core.prototype = {
   // @todo Should this really be a model property?
   unhighlightItems: function() {
     var highlightedItems = this.itemDatabase.where({ highlighted: true });
-    for ( var i in highlightedItems ) {
-      highlightedItems[ i ].set( 'highlighted', false );
+    if ( highlightedItems.length ) {
+      for ( var i in highlightedItems ) {
+        highlightedItems[ i ].set( 'highlighted', false );
+      }
+      this.triggerEvent(
+        'items',
+        [ 'change', 'highlighted' ],
+        new Archibald.ItemCollection( highlightedItems ),
+        this.itemDatabase
+      );
     }
   },
 
@@ -464,8 +472,16 @@ Core.prototype = {
   // @todo Should this really be a model property?
   resetExpandedItems: function() {
     var expandedItems = this.itemDatabase.where({ expanded: true });
-    for ( var i in expandedItems ) {
-      expandedItems[ i ].set( 'expanded', false );
+    if ( expandedItems.length ) {
+      for ( var i in expandedItems ) {
+        expandedItems[ i ].set( 'expanded', false );
+      }
+      this.triggerEvent(
+        'items',
+        [ 'change', 'expanded' ],
+        new Archibald.ItemCollection( expandedItems ),
+        this.itemDatabase
+      );
     }
   },
 

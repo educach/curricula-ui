@@ -287,7 +287,26 @@ QUnit.test( "responsive logic helpers", function( assert ) {
  * Test unhighlighting items.
  */
 QUnit.test( "unhighlighting items", function( assert ) {
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() );
+  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
+      doneChangeHighlightedEvent = assert.async(),
+      done = assert.async();
+
+  // Check the event is correctly triggered.
+  app.on( 'items:change:highlighted', function( changedItems, allItems, eventApp ) {
+    doneChangeHighlightedEvent();
+    assert.ok(
+      !!changedItems.get( 'id-1' ),
+      "Passed items for items:change:highlighted event contains item id-1"
+    );
+    assert.ok(
+      !!changedItems.get( 'id-3' ),
+      "Passed items for items:change:highlighted event contains item id-3"
+    );
+    assert.ok(
+      !!changedItems.get( 'id-6' ),
+      "Passed items for items:change:highlighted event contains item id-6"
+    );
+  } );
 
   // Highlight some items.
   app.getItemDatabase().get( 'id-1' ).set( 'highlighted', true );
@@ -303,13 +322,34 @@ QUnit.test( "unhighlighting items", function( assert ) {
     !!app.getItemDatabase().where({ highlighted: true }).length,
     "All items were unhighlighted."
   );
+
+  done();
 });
 
 /**
  * Test resetting expanded items.
  */
 QUnit.test( "reset expanded items", function( assert ) {
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() );
+  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
+      doneChangeExpandedEvent = assert.async(),
+      done = assert.async();
+
+  // Check the event is correctly triggered.
+  app.on( 'items:change:expanded', function( changedItems, allItems, eventApp ) {
+    doneChangeExpandedEvent();
+    assert.ok(
+      !!changedItems.get( 'id-1' ),
+      "Passed items for items:change:expanded event contains item id-1"
+    );
+    assert.ok(
+      !!changedItems.get( 'id-3' ),
+      "Passed items for items:change:expanded event contains item id-3"
+    );
+    assert.ok(
+      !!changedItems.get( 'id-6' ),
+      "Passed items for items:change:expanded event contains item id-6"
+    );
+  } );
 
   // Expand some items.
   app.getItemDatabase().get( 'id-1' ).set( 'expanded', true );
@@ -325,6 +365,8 @@ QUnit.test( "reset expanded items", function( assert ) {
     !!app.getItemDatabase().where({ expanded: true }).length,
     "All expanded items were reset."
   );
+
+  done();
 });
 
 /**

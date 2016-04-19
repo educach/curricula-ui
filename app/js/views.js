@@ -412,7 +412,6 @@ Archibald.ItemListView = Backbone.View.extend({
 
   // Helper function to trigger an `item:*` event.
   triggerItemEvent: function( event, itemModel ) {
-    console.log('event', event)
     this.trigger( 'item:' + event, itemModel, this.collection, this );
   },
 

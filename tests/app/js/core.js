@@ -237,7 +237,6 @@ QUnit.test( "responsive logic helpers", function( assert ) {
     for ( i = 5; i > 0; --i ) {
       column = app.createColumn( _testGetJSONItems()[ 'root' ] );
       column.expand();
-      console.log( column, column.isExpanded() );
     }
     // Make the application think we are showing all 5.
     app.maxCols = 5;

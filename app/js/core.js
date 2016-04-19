@@ -198,7 +198,7 @@ Core.prototype = {
   createColumn: function( items, editable, collapsed ) {
     // Editable by default.
     editable = typeof editable !== 'undefined' ? editable : true;
-    var column = new Archibald.ItemListView({
+    var column = new this.settings.itemListView({
       collection: new Archibald.ItemCollection( items ),
       editable:   editable
     });

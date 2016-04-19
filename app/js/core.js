@@ -188,7 +188,7 @@ Core.prototype = {
     }
 
     // Add our new column to our column database.
-    this.columnDatabase.add({ column: column});
+    this.columnDatabase.add({ column: column });
 
     return column;
   },

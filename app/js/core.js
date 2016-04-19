@@ -189,18 +189,17 @@ Core.prototype = {
   // @param {Array} items
   //    The items to put in the column.
   // @param {Boolean} editable
-  //    (optional) Whether the column items are editable or not. Defaults to true.
+  //    (optional) Whether the column items are editable or not. Defaults to
+  //    false.
   // @param {Boolean} collapsed
   //    (optional) Whether the column should be collapsed on creation or not.
   //    Defaults to false.
   //
   // @returns {ArchibaldCurriculum.ItemListView}
   createColumn: function( items, editable, collapsed ) {
-    // Editable by default.
-    editable = typeof editable !== 'undefined' ? editable : true;
     var column = new this.settings.itemListView({
       collection: new Archibald.ItemCollection( items ),
-      editable:   editable,
+      editable:   !!editable,
       childView:  this.settings.itemView
     });
 

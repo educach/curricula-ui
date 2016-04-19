@@ -68,7 +68,7 @@ QUnit.test( "column creation helper", function( assert ) {
 
   // Check the defaults.
   assert.notOk( column.isCollapsed(), "The column is not collapsed by default." );
-  assert.ok( column.editable, "The column is editable by default." );
+  assert.notOk( column.settings.editable, "The column is not editable by default." );
   // Check the column was added to the DOM.
   assert.ok(
     document.contains( column.$el[ 0 ] ),
@@ -81,9 +81,9 @@ QUnit.test( "column creation helper", function( assert ) {
   );
 
   // Check passing params.
-  column = app.createColumn( _testGetJSONItems()[ 'root' ], false, true );
+  column = app.createColumn( _testGetJSONItems()[ 'root' ], true, true );
   assert.ok( column.isCollapsed(), "The column is collapsed." );
-  assert.notOk( column.editable, "The column is not editable." );
+  assert.ok( column.settings.editable, "The column is editable." );
 });
 
 /**

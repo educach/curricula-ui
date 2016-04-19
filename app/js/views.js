@@ -122,6 +122,9 @@ Archibald.ItemView = Backbone.View.extend({
   // It uses the `item` template from our templates list.
   tpl: _.template( Archibald.templates.item ),
 
+  // This hash keeps track of the view settings.
+  settings: null,
+
   // The item view can react to multiple events, most notably, for *editable*
   // items, the (un)checking of the checkbox, resulting in a change of state
   // of the linked model.
@@ -138,7 +141,7 @@ Archibald.ItemView = Backbone.View.extend({
 
   // Upon initialization, the view checks if a usable model is provided. If not,
   // it will throw an exception.
-  initialize: function( args ) {
+  initialize: function( settings ) {
     if ( !this.model ) {
       throw "Cannot initialize an ItemView without a model.";
     }
@@ -147,8 +150,11 @@ Archibald.ItemView = Backbone.View.extend({
       throw "Cannot initialize an ItemView with an invalid model. Errors: " + errors.join( ', ' );
     }
 
-    // Whether the item is editable or not. Defaults to `false`.
-    this.editable = typeof args !== 'undefined' ? !!args.editable : false;
+    // Store the passed settings, providing defaults.
+    this.settings = _.extend( {
+      // Whether the item is editable or not. Defaults to `false`.
+      editable: false
+    }, settings || {} );
 
     // The view will react on model state changes, either re-rendering itself
     // or removing itself completely from the DOM. When such events are
@@ -185,7 +191,7 @@ Archibald.ItemView = Backbone.View.extend({
     // Prepare the template variables based on the model's values. We also pass
     // some of our view's attributes.
     var variables = this.model.toJSON();
-    variables.editable = this.editable;
+    variables.editable = this.settings.editable;
 
     // Preprocess the name, as it can contain newlines, which have to be
     // translated to <br> tags.
@@ -287,6 +293,9 @@ Archibald.ItemListView = Backbone.View.extend({
   // This array keeps track of all child views.
   childViews: [],
 
+  // This hash keeps track of the view settings.
+  settings: null,
+
   // The item view can react to 2 events, which are related to navigating the
   // application. Each list contains 2 buttons, a *Back* button, and a *Top*
   // button. Both trigger a specific event.
@@ -297,18 +306,18 @@ Archibald.ItemListView = Backbone.View.extend({
 
   // Upon initialization, the view checks if a usable collection is provided.
   // If not, it will throw an exception.
-  initialize: function( args ) {
+  initialize: function( settings ) {
     if ( !this.collection ) {
       throw "Cannot initialize an ItemListView without a collection.";
     }
 
-    // Whether the child items are editable or not. Defaults to `false`.
-    this.editable = typeof args !== 'undefined' ? !!args.editable : false;
-
-    // What View to use for the child view. Defaults to `Archibald.ItemView`.
-    this.childView = typeof args !== 'undefined' && typeof args.childView !== 'undefined' ?
-      args.childView :
-      Archibald.ItemView;
+    // Store the passed settings, providing defaults.
+    this.settings = _.extend( {
+      // Whether the child items are editable or not. Defaults to `false`.
+      editable: false,
+      // What View to use for the child view. Defaults to `Archibald.ItemView`.
+      childView: Archibald.ItemView
+    }, settings || {} );
 
     // The view will react on collection state changes, re-rendering itself
     // every time. When such events are triggered by the collection, the view
@@ -344,7 +353,7 @@ Archibald.ItemListView = Backbone.View.extend({
     // Go through the collection, and create a new child view for each model.
     this.collection.forEach( function( model ) {
       // Prepare the child view, and register it with our view.
-      var item = new that.childView({ model: model, editable: that.editable });
+      var item = new that.settings.childView({ model: model, editable: that.settings.editable });
       that.childViews.push( item );
 
       // Listen on certain events the child view can trigger. This will allow
@@ -435,7 +444,7 @@ Archibald.ItemInfoView = Backbone.View.extend({
 
   // Upon initialization, the view checks if a usable model is provided. If not,
   // it will throw an exception.
-  initialize: function( args ) {
+  initialize: function() {
     if ( !this.model ) {
       throw "Cannot initialize an ItemInfoView without a model.";
     }

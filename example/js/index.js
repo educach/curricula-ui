@@ -252,7 +252,7 @@ var appInit = function() {
       };
 
       // Create the initial column.
-      var column = app.createColumn(itemDatabase.where({ parentId: "root" }));
+      var column = app.createColumn(itemDatabase.where({ parentId: "root" }), true);
       column.on('item:select', addColumn);
       column.on('item:select', updateItemInfo);
       column.on('item:change', updateHierarchy);

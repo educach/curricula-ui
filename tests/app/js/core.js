@@ -6,6 +6,7 @@ QUnit.module( "Core" );
  */
 QUnit.test( "constructor", function( assert ) {
   var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) );
+
   assert.ok( !!app.getItemDatabase(), "The item database is correctly set." );
   assert.ok( app.getWrapper().length, "The wrapper is correctly set." );
 });
@@ -18,9 +19,21 @@ QUnit.test( "settings extension", function( assert ) {
     dummySetting: true,
     itemView: { fake: true }
   } );
-  assert.ok( app.getSettings().dummySetting, "Unknown settings are correctly set." );
-  assert.deepEqual( { fake: true }, app.getSettings().itemView, "The settings are correctly set and extended." );
-  assert.deepEqual( ArchibaldCurriculum.ItemListView, app.getSettings().itemListView, "The default settings are correctly kept." );
+
+  assert.ok(
+    app.getSettings().dummySetting,
+    "Unknown settings are correctly set."
+  );
+  assert.deepEqual(
+    { fake: true },
+    app.getSettings().itemView,
+    "The settings are correctly set and extended."
+  );
+  assert.deepEqual(
+    ArchibaldCurriculum.ItemListView,
+    app.getSettings().itemListView,
+    "The default settings are correctly kept."
+  );
 });
 
 /**
@@ -31,12 +44,19 @@ QUnit.test( "column collection events", function( assert ) {
       columns = app.getColumnDatabase(),
       $dummy = $( '<div>Column</div>' ).appendTo( '#qunit-fixture' ),
       model = new ArchibaldCurriculum.ColumnModel({ column: $dummy });
+
   // Add the column, and then remove it again. This should trigger the remove
   // event, which should remove the $dummy element from the DOM.
-  assert.ok( document.contains( $dummy[ 0 ] ), "The column was correctly added to the DOM." );
+  assert.ok(
+    document.contains( $dummy[ 0 ] ),
+    "The column was correctly added to the DOM."
+  );
   columns.add( model );
   columns.remove( model );
-  assert.notOk( document.contains( $dummy[ 0 ] ), "The column was correctly removed from the DOM." );
+  assert.notOk(
+    document.contains( $dummy[ 0 ] ),
+    "The column was correctly removed from the DOM."
+  );
 });
 
 /**
@@ -45,13 +65,20 @@ QUnit.test( "column collection events", function( assert ) {
 QUnit.test( "column creation helper", function( assert ) {
   var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
       column = app.createColumn( _testGetJSONItems()[ 'root' ] );
+
   // Check the defaults.
   assert.notOk( column.isCollapsed(), "The column is not collapsed by default." );
   assert.ok( column.editable, "The column is editable by default." );
   // Check the column was added to the DOM.
-  assert.ok( document.contains( column.$el[ 0 ] ), "The column was correctly added to the DOM." );
+  assert.ok(
+    document.contains( column.$el[ 0 ] ),
+    "The column was correctly added to the DOM."
+  );
   // Check it was added to the column database.
-  assert.ok( !!app.getColumnDatabase().where({ column: column }).length, "The column was correctly added to the database." );
+  assert.ok(
+    !!app.getColumnDatabase().where({ column: column }).length,
+    "The column was correctly added to the database."
+  );
 
   // Check passing params.
   column = app.createColumn( _testGetJSONItems()[ 'root' ], false, true );
@@ -72,6 +99,7 @@ QUnit.test( "column left/right selection helpers", function( assert ) {
       mapCallback = function( item ) {
         return item.get( 'column' );
       };
+
   assert.deepEqual(
     [],
     _.map( app.getColumnLeftSiblings( column1 ), mapCallback ),

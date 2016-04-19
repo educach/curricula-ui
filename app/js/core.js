@@ -427,6 +427,18 @@ Core.prototype = {
         }
       });
     }
+  },
+
+  // Unhighlight all items.
+  //
+  // Update all models in the item database, and set their respective
+  // "highlighted" properties to false.
+  // @todo Should this really be a model property?
+  unhighlightItems: function() {
+    var highlightedItems = this.itemDatabase.where({ highlighted: true });
+    for ( var i in highlightedItems ) {
+      highlightedItems[ i ].set( 'highlighted', false );
+    }
   }
 };
 

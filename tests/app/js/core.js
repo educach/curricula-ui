@@ -273,6 +273,28 @@ QUnit.test( "responsive logic helpers", function( assert ) {
 });
 
 /**
+ * Test unhighlighting items.
+ */
+QUnit.test( "unhighlighting items", function( assert ) {
+  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() );
+
+  // Highlight some items.
+  app.getItemDatabase().get( 'id-1' ).set( 'highlighted', true );
+  app.getItemDatabase().get( 'id-3' ).set( 'highlighted', true );
+  app.getItemDatabase().get( 'id-6' ).set( 'highlighted', true );
+  assert.ok(
+    !!app.getItemDatabase().where({ highlighted: true }).length,
+    "Some items were highlighted."
+  );
+
+  app.unhighlightItems();
+  assert.notOk(
+    !!app.getItemDatabase().where({ highlighted: true }).length,
+    "All items were unhighlighted."
+  );
+});
+
+/**
  * Define a test item database, mimicking the structure a JSON file would
  * contain.
  */

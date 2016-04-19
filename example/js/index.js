@@ -18,16 +18,6 @@ var appInit = function() {
 
       app.activateResponsiveLogic();
 
-      // Re-usable function for disabling all highlights.
-      // It is possible some items were highlighted. Whenever we click
-      // somewhere, we want to remove all highlighting.
-      var unhighlight = function() {
-        var highlightedItems = app.getItemDatabase().where({ highlighted: true });
-        for (var i in highlightedItems) {
-          highlightedItems[i].set('highlighted', false);
-        }
-      };
-
       // Re-usable function for disabling all expands.
       var unexpand = function() {
         var expandedItems = app.getItemDatabase().where({ expanded: true });
@@ -57,7 +47,7 @@ var appInit = function() {
         );
 
         // It is possible some items were highlighted. Unhighlight them.
-        unhighlight();
+        app.unhighlightItems();
 
         // Get all expanded sibling *items* in the column (should only be one,
         // but we use a failsafe logic and treat it as an array) and update
@@ -139,7 +129,7 @@ var appInit = function() {
       // column again.
       var goBack = function(columnCollection, column, e) {
         // It is possible some items were highlighted. Unhighlight them.
-        unhighlight();
+        app.unhighlightItems();
 
         // Remove the item info.
         updateItemInfo();
@@ -170,7 +160,7 @@ var appInit = function() {
       var goToRoot = function(columnCollection, column, e) {
         // It is possible some items were highlighted or expanded. Remove
         // these attributes.
-        unhighlight();
+        app.unhighlightItems();
         unexpand();
 
         // Remove the item info.

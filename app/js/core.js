@@ -32,6 +32,9 @@ var Core = function( items, wrapper, settings ) {
   // Store the application DOM wrapper.
   this.setWrapper( wrapper );
 
+  // Store the settings.
+  this.setSettings( settings );
+
   // Initialize the column database. This will hold all column views (yes,
   // views) that are currently available "on screen". This way of referencing
   // views using models and a collection allows us to perform actions based
@@ -45,6 +48,9 @@ var Core = function( items, wrapper, settings ) {
 
 // Extend the `ArchibaldCurriculum.Core` prototype.
 Core.prototype = {
+
+  // A hash of settings.
+  settings: null,
 
   // Prepare an item database. This will allow us to quickly update large
   // lists of items, in case of recursive checking, for example.
@@ -61,7 +67,7 @@ Core.prototype = {
   $summaryEl: null,
 
   // Prepare a reference to the summary view.
-  summaryTreeView: null,
+  summaryView: null,
 
   // Set or refresh the application DOM wrapper.
   //
@@ -78,6 +84,30 @@ Core.prototype = {
     return this.$el;
   },
 
+  // Set or refresh the application settings.
+  //
+  // @param {Object} settings
+  //    The settings hash. Will extend with the application defaults.
+  setSettings: function( settings ) {
+    this.settings = _.extend( {
+      // View classes.
+      itemView:     Archibald.ItemView,
+      itemListView: Archibald.ItemListView,
+      itemInfoView: Archibald.ItemInfoView,
+      summaryView:  Archibald.SummaryTreeView,
+
+      // Behavior settings.
+      recursiveCheckPromptMessage: "This will also uncheck all child items. Are you sure you want to continue?",
+    }, settings || {} );
+  },
+
+  // Get the application settings.
+  //
+  // @returns {Object}
+  getSettings: function() {
+    return this.settings;
+  },
+
   // Set or refresh the application summary DOM wrapper.
   //
   // @param {Object} wrapper
@@ -88,13 +118,13 @@ Core.prototype = {
 
     // Pass our item database to the summary view, which will pick out the
     // active elements, and render them.
-    this.summaryTreeView = new Archibald.SummaryTreeView({
+    this.summaryView = new this.settings.summaryView({
       collection: this.itemDatabase
     });
 
     // Append the summary wrapper to our application wrapper, keeping things
     // together.
-    wrapper.append( this.summaryTreeView.render().$el );
+    wrapper.append( this.summaryView.render().$el );
 
     // Store a reference to the summary wrapper.
     this.$summaryEl = wrapper;
@@ -111,7 +141,7 @@ Core.prototype = {
   //
   // @returns {Object}
   getSummary: function() {
-    return this.summaryTreeView;
+    return this.summaryView;
   },
 
   // Set or refresh the global item database.

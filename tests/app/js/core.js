@@ -11,6 +11,19 @@ QUnit.test( "constructor", function( assert ) {
 });
 
 /**
+ * Test the settings extension logic.
+ */
+QUnit.test( "settings extension", function( assert ) {
+  var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ), {
+    dummySetting: true,
+    itemView: { fake: true }
+  } );
+  assert.ok( app.getSettings().dummySetting, "Unknown settings are correctly set." );
+  assert.deepEqual( { fake: true }, app.getSettings().itemView, "The settings are correctly set and extended." );
+  assert.deepEqual( ArchibaldCurriculum.ItemListView, app.getSettings().itemListView, "The default settings are correctly kept." );
+});
+
+/**
  * Test the column collection event binding.
  */
 QUnit.test( "column collection events", function( assert ) {

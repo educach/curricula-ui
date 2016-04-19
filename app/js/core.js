@@ -26,6 +26,10 @@
 // @param {Object} settings
 //    (optional) The settings object.
 var Core = function( items, wrapper, settings ) {
+  // We keep track of which instance we are. This is need to generate unique
+  // IDs in certain conditions.
+  this.id = ++Core.count;
+
   // Initialize the item database. This parses the raw data items and
   // initializes them as reusable models.
   if ( items ) {
@@ -54,6 +58,9 @@ var Core = function( items, wrapper, settings ) {
 // Extend the `ArchibaldCurriculum.Core` prototype.
 Core.prototype = {
 
+  // The identifier for the instance.
+  id: null,
+
   // A hash of settings.
   settings: null,
 
@@ -68,6 +75,15 @@ Core.prototype = {
   // Prepare a reference to the application wrapper.
   $el: null,
 
+  // Prepare a reference to the style wrapper, used when the responsive logic
+  // is enabled. See `ArchibaldCuliculm.Core#activateResponsiveLogic()`.
+  $style: null,
+
+  // Prepare a reference to the maximum number of columns the application can
+  // have. This is only used if the responsive logic is activated. See
+  // `ArchibaldCuliculm.Core#activateResponsiveLogic()`.
+  maxCols: null,
+
   // Prepare a reference to the application summary wrapper, if used.
   $summaryEl: null,
 
@@ -80,6 +96,13 @@ Core.prototype = {
   //    The jQuery object that serves as a wrapper for the application.
   setWrapper: function( wrapper ) {
     this.$el = wrapper || this.$el;
+
+    // We prefer having an ID for our wrapper. This will prevent conflicting
+    // CSS rules if the responsive logic is activated. If our wrapper has no
+    // ID, generate one.
+    if ( typeof this.$el[ 0 ].id === 'undefined' || this.$el[ 0 ].id === '' ) {
+      this.$el[ 0 ].id = 'archibald-curriculum-ui-core-' + this.id;
+    }
   },
 
   // Get the application DOM wrapper.
@@ -303,8 +326,122 @@ Core.prototype = {
         item.set( 'active', true );
       }
     }
+  },
+
+  // Activate responsive logic.
+  //
+  // The application is a bit too complex to be fully responsive using only CSS.
+  // This method activates the responsive JS logic for the application, which is
+  // responsible for calculating how many columns can be shown on screen.
+  activateResponsiveLogic: function() {
+    this.$style = $( '<style type="text/css" />' ).appendTo( 'head' );
+    this.maxCols = 0;
+
+    // Tests show a flash of unstyled content, which breaks the resize() math.
+    // Allow for a tiny delay before initiating the resize calculations.
+    var that = this;
+    setTimeout( function() {
+      // Create an invisible iframe. See
+      // http://stackoverflow.com/questions/2175992/detect-when-window-vertical-scrollbar-appears
+      // and https://gist.github.com/OrganicPanda/8222636.
+      var $iframe = $( '<iframe class="__archibald-curricula-ui--hacky-scrollbar-resize-listener__" />' );
+
+      // Make the iframe invisible, but still as wide as the screen.
+      $iframe
+        .css({
+          height:  0,
+          margin:  0,
+          padding: 0,
+          border:  0,
+          width:  '100%'
+        })
+        .on( 'load', function() {
+          // Register our event when the iframe loads. This way, we can
+          // safely react on resize events.
+          this.contentWindow.addEventListener( 'resize', function() {
+            that.resize();
+          } );
+        })
+        .appendTo( 'body' );
+
+      // Trigger the initial math.
+      that.resize();
+    }, 100 );
+  },
+
+  // Resize helper.
+  //
+  // This method computes the new amount of columns that are to be shown, and
+  // updates the CSS rules accordingly. It is possible to pass the expected new
+  // width to the function, which will then skip the computing of the current
+  // width. This is very useful when using CSS animations: the JS may trigger
+  // immediately, but the CSS is still animating. By passing the expected width,
+  // the JS can compute the correct sizes without interfering with the CSS
+  // animations, or having to listen to animation events, which are complex.
+  //
+  // @param {Number} newWidth
+  //    (optional) The width of the application wrapper. If not given the width
+  //    will be computed based on the application wrapper's current width.
+  resize: function( newWidth ) {
+    if ( typeof this.$style === 'undefined' ) {
+      throw "Resizing is only available if the responsive logic is activated. Call activateResponsiveLogic() first.";
+    }
+
+    var width = typeof newWidth === 'number' ? newWidth : this.$el.width(),
+        oldMaxCols = this.maxCols;
+
+    // Recompute the amount of columns we can show. For widths less than 600,
+    // we only show 1. For widths between 600 and 900, we show 2; between 900
+    // and 1200, we show 3, and above that, we show 4.
+    this.maxCols = width < 600 ? 1 : ( width < 900 ? 2 : ( width < 1200 ? 3 : 4 ) );
+
+    // Take 1px off, in case of rounding errors (we're looking at you, IE).
+    var colWidth = Math.floor( width / this.maxCols ) - 1;
+
+    // Update our CSS rules by updating the content of our style element.
+    this.$style.text( Core.cssTemplate({
+      id:    this.$el[ 0 ].id,
+      width: colWidth
+    }) );
+
+    // Did we have more cols previously? If so, we need to collapse an
+    // appropriate amount of columns on the left. If we have room for more, we
+    // need to expand.
+    // @todo Don't rely on the DOM selector we use here!
+    var numExpanded = this.$el.find( '.archibald-column:not(.archibald-column--collapsed)' ).length,
+        diff = Math.abs( oldMaxCols - this.maxCols );
+
+    if ( oldMaxCols > this.maxCols && numExpanded > this.maxCols ) {
+      this.columnDatabase.forEach( function( model ) {
+        if ( diff && model.get( 'column' ).isExpanded() ) {
+          model.get( 'column' ).collapse();
+          diff--;
+        }
+      });
+    }
+    else if ( oldMaxCols < this.maxCols && numExpanded < this.maxCols ) {
+      _.forEach( this.columnDatabase.toArray().reverse(), function( model ) {
+        if ( diff && !model.get( 'column' ).isExpanded() ) {
+          model.get( 'column' ).expand();
+          diff--;
+        }
+      });
+    }
   }
 };
+
+// A counter, which keeps track of how many Core instances are instantiated.
+Core.count = 0;
+
+// A template for the dynamic CSS rules we inject for the responsive logic. See
+// `ArchibaldCurriculum.Core#activateResponsiveLogic()` and
+// `ArchibaldCurriculum.Core#resize()`.
+Core.cssTemplate = _.template( '\
+#<%= id %> .archibald-column__wrapper,\
+#<%= id %> .archibald-column {\
+  width: <%= width %>px;\
+}\
+' );
 
 // Extend with Backbone Events core and export.
 Archibald.Core = _.extend( Core, Backbone.Events );

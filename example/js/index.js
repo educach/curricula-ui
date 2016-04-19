@@ -16,72 +16,7 @@ var appInit = function() {
       // Fetch the row and pass it to the application as the DOM wrapper.
       app.setWrapper($('#archibald-editor-content'));
 
-      // Max columns and width logic.
-      var $style = $('<style type="text/css" />').appendTo('head'),
-          maxCols = 0;
-
-      // Prepare a re-usable function.
-      var onResize = function(newWidth) {
-        var width = typeof newWidth === 'number' ? newWidth : app.getWrapper().width(),
-            oldMaxCols = maxCols;
-
-        maxCols = width < 600 ? 1 : (width < 900 ? 2 : (width < 1200 ? 3 : 4));
-
-        // Take 1px off, in case of rounding errors.
-        var colWidth = Math.floor(width / maxCols) - 1;
-        $style.text('.archibald-column__wrapper, .archibald-column { width: ' + colWidth + 'px; }');
-
-        // Did we have more cols previously? If so, we need to collapse an
-        // appropriate amount of columns on the left. If we have room for
-        // more, we need to expand.
-        // @todo Don't rely on the DOM selector we use here!
-        var numExpanded = $('.archibald-column:not(.archibald-column--collapsed)').length,
-            diff = Math.abs(oldMaxCols - maxCols),
-            columnDatabase = app.getColumnDatabase();
-
-        if (oldMaxCols > maxCols && numExpanded > maxCols) {
-          columnDatabase.forEach(function(model) {
-            if (diff && model.get('column').isExpanded()) {
-              model.get('column').collapse();
-              diff--;
-            }
-          });
-        }
-        else if (oldMaxCols < maxCols && numExpanded < maxCols) {
-          _.forEach(columnDatabase.toArray().reverse(), function(model) {
-            if (diff && !model.get('column').isExpanded()) {
-              model.get('column').expand();
-              diff--;
-            }
-          });
-        }
-      };
-
-      // Tests show a flash of unstyled content, which breaks the below math.
-      // Allow for a tiny delay before initiating the calculations.
-      setTimeout(function() {
-        // Create an invisible iframe. See
-        // http://stackoverflow.com/questions/2175992/detect-when-window-vertical-scrollbar-appears
-        // and https://gist.github.com/OrganicPanda/8222636.
-        var $iframe = $('<iframe id="__hacky-scrollbar-resize-listener__" />');
-        $iframe
-          .css({
-            height: 0,
-            margin: 0,
-            padding: 0,
-            border: 0,
-            width: '100%'
-          })
-          .on('load', function() {
-            // Register our event when the iframe loads. This way, we can
-            // safely react on resize events.
-            this.contentWindow.addEventListener('resize', onResize);
-          })
-          .appendTo('body');
-
-        // Trigger the initial math.
-        onResize();
-      }, 100);
+      app.activateResponsiveLogic();
 
       // Re-usable function for disabling all highlights.
       // It is possible some items were highlighted. Whenever we click
@@ -152,14 +87,14 @@ var appInit = function() {
         newColumn.on('column:go-back', goBack);
         newColumn.on('column:go-to-root', goToRoot);
 
-        // If there are more than maxCols columns visible, hide the
+        // If there are more than app.maxCols columns visible, hide the
         // first ones. Expand the others, as a failsafe.
         var leftSiblings = app.getColumnLeftSiblings(newColumn),
             leftSiblingsCount = leftSiblings.length;
-        if (leftSiblingsCount >= maxCols) {
+        if (leftSiblingsCount >= app.maxCols) {
           _.each(leftSiblings, function(element, i) {
             var column = element.get('column');
-            if (leftSiblingsCount - i >= maxCols) {
+            if (leftSiblingsCount - i >= app.maxCols) {
               column.collapse();
             }
             else {
@@ -343,10 +278,10 @@ var appInit = function() {
         // gives us the difference in width for the wrapper.
         var itemInfoWidth = 270; // 300 - 30;
         if ($('#archibald-item-info').hasClass('archibald-item-info--expanded')) {
-          onResize(app.getWrapper().width() - itemInfoWidth);
+          app.resize(app.getWrapper().width() - itemInfoWidth);
         }
         else {
-          onResize(app.getWrapper().width() + itemInfoWidth);
+          app.resize(app.getWrapper().width() + itemInfoWidth);
         }
       });
 
@@ -384,7 +319,7 @@ var appInit = function() {
             $('#archibald-full-screen').find('i[class^="icon"]')
               .removeClass('icon-fullscreen')
               .addClass('icon-not-fullscreen');
-            onResize();
+            app.resize();
           }
           else {
             // @todo this is not very clean, with the toggleClass() inside
@@ -392,7 +327,7 @@ var appInit = function() {
             $('#archibald-full-screen').find('i[class^="icon"]')
               .addClass('icon-fullscreen')
               .removeClass('icon-not-fullscreen');
-            onResize(originalWidth);
+            app.resize(originalWidth);
           }
         };
 

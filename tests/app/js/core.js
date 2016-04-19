@@ -295,6 +295,28 @@ QUnit.test( "unhighlighting items", function( assert ) {
 });
 
 /**
+ * Test resetting expanded items.
+ */
+QUnit.test( "reset expanded items", function( assert ) {
+  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() );
+
+  // Expand some items.
+  app.getItemDatabase().get( 'id-1' ).set( 'expanded', true );
+  app.getItemDatabase().get( 'id-3' ).set( 'expanded', true );
+  app.getItemDatabase().get( 'id-6' ).set( 'expanded', true );
+  assert.ok(
+    !!app.getItemDatabase().where({ expanded: true }).length,
+    "Some items were expanded."
+  );
+
+  app.resetExpandedItems();
+  assert.notOk(
+    !!app.getItemDatabase().where({ expanded: true }).length,
+    "All expanded items were reset."
+  );
+});
+
+/**
  * Define a test item database, mimicking the structure a JSON file would
  * contain.
  */

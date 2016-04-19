@@ -18,14 +18,6 @@ var appInit = function() {
 
       app.activateResponsiveLogic();
 
-      // Re-usable function for disabling all expands.
-      var unexpand = function() {
-        var expandedItems = app.getItemDatabase().where({ expanded: true });
-        for (var i in expandedItems) {
-          expandedItems[i].set('expanded', false);
-        }
-      };
-
       // Re-usable function for handling "select" events.
       // This callback will handle the "collapsing" of existing columns (if
       // needed) and add new columns.
@@ -161,7 +153,7 @@ var appInit = function() {
         // It is possible some items were highlighted or expanded. Remove
         // these attributes.
         app.unhighlightItems();
-        unexpand();
+        app.resetExpandedItems();
 
         // Remove the item info.
         updateItemInfo();

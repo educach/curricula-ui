@@ -439,6 +439,18 @@ Core.prototype = {
     for ( var i in highlightedItems ) {
       highlightedItems[ i ].set( 'highlighted', false );
     }
+  },
+
+  // Reset all expanded items.
+  //
+  // Update all models in the item database, and set their respective
+  // "expanded" properties to false.
+  // @todo Should this really be a model property?
+  resetExpandedItems: function() {
+    var expandedItems = this.itemDatabase.where({ expanded: true });
+    for ( var i in expandedItems ) {
+      expandedItems[ i ].set( 'expanded', false );
+    }
   }
 };
 

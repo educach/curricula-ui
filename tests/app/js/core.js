@@ -95,6 +95,29 @@ QUnit.test( "column left/right selection helpers", function( assert ) {
 });
 
 /**
+ * Test the recursive (un)checking logic.
+ */
+QUnit.test( "recursive (un)checking logic", function( assert ) {
+  var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
+      chain = [ 'id-6', 'id-5', 'id-1' ],
+      database = app.getItemDatabase();
+  // Checking item with the id-6 will also check items id-5 and id-1.
+  var model1 = database.get( 'id-6' );
+  model1.set( 'active', true );
+  app.recursiveCheck( model1 );
+  for ( var i = 0; i < chain.length; i++ ) {
+    assert.ok( database.get( chain[ i ] ).get( 'active' ), "Correctly checked item " + chain[ i ] );
+  }
+  // Unchecking item id-1 will also uncheck items id-5 and id-6.
+  var model2 = database.get( 'id-1' );
+  model2.set( 'active', false );
+  app.recursiveCheck( model2 );
+  for ( var j = 0; j < chain.length; j++ ) {
+    assert.notOk( database.get( chain[ j ] ).get( 'active' ), "Correctly checked item " + chain[ j ] );
+  }
+});
+
+/**
  * Define a test item database, mimicking the structure a JSON file would
  * contain.
  */

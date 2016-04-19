@@ -258,14 +258,9 @@ Core.prototype = {
   //    The item from which the recursive (un)checking must start.
   // @param {Boolean} prompt
   //    (optional) Whether to prompt the user in case of recursively unchecking
-  //    items. Defaults to true.
-  // @param {String} promptMessage
-  //    (optional) If the user must be prompted, this message will be used.
-  //    Defaults to "This will also uncheck all child items. Are you sure you
-  //    want to continue?"
-  recursiveCheck: function( item, prompt, promptMessage ) {
+  //    items. Defaults to false.
+  recursiveCheck: function( item, prompt ) {
     prompt = !!prompt;
-    promptMessage = promptMessage || "This will also uncheck all child items. Are you sure you want to continue?";
 
     // If an item is selected, we must also select all its parents.
     if ( item.get( 'active' ) ) {
@@ -280,7 +275,7 @@ Core.prototype = {
     else if ( item.get( 'hasChildren' ) ) {
       // Else, we must unselect its children. But, in order to prevent
       // errors, we ask the user for confirmation.
-      if ( !prompt || confirm( promptMessage ) ) {
+      if ( !prompt || confirm( this.settings.recursiveCheckPromptMessage ) ) {
         // Helper function for recursively looking up selected child
         // items.
         var that = this;

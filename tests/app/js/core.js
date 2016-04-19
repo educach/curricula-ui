@@ -317,6 +317,40 @@ QUnit.test( "reset expanded items", function( assert ) {
 });
 
 /**
+ * Test triggering events.
+ */
+QUnit.test( "triggering events", function( assert ) {
+  var done = assert.async();
+
+  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
+      doneEvent = assert.async( 3 );
+
+  // Prepare the event listeners.
+  app.on( 'category:chain1', function( arg1, arg2, eventApp ) {
+    doneEvent();
+    assert.ok( true, "The category:chain1 event was invoked." );
+    assert.equal( app, eventApp, "The passed application is the same as the one listened to." );
+    assert.equal( 1, arg1, "The passed arguments are correct." );
+    assert.equal( "arg2", arg2, "The passed arguments are correct." );
+  } );
+  app.on( 'category:chain1:chain2', function( arg1, arg2, eventApp ) {
+    doneEvent();
+    assert.ok( true, "The category:chain1:chain2 event was invoked." );
+    assert.equal( app, eventApp, "The passed application is the same as the one listened to." );
+    assert.equal( 1, arg1, "The passed arguments are correct." );
+    assert.equal( "arg2", arg2, "The passed arguments are correct." );
+  } );
+
+  // First, trigger a single event, no chain.
+  app.triggerEvent( 'category', 'chain1', 1, "arg2" );
+
+  // Next, with a chain.
+  app.triggerEvent( 'category', [ 'chain1', 'chain2' ], 1, "arg2" );
+
+  done();
+});
+
+/**
  * Define a test item database, mimicking the structure a JSON file would
  * contain.
  */

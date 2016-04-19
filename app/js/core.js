@@ -451,6 +451,44 @@ Core.prototype = {
     for ( var i in expandedItems ) {
       expandedItems[ i ].set( 'expanded', false );
     }
+  },
+
+  // Helper function to trigger an event.
+  //
+  // @param {String} category
+  //    The category for which the event is triggered. Examples:
+  //    - `"items"` for the item database.
+  //    - `"summary"` for the summary view.
+  //    - `"columns"` for the column database.
+  // @param {Array} chain
+  //    A chain of events, which will trigger multiple even variants. For
+  //    example, passing `[ "change", "active" ]` for the `"items"` category
+  //    will trigger the following events:
+  //    - `items:change`
+  //    - `items:change:active`
+  // @param ...
+  //    (optional) Any other parameters will simply be passed to the event
+  //    listeners, in order.
+  triggerEvent: function( category, chain ) {
+    // Get the remaining arguments, if any.
+    var args = Array.prototype.slice.call( arguments, 2 );
+
+    // Add the application itself.
+    args.push( this );
+
+    // Make sure the chain is an array.
+    if ( !Array.isArray( chain ) ) {
+      chain = [ chain ];
+    }
+
+    // Trigger multiple events, based on the chain elements. Each element in the
+    // chain triggers an event in the given category.
+    for ( var i = 1, len = chain.length; i <= len; i++ ) {
+      this.trigger.apply(
+        this,
+        [ category + ':' + chain.slice( 0, i ).join( ':' ) ].concat( args )
+      );
+    }
   }
 };
 
@@ -467,7 +505,10 @@ Core.cssTemplate = _.template( '\
 }\
 ' );
 
-// Extend with Backbone Events core and export.
-Archibald.Core = _.extend( Core, Backbone.Events );
+// Extend core prototype with Backbone Events.
+Core.prototype = _.extend( Core.prototype, Backbone.Events );
+
+// Export.
+Archibald.Core = Core;
 
 })( jQuery, Backbone, _, window.ArchibaldCurriculum || ( window.ArchibaldCurriculum = new Object() ) );

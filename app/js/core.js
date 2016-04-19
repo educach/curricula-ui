@@ -19,18 +19,23 @@
 // Constructor.
 //
 // @param {Object} items
-//    An object representing the JSON database of all curriculum items.
+//    (optional) An object representing the JSON database of all curriculum
+//    items.
 // @param {Object} wrapper
-//    The jQuery object that serves as a wrapper for the application.
+//    (optional) The jQuery object that serves as a wrapper for the application.
 // @param {Object} settings
-//    The settings object. @todo
+//    (optional) The settings object.
 var Core = function( items, wrapper, settings ) {
   // Initialize the item database. This parses the raw data items and
   // initializes them as reusable models.
-  this.setItemDatabase( items );
+  if ( items ) {
+    this.setItemDatabase( items );
+  }
 
   // Store the application DOM wrapper.
-  this.setWrapper( wrapper );
+  if ( wrapper ) {
+    this.setWrapper( wrapper );
+  }
 
   // Store the settings.
   this.setSettings( settings );

@@ -42,7 +42,7 @@ QUnit.test( "settings extension", function( assert ) {
  * Test the column collection event binding.
  */
 QUnit.test( "column collection events", function( assert ) {
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
+  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
       columns = app.getColumnDatabase(),
       $dummy = $( '<div>Column</div>' ).appendTo( '#qunit-fixture' ),
       model = new ArchibaldCurriculum.ColumnModel({ column: $dummy });
@@ -133,7 +133,7 @@ QUnit.test( "recursive (un)checking logic", function( assert ) {
 
   var doneConfirmEvent = assert.async( 2 ),
       done = assert.async(),
-      app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
+      app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
       chain = [ 'id-6', 'id-5', 'id-1' ],
       database = app.getItemDatabase();
 

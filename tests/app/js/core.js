@@ -132,10 +132,22 @@ QUnit.test( "recursive (un)checking logic", function( assert ) {
   var realConfirm = window.confirm;
 
   var doneConfirmEvent = assert.async( 2 ),
+      doneChangeActiveEvent = assert.async( 3 ),
       done = assert.async(),
       app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
       chain = [ 'id-6', 'id-5', 'id-1' ],
       database = app.getItemDatabase();
+
+  // Check the event is correctly triggered.
+  app.on( 'items:change:active', function( changedItems, allItems, eventApp ) {
+    doneChangeActiveEvent();
+    for ( var i = 0; i < chain.length; i++ ) {
+      assert.ok(
+        !!changedItems.get( chain[ i ] ),
+        "Passed items for items:change:active event contains item " + chain[ i ]
+      );
+    }
+  } );
 
   // Checking item with the id-6 will also check items id-5 and id-1.
   var item6 = database.get( 'id-6' );

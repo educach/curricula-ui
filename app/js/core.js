@@ -289,25 +289,32 @@ Core.prototype = {
   //    items. Defaults to false.
   recursiveCheck: function( item, prompt ) {
     prompt = !!prompt;
+    var updated = [];
 
     // If an item is selected, we must also select all its parents.
     if ( item.get( 'active' ) ) {
+      updated.push( item );
+
       var parentId = item.get( 'parentId' ),
           parentItem;
       while ( parentId !== 'root' ) {
         parentItem = this.itemDatabase.get( parentId );
         parentItem.set( 'active', true );
         parentId = parentItem.get( 'parentId' );
+        updated.push( parentItem );
       }
     }
     else if ( item.get( 'hasChildren' ) ) {
       // Else, we must unselect its children. But, in order to prevent
       // errors, we ask the user for confirmation.
       if ( !prompt || confirm( this.settings.recursiveCheckPromptMessage ) ) {
+        updated.push( item );
+
         // Helper function for recursively looking up selected child
         // items.
         var that = this;
         var recursiveUnselect = function( item ) {
+          updated.push( item );
           item.set( 'active', false );
           var childItems = that.itemDatabase.where({
             parentId: item.get( 'id' ),
@@ -325,6 +332,15 @@ Core.prototype = {
         // re-select our item.
         item.set( 'active', true );
       }
+    }
+
+    if ( updated.length ) {
+      this.triggerEvent(
+        'items',
+        [ 'change', 'active' ],
+        new Archibald.ItemCollection( updated ),
+        this.itemDatabase
+      );
     }
   },
 

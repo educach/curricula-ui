@@ -5,10 +5,12 @@ QUnit.module( "Core" );
  * Test the constructor logic.
  */
 QUnit.test( "constructor", function( assert ) {
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) );
+  var $wrapper = $( '<div></div>' ).appendTo( '#qunit-fixture' ),
+      app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $wrapper );
 
   assert.ok( !!app.getItemDatabase(), "The item database is correctly set." );
   assert.ok( app.getWrapper().length, "The wrapper is correctly set." );
+  assert.notEqual( '', $wrapper[ 0 ].id, "The wrapper received an ID." );
 });
 
 /**
@@ -95,7 +97,7 @@ QUnit.test( "column left/right selection helpers", function( assert ) {
       column2 = app.createColumn( _testGetJSONItems()[ 'root' ] ),
       column3 = app.createColumn( _testGetJSONItems()[ 'root' ] ),
       column4 = app.createColumn( _testGetJSONItems()[ 'root' ] ),
-      column5 = app.createColumn( _testGetJSONItems()[ 'root' ] );
+      column5 = app.createColumn( _testGetJSONItems()[ 'root' ] ),
       mapCallback = function( item ) {
         return item.get( 'column' );
       };

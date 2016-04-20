@@ -29,10 +29,10 @@
 // Templates
 // ---------
 //
-// This defines the default templates used by the application. They can be
-// overridden in various cases, as needed. Archibald Curriculum strictly adheres
-// to *BEM* notation for the markup, and overrides should follow suit.
-Archibald.templates = {
+// This defines the default templates used by the views in the application. They
+// can be overridden in various cases, as needed. Archibald Curriculum strictly
+// adheres to *BEM* notation for the markup, and overrides should follow suit.
+Archibald.templates =  _.extend( {
 
   // A single item.
   //
@@ -112,7 +112,7 @@ Archibald.templates = {
 </li>\
 '
 
-};
+}, Archibald.templates || {} );
 
 
 // Item view

@@ -16,7 +16,59 @@
 "use strict";
 ( function( $, Backbone, _, Archibald ) {
 
-// Constructor.
+
+// Templates
+// ---------
+//
+// This defines the default templates used by the core application. They
+// can be overridden in various cases, as needed. Archibald Curriculum strictly
+// adheres to *BEM* notation for the markup, and overrides should follow suit.
+Archibald.templates =  _.extend( {
+
+  // CSS rules
+  //
+  // A template for the dynamic CSS rules we inject for the responsive logic.
+  // See `ArchibaldCurriculum.Core#activateResponsiveLogic()` and
+  // `ArchibaldCurriculum.Core#resize()`.
+  css: '\
+#<%= id %> .archibald-column__wrapper,\
+#<%= id %> .archibald-column {\
+  width: <%= width %>px;\
+}',
+
+  // Main application markup
+  //
+  // This defines the main application body markup, which will be injected into
+  // the DOM wrapper that contains the application.
+  // @todo
+  // - nano classes?
+  // - IDs
+  app: '\
+<div class="archibald-curriculum-ui">\
+  <div class="archibald-curriculum-ui__row">\
+    <h3><%= typeof editorLabel !== "undefined" ? editorLabel : "Editor" %></h3>\
+    <div class="archibald-curriculum-ui__item-info-wrapper"></div>\
+    <div class="archibald-curriculum-ui__editor archibald-curriculum-ui__row">\
+    </div>\
+  </div>\
+  <div class="archibald-curriculum-ui__row archibald-curriculum-ui__summary" id="archibald-curriculum-ui__summary">\
+    <h3 class="archibald-curriculum-ui__summary__label"><i id="archibald-curriculum-ui__summary-collapse" class="icon-minus"></i> <%= typeof summaryLabel !== "undefined" ? summaryLabel : "Summary" %></h3>\
+    <div class="archibald-curriculum-ui__summary__content" id="archibald-curriculum-ui__summary-content">\
+    </div>\
+  </div>\
+</div>\
+'
+
+}, Archibald.templates || {} );
+
+// Core
+// ----
+//
+// The Core class is the is the central part of the application. It ties the
+// models and views together, and is responsible for managing the UI in an
+// intuitive manner. It provides many settings to change aspects of its
+// behavior, and triggers many events, giving other libraries and modules much
+// flexibility in order to alter and enhance the application workflow.
 //
 // @param {Object} items
 //    (optional) An object representing the JSON database of all curriculum
@@ -114,7 +166,7 @@ Core.prototype = {
     }
 
     // Render the application markup.
-    this.$el.html( Core.appTemplate() );
+    this.$el.html( this.settings.templates.app() );
 
     // Add the item info element to the markup.
     this.updateItemInfo();
@@ -149,6 +201,12 @@ Core.prototype = {
           // Behavior settings.
           recursiveCheckPrompt:        false,
           recursiveCheckPromptMessage: "This will also uncheck all child items. Are you sure you want to continue?",
+
+          // Templates.
+          templates: {
+            app: _.template( Archibald.templates.app ),
+            css: _.template( Archibald.templates.css )
+          },
 
           // Event callbacks.
           events: {
@@ -648,7 +706,7 @@ Core.prototype = {
     var colWidth = Math.floor( width / this.maxCols ) - 1;
 
     // Update our CSS rules by updating the content of our style element.
-    this.$style.text( Core.cssTemplate({
+    this.$style.text( this.settings.templates.css({
       id:    this.$el[ 0 ].id,
       width: colWidth
     }) );
@@ -813,38 +871,6 @@ Core.prototype = {
 
 // A counter, which keeps track of how many Core instances are instantiated.
 Core.count = 0;
-
-// A template for the dynamic CSS rules we inject for the responsive logic. See
-// `ArchibaldCurriculum.Core#activateResponsiveLogic()` and
-// `ArchibaldCurriculum.Core#resize()`.
-// @todo Don't use Core.* for this; either Settings or Archibald.templates
-Core.cssTemplate = _.template( '\
-#<%= id %> .archibald-column__wrapper,\
-#<%= id %> .archibald-column {\
-  width: <%= width %>px;\
-}\
-' );
-
-// @todo
-// - nano classes?
-// - IDs
-// - Don't use Core.* for this; either Settings or Archibald.templates
-// - item info
-Core.appTemplate = _.template( '\
-<div class="archibald-curriculum-ui">\
-  <div class="archibald-curriculum-ui__row">\
-    <h3><%= typeof editorLabel !== "undefined" ? editorLabel : "Editor" %></h3>\
-    <div class="archibald-curriculum-ui__item-info-wrapper"></div>\
-    <div class="archibald-curriculum-ui__editor archibald-curriculum-ui__row">\
-    </div>\
-  </div>\
-  <div class="archibald-curriculum-ui__row archibald-curriculum-ui__summary" id="archibald-curriculum-ui__summary">\
-    <h3 class="archibald-curriculum-ui__summary__label"><i id="archibald-curriculum-ui__summary-collapse" class="icon-minus"></i> <%= typeof summaryLabel !== "undefined" ? summaryLabel : "Summary" %></h3>\
-    <div class="archibald-curriculum-ui__summary__content" id="archibald-curriculum-ui__summary-content">\
-    </div>\
-  </div>\
-</div>\
-' );
 
 // Extend core prototype with Backbone Events.
 Core.prototype = _.extend( Core.prototype, Backbone.Events );

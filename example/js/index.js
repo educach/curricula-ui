@@ -6,7 +6,27 @@ var appInit = function() {
     url: 'json/' + variant + '_full.json',
     dataType: 'json',
     success: function( items ) {
-      var app = new ArchibaldCurriculum.Core(items, $('#app'), {
+      // We don't pass in the wrapper, otherwise we cannot react to the
+      // app:render event.
+      var app = new ArchibaldCurriculum.Core(items);
+
+      // Bind our event listener.
+      app.on( 'app:render', function() {
+        app.getWrapper().prepend('\
+        <div class="opts">\
+          <div class="confirm-opt-out">\
+            <label><input type="checkbox" id="confirm-opt-out" checked> Ask for confirmation when unchecking items</label>\
+          </div>\
+          <div class="full-screen" id="full-screen">\
+            <i class="icon-fullscreen"></i> Full screen\
+          </div>\
+        </div>\
+        ');
+      });
+
+      // Set the remaining options now.
+      app.setWrapper($('#app'));
+      app.setSettings({
         recursiveCheckPrompt: $('#confirm-opt-out').is(':checked')
       });
 

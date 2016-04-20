@@ -167,6 +167,7 @@ Core.prototype = {
 
     // Render the application markup.
     this.$el.html( this.settings.templates.app() );
+    this.triggerEvent( 'app' , 'render', this );
 
     // Add the item info element to the markup.
     this.updateItemInfo();
@@ -183,9 +184,6 @@ Core.prototype = {
   },
 
   // Set or refresh the application settings.
-  //
-  // Warning: this will detach all event listeners! Make sure to re-attach
-  // custom event listeners after this method gets called.
   //
   // @param {Object} settings
   //    The settings hash. Will extend with the application defaults.

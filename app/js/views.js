@@ -96,7 +96,7 @@ Archibald.templates =  _.extend( {
   summaryList: '\
 <li\
   data-model-id="<%= id %>"\
-  class="archibald-summary-tree__list__item\
+  class="archibald-curriculum-ui-summary__list__item\
     <% if ( typeof hasCycle1 !== "undefined" && hasCycle1 ) {%>has-cycle-1<% } %>\
     <% if ( typeof hasCycle2 !== "undefined" && hasCycle2 ) {%>has-cycle-2<% } %>\
     <% if ( typeof hasCycle3 !== "undefined" && hasCycle3 ) {%>has-cycle-3<% } %>\
@@ -503,7 +503,7 @@ Archibald.ItemInfoView = Backbone.View.extend({
 // information, we can construct a summary of all active items. As the data is
 // a hierarchy, we display it as a recursively rendered tree.
 Archibald.SummaryTreeView = Backbone.View.extend({
-  className: 'archibald-summary-tree',
+  className: 'archibald-curriculum-ui-summary',
 
   // It uses the `summaryList` template from our templates list.
   tpl: _.template( Archibald.templates.summaryList ),
@@ -578,7 +578,7 @@ Archibald.SummaryTreeView = Backbone.View.extend({
 
     if ( children.length ) {
       // Render a list of child items.
-      html = '<ul class="archibald-summary-tree__list">';
+      html = '<ul class="archibald-curriculum-ui-summary__list">';
       children.forEach( function( model ) {
         // Render a single item. Recursively get the child markup by calling
         //  `SummaryTreeView#recursiveRender()` again.

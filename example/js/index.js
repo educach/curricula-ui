@@ -41,74 +41,18 @@ var appInit = function() {
       // really hard time returning data that can be cast to a boolean. Use
       // integer casting and strict comparison instead.
       $('#confirm-opt-out').change(function() {
-        $.cookie('archibald_confirm_opt_out', $('#confirm-opt-out').is(':checked') ? 0 : 1, { expires: 7, path: '/' });
+        // Update the settings. Don't use setSettings() again, as we don't need
+        // everything to be re-computed. We just want to update the prompt
+        // option.
         app.settings.recursiveCheckPrompt = $('#confirm-opt-out').is(':checked');
+
+        // Set a cookie to remember the selection.
+        $.cookie('archibald_confirm_opt_out', $('#confirm-opt-out').is(':checked') ? 0 : 1, { expires: 7, path: '/' });
       }).attr('checked', parseInt($.cookie('archibald_confirm_opt_out')) === 0);
 
 
 
-      // Summary logic.
-      // Set the summary DOM wrapper.
-      app.setSummaryWrapper($('#archibald-summary-content'));
-      var summary = app.getSummary();
-      summary.on('summary:select-item', function(itemModel, collection, summaryView, e) {
-        // First, fully collapse all the columns, except the "root" one. Get
-        // the first column element from the database.
-        var column = app.getColumnDatabase().first().get('column');
 
-        // Expand it.
-        column.expand();
-
-        // Remove all other columns on the right.
-        app.getColumnDatabase().remove(
-          app.getColumnRightSiblings(column)
-        );
-
-        // Construct the hierarchy as an array.
-        var items = [],
-            item = itemModel;
-        while (item.get('parentId') !== 'root') {
-          items.push(item);
-          item = collection.get(item.get('parentId'));
-        }
-        items.push(item);
-
-        // Reverse it, and remove the last item (we don't expand the selected
-        // item).
-        items.reverse().pop();
-
-        // Make sure none of the items in the database are "expanded" or
-        // "highlighted".
-        var expandedItems = app.getItemDatabase().where({ expanded: true });
-        for (var i in expandedItems) {
-          expandedItems[i].set('expanded', false);
-        }
-
-        // Now, loop through the selected item's hierarchy, and trigger the
-        // "item:select" event, updating the column reference every time.
-        for (var i in items) {
-          column.trigger(
-            'item:select',
-            items[i],
-            new ArchibaldCurriculum.ItemCollection(),
-            column,
-            {}
-          );
-
-          // Update the column reference, so we trigger it on the correct one
-          // on the next pass.
-          column = app.getColumnDatabase().last().get('column');
-        }
-
-        // Finally, highlight the selected item, and scroll to it, both in the
-        // main window AND inside the column.
-        itemModel.set('highlighted', true);
-        // @todo Make this a method of the View itself!
-        column.$el.find('.nano').nanoScroller({ scrollTo: $('#archibald-column__wrapper__list__item-' + itemModel.get('id')) });
-        $('body, html').stop().animate({
-          scrollTop: (app.getWrapper().offset().top - 50) + 'px'
-        });
-      });
 
       // Allow the summary to be collapsed.
       $('#archibald-summary-collapse').click(function() {

@@ -51,7 +51,7 @@ Archibald.templates =  _.extend( {
     <div class="archibald-curriculum-ui__editor archibald-curriculum-ui__row">\
     </div>\
   </div>\
-  <div class="archibald-curriculum-ui__row archibald-curriculum-ui__summary" id="archibald-curriculum-ui__summary">\
+  <div class="archibald-curriculum-ui__row archibald-curriculum-ui__summary-wrapper">\
     <h3 class="archibald-curriculum-ui__summary__label"><i id="archibald-curriculum-ui__summary-collapse" class="icon-minus"></i> <%= typeof summaryLabel !== "undefined" ? summaryLabel : "Summary" %></h3>\
     <div class="archibald-curriculum-ui__summary__content" id="archibald-curriculum-ui__summary-content">\
     </div>\
@@ -136,9 +136,6 @@ Core.prototype = {
   // `ArchibaldCuliculm.Core#activateResponsiveLogic()`.
   maxCols: null,
 
-  // Prepare a reference to the application summary wrapper, if used.
-  $summaryEl: null,
-
   // Prepare a reference to the summary view.
   summaryView: null,
 
@@ -171,6 +168,9 @@ Core.prototype = {
 
     // Add the item info element to the markup.
     this.updateItemInfo();
+
+    // Activate the summary logic.
+    this.activateSummary();
 
     // Recompute the amount of columns we can show.
     this.computeMaxCols();
@@ -363,40 +363,81 @@ Core.prototype = {
     return this.settings;
   },
 
-  // Set or refresh the application summary DOM wrapper.
-  //
-  // @param {Object} wrapper
-  //    The jQuery object that serves as a wrapper for the application summary.
-  setSummaryWrapper: function( wrapper ) {
-    // Empty the summary view.
-    wrapper.empty();
+  // Activate the application summary logic.
+  activateSummary: function() {
+    if ( !this.summaryView || !this.summaryView.$el.length ) {
+      // Pass our item database to the summary view, which will automatically
+      // pick out the active elements, and render them.
+      this.summaryView = new this.settings.summaryView({
+        collection: this.itemDatabase
+      });
 
-    // Pass our item database to the summary view, which will pick out the
-    // active elements, and render them.
-    this.summaryView = new this.settings.summaryView({
-      collection: this.itemDatabase
-    });
+      var that = this;
+      this.summaryView.on( 'summary:select-item', function( selectedItem, collection, summaryView ) {
+        // First, fully collapse all the columns, except the "root" one. Get
+        // the first column element from the database.
+        var column = that.columnDatabase.first().get( 'column' );
 
-    // Append the summary wrapper to our application wrapper, keeping things
-    // together.
-    wrapper.append( this.summaryView.render().$el );
+        // Expand it.
+        column.expand();
 
-    // Store a reference to the summary wrapper.
-    this.$summaryEl = wrapper;
-  },
+        // Remove all other columns on the right.
+        that.columnDatabase.remove(
+          that.getColumnRightSiblings( column )
+        );
 
-  // Get the application summary DOM wrapper.
-  //
-  // @returns {Object}
-  getSummaryWrapper: function() {
-    return this.$summaryEl;
-  },
+        // Construct the hierarchy as an array.
+        var items = [],
+            item = selectedItem;
+        while ( item.get( 'parentId' ) !== 'root' ) {
+          items.push( item );
+          item = collection.get( item.get( 'parentId' ) );
+        }
+        items.push( item );
 
-  // Get the application summary view.
-  //
-  // @returns {Object}
-  getSummary: function() {
-    return this.summaryView;
+        // Reverse it, and remove the last item (we don't expand the selected
+        // item).
+        items.reverse().pop();
+
+        // Make sure none of the items in the database are "expanded" or
+        // "highlighted".
+        var expandedItems = that.itemDatabase.where({ expanded: true });
+        if ( expandedItems.length ) {
+          for ( var i in expandedItems ) {
+            expandedItems[ i ].set( 'expanded', false );
+          }
+        }
+
+        // Now, loop through the selected item's hierarchy, and trigger the
+        // "item:select" event, updating the column reference every time.
+        for ( var i in items ) {
+          column.trigger(
+            'item:select',
+            items[ i ],
+            new ArchibaldCurriculum.ItemCollection(),
+            column,
+            {}
+          );
+
+          // Update the column reference, so we trigger it on the correct one
+          // on the next pass.
+          column = that.columnDatabase.last().get( 'column' );
+        }
+
+        // Finally, highlight the selected item, and scroll to it, both in the
+        // main window AND inside the column.
+        selectedItem.set( 'highlighted', true );
+
+        // @todo Make this a method of the View itself!
+        //column.$el.find('.nano').nanoScroller({ scrollTo: $('#archibald-column__wrapper__list__item-' + selectedItem.get('id')) });
+        $( 'body, html' ).stop().animate({
+          scrollTop: (that.$el.offset().top - 50 ) + 'px'
+        });
+      } );
+
+      // Append the summary to our application wrapper.
+      this.$el.find( '.archibald-curriculum-ui__summary-wrapper' ).append( this.summaryView.render().$el );
+    }
   },
 
   // Set or refresh the global item database.

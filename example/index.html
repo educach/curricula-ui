@@ -8,11 +8,9 @@
   <link rel="stylesheet" href="../assets/components/nanoscroller/bin/css/nanoscroller.css">
   <link rel="stylesheet" href="../app/css/styles.css">
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
 
   <script src="../assets/components/jquery/jquery.js"></script>
-  <script type="text/javascript">
-  var jQuery = $.noConflict();
-  </script>
   <script src="../assets/components/underscore/underscore.js"></script>
   <script src="../assets/components/backbone/backbone.js"></script>
   <script src="../assets/components/jquery.cookie/jquery.cookie.js"></script>
@@ -24,17 +22,18 @@
 </head>
 <body>
 <div class="container">
+  <div class="confirm-opt-out">
+    <label><input type="checkbox" id="confirm-opt-out" checked> Ask for confirmation when unchecking items</label>
+  </div>
+
+  <div class="full-screen" id="full-screen">
+    <i class="icon-fullscreen"></i> Full screen
+  </div>
   <div id="app"></div>
 
   <!--<div class="archibald-curriculum-display" id="archibald-curriculum-display">
     <div class="archibald-row-wrapper">
-      <div class="archibald-confirm-opt-out">
-        <label><input type="checkbox" id="archibald-confirm-opt-out" checked> Ask for confirmation when unchecking items</label>
-      </div>
 
-      <div class="archibald-full-screen" id="archibald-full-screen">
-        <i class="icon-fullscreen"></i> Full screen
-      </div>
 
       <h3>Editor</h3>
 

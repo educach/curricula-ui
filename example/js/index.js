@@ -1,17 +1,13 @@
 (function($) {
 
-// In case of noConflict mode.
-Backbone.$ = $;
-
 var appInit = function() {
   var variant = window.location.search.replace( "?", "" ) || 'lp21';
   $.ajax({
     url: 'json/' + variant + '_full.json',
     dataType: 'json',
     success: function( items ) {
-      // First, create a large database of all items.
       var app = new ArchibaldCurriculum.Core(items, $('#app'), {
-        recursiveCheckPrompt: $('#archibald-confirm-opt-out').is(':checked')
+        recursiveCheckPrompt: $('#confirm-opt-out').is(':checked')
       });
 
       // Create the initial column.
@@ -20,43 +16,14 @@ var appInit = function() {
       // Activate the responsive logic.
       app.activateResponsiveLogic();
 
-        // If there's a previous column, show it, and collapse the last one.
-        var prev = _.last(app.getColumnLeftSiblings(column)),
-            last = _.last(app.getColumnRightSiblings(column));
-
-        if (prev) {
-          prev.get('column').expand();
-        }
-
-        if (last) {
-          app.getColumnDatabase().remove(last);
-        }
-
-        // Remove the expanded attribute on the new last column items.
-        last = app.getColumnDatabase().last();
-        var expandedItems = last.get('column').collection.where({ expanded: true });
-        for (var i in expandedItems) {
-          expandedItems[i].set('expanded', false);
-        }
-      };
-
-      // Re-usable function for handling "go to root" events.
-      // Whenever the "Top" button is clicked, we want to show only the
-      // top-most parent column.
-      var goToRoot = function(columnCollection, column, e) {
-        // It is possible some items were highlighted or expanded. Remove
-        // these attributes.
-        app.unhighlightItems();
-        app.resetExpandedItems();
-
-        // Remove the item info.
-        updateItemInfo();
-
-        // Fetch the first column, and collapse all others.
-        var firstColumn = app.getColumnDatabase().first();
-        app.getColumnDatabase().remove(
-          app.getColumnRightSiblings(firstColumn.get('column'))
-        );
+      // Opt out of confirm dialog logic.
+      // Careful, cookies don't like Booleans... and jQuery.cookie() has a
+      // really hard time returning data that can be cast to a boolean. Use
+      // integer casting and strict comparison instead.
+      $('#confirm-opt-out').change(function() {
+        $.cookie('archibald_confirm_opt_out', $('#confirm-opt-out').is(':checked') ? 0 : 1, { expires: 7, path: '/' });
+        app.settings.recursiveCheckPrompt = $('#confirm-opt-out').is(':checked');
+      }).attr('checked', parseInt($.cookie('archibald_confirm_opt_out')) === 0);
 
 
 
@@ -129,19 +96,6 @@ var appInit = function() {
         $('#archibald-summary').toggleClass('archibald-summary--collapsed');
       });
 
-      // Item info logic.
-      // Add the scrollbar.
-      // $('#archibald-item-info').nanoScroller();
-
-
-      // Opt out of confirm dialog logic.
-      // Careful, cookies don't like Booleans... and jQuery.cookie() has a
-      // really hard time returning data that can be cast to a boolean. Use
-      // integer casting and strict comparison instead.
-      $('#archibald-confirm-opt-out').change(function() {
-        $.cookie('archibald_confirm_opt_out', $(this).is(':checked') ? 0 : 1, { expires: 7, path: '/' });
-      }).attr('checked', parseInt($.cookie('archibald_confirm_opt_out')) === 0);
-
       // Full screen logic.
       if (
         document.fullscreenEnabled ||
@@ -149,7 +103,7 @@ var appInit = function() {
         document.mozFullScreenEnabled ||
         document.msFullscreenEnabled
       ) {
-        $('#archibald-curriculum-display').addClass('has-fullscreen');
+        $('html').addClass('has-fullscreen');
 
         // @todo this is fragile. Probably better to use some other mechanic.
         var originalWidth = app.getWrapper().width();
@@ -165,7 +119,7 @@ var appInit = function() {
           if (isFullScreen()) {
             // @todo this is not very clean, with the toggleClass() inside
             // the click handler as well...
-            $('#archibald-full-screen').find('i[class^="icon"]')
+            $('#full-screen').find('i[class^="icon"]')
               .removeClass('icon-fullscreen')
               .addClass('icon-not-fullscreen');
             app.resize();
@@ -173,7 +127,7 @@ var appInit = function() {
           else {
             // @todo this is not very clean, with the toggleClass() inside
             // the click handler as well...
-            $('#archibald-full-screen').find('i[class^="icon"]')
+            $('#full-screen').find('i[class^="icon"]')
               .addClass('icon-fullscreen')
               .removeClass('icon-not-fullscreen');
             app.resize(originalWidth);
@@ -215,13 +169,13 @@ var appInit = function() {
         document.addEventListener('mozfullscreenchange', fullScreenHandler, false);
         document.addEventListener('MSFullscreenChange', fullScreenHandler, false);
 
-        $('#archibald-full-screen').click(function() {
+        $('#full-screen').click(function() {
           var mustGoFullScreen = $(this).find('i[class^="icon"]')
                                     .toggleClass('icon-fullscreen')
                                     .toggleClass('icon-not-fullscreen')
                                     .hasClass('icon-not-fullscreen');
 
-          var element = $('#archibald-curriculum-display')[0];
+          var element = $('#app')[0];
 
           if (mustGoFullScreen) {
             goFullScreen(element);

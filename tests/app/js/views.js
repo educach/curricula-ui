@@ -246,16 +246,9 @@ QUnit.module( "ItemInfoView" );
 
 /**
  * Test initialization logic. It should not be possible to initialize an
- * ItemInfoView without a model, or with an invalid model.
+ * ItemInfoView with an invalid model.
  */
 QUnit.test( "initialize", function( assert ) {
-  assert.throws(
-    function() {
-      var view = new ArchibaldCurriculum.ItemInfoView();
-    },
-    "Initializing a view without any model throws an error."
-  );
-
   assert.throws(
     function() {
       var item = new ArchibaldCurriculum.ItemModel(),
@@ -269,16 +262,28 @@ QUnit.test( "initialize", function( assert ) {
  * Test view events. ItemInfoViews trigger several events.
  */
 QUnit.test( "view events", function( assert ) {
-  assert.expect( 1 );
+  assert.expect( 3 );
 
   var doneRenderEvent = assert.async(),
+      doneCollapseExpandEvent = assert.async( 2 ),
       model1 = new ArchibaldCurriculum.ItemModel({ name: [ "Some name" ] }),
       view1 = new ArchibaldCurriculum.ItemInfoView({ model: model1 });
+
   view1.on( 'render', function() {
     assert.ok( true, "The view triggers a render event when rendered." );
     doneRenderEvent();
   });
   view1.render();
+
+  view1.on( 'collapse', function() {
+    assert.ok( true, "The view triggers a collapse event when collapsed." );
+    doneCollapseExpandEvent();
+  });
+  view1.on( 'expand', function() {
+    assert.ok( true, "The view triggers a expand event when expanded." );
+    doneCollapseExpandEvent();
+  });
+  view1.$el.find( '.archibald-curriculum-ui-item-info__label' ).click().click();
 });
 
 

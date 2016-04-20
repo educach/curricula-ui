@@ -75,8 +75,15 @@ Archibald.templates = {
   // context. It provides a sensible default template, with very little
   // information other than a link. Mainly used by `ItemInfoView`.
   itemInfo: '\
-<div class="archibald-item-info-view">\
-  Todo\
+<h3 class="archibald-curriculum-ui-item-info__label">\
+  <%= typeof itemInfoLabel !== "undefined" ? itemInfoLabel : "Item info" %>\
+</h3>\
+<div class="archibald-curriculum-ui-item-info__content">\
+  <% if ( typeof name === "undefined" ) { %>\
+    <span class="archibald-curriculum-ui-item-info-view__empty">Select an item to see its information</span>\
+  <% } else { %>\
+    <%= name %>\
+  <% } %>\
 </div>\
 ',
 
@@ -436,20 +443,24 @@ Archibald.ItemListView = Backbone.View.extend({
 // representing the item, usually a `ArchibaldCurriculum.ItemModel`. See
 // `models.js` for more information.
 Archibald.ItemInfoView = Backbone.View.extend({
-  className: 'archibald-item-info__wrapper',
+  className: 'archibald-curriculum-ui-item-info',
 
   // It uses the `itemList` template from our templates list.
   tpl: _.template( Archibald.templates.itemInfo ),
 
+  // The item info view can be collapsed by clicking on its label.
+  events: {
+    "click .archibald-curriculum-ui-item-info__label": "toggleCollapse"
+  },
+
   // Upon initialization, the view checks if a usable model is provided. If not,
   // it will throw an exception.
   initialize: function() {
-    if ( !this.model ) {
-      throw "Cannot initialize an ItemInfoView without a model.";
-    }
-    var errors = this.model.validate();
-    if ( errors && errors.length ) {
-      throw "Cannot initialize an ItemInfoView with an invalid model. Errors: " + errors.join( ', ' );
+    if ( this.model ) {
+      var errors = this.model.validate();
+      if ( errors && errors.length ) {
+        throw "Cannot initialize an ItemInfoView with an invalid model. Errors: " + errors.join( ', ' );
+      }
     }
   },
 
@@ -459,8 +470,7 @@ Archibald.ItemInfoView = Backbone.View.extend({
     this.$el.empty();
 
     // Prepare the template variables and render the template.
-    var variables = this.model.toJSON();
-    variables.url = variables.url || null;
+    var variables = this.model ? this.model.toJSON() : {};
     this.$el.html( this.tpl( variables ) );
 
     // Trigger a `render` event, so other parts of the application can interact
@@ -469,6 +479,18 @@ Archibald.ItemInfoView = Backbone.View.extend({
 
     // Allow the chaining of method calls.
     return this;
+  },
+
+  // Collapse or expand the item information element, based on its previous
+  // state. This will trigger a expand or collapse event, so other parts of the
+  // application can react to this action.
+  toggleCollapse: function() {
+    this.$el.toggleClass( 'archibald-curriculum-ui-item-info--expanded' );
+    this.trigger(
+      this.$el.hasClass( 'archibald-curriculum-ui-item-info--expanded' ) ? 'expand' : 'collapse',
+      this.model,
+      this
+    );
   }
 });
 

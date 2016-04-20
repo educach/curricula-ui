@@ -21,15 +21,14 @@
 .archibald-full-screen:hover {
   background-color: #eee;
 }
-.archibald-curriculum-display {
+.archibald-curriculum-ui {
   overflow: auto;
   background: white;
   width: 100%;
-  padding: 0 5px;
   box-sizing: border-box;
   margin: 0 auto;
 }
-.archibald-curriculum-display hr {
+.archibald-curriculum-ui hr {
   margin: 10px 0;
 }
 .archibald-row {
@@ -162,20 +161,20 @@
   right: 10px;
   top: 14px;
 }
-.archibald-summary {
+.archibald-curriculum-ui__summary {
   position: relative;
   border-top: 5px solid gray;
   min-height: 30px;
   width: 100%;
 }
-.archibald-summary--collapsed {
+.archibald-curriculum-ui__summary--collapsed {
   height: 30px;
 }
-.archibald-summary--collapsed .archibald-summary__label {
+.archibald-curriculum-ui__summary--collapsed .archibald-curriculum-ui__summary__label {
   font-size: 12px;
   margin: 0.5em;
 }
-#archibald-summary-collapse {
+#archibald-curriculum-ui__summary-collapse {
   position: absolute;
   z-index: 900;
   top: 0;
@@ -184,45 +183,45 @@
   border: 5px solid white;
   cursor: pointer;
 }
-.archibald-summary__cycles {
+.archibald-curriculum-ui__summary__cycles {
   display: none;
   margin-bottom: 1em;
 }
-.lp21 .archibald-summary__cycles {
+.lp21 .archibald-curriculum-ui__summary__cycles {
   display: table;
   width: 100%;
 }
-.archibald-summary__cycles__label {
+.archibald-curriculum-ui__summary__cycles__label {
   display: none;
 }
-.archibald-summary__cycles__cycle {
+.archibald-curriculum-ui__summary__cycles__cycle {
   display: none;
   height: .5em;
   text-indent: -9999px;
   overflow: hidden;
   color: white;
 }
-.has-cycle-1 .archibald-summary__cycles__cycle--cycle-1,
-.has-cycle-1 .archibald-summary__cycles__label,
-.has-cycle-2 .archibald-summary__cycles__cycle--cycle-2,
-.has-cycle-2 .archibald-summary__cycles__label,
-.has-cycle-3 .archibald-summary__cycles__cycle--cycle-3,
-.has-cycle-3 .archibald-summary__cycles__label {
+.has-cycle-1 .archibald-curriculum-ui__summary__cycles__cycle--cycle-1,
+.has-cycle-1 .archibald-curriculum-ui__summary__cycles__label,
+.has-cycle-2 .archibald-curriculum-ui__summary__cycles__cycle--cycle-2,
+.has-cycle-2 .archibald-curriculum-ui__summary__cycles__label,
+.has-cycle-3 .archibald-curriculum-ui__summary__cycles__cycle--cycle-3,
+.has-cycle-3 .archibald-curriculum-ui__summary__cycles__label {
   display: table-cell;
 }
-.archibald-summary-tree__list {
+.archibald-curriculum-ui__summary-tree__list {
   padding-left: 0;
   list-style: none;
   max-width: 90%;
 }
-.archibald-summary-tree__list .archibald-summary-tree__list {
+.archibald-curriculum-ui__summary-tree__list .archibald-curriculum-ui__summary-tree__list {
   padding-left: 2em;
   max-width: 100%;
 }
-.archibald-summary-tree__list__item {
+.archibald-curriculum-ui__summary-tree__list__item {
   position: relative;
 }
-.archibald-summary-tree__list__item::before {
+.archibald-curriculum-ui__summary-tree__list__item::before {
   content: "";
   position: absolute;
   bottom: 0;
@@ -230,12 +229,12 @@
   left: -2em;
   border-left: 1px dashed #CCC;
 }
-.archibald-summary-tree__list__item:last-child::before {
+.archibald-curriculum-ui__summary-tree__list__item:last-child::before {
   bottom: auto;
   top: 0;
   height: 1em;
 }
-.archibald-summary-tree__list__item::after {
+.archibald-curriculum-ui__summary-tree__list__item::after {
   content: "";
   position: absolute;
   width: 2em;
@@ -243,7 +242,7 @@
   left: -2em;
   border-top: 1px dashed #CCC;
 }
-.archibald-summary-tree__list__item span {
+.archibald-curriculum-ui__summary-tree__list__item span {
   position: relative;
   display: block;
   padding: .5em 3em .5em 2em;
@@ -256,10 +255,10 @@
   white-space: nowrap;
   max-height: 2.5em;
 }
-.archibald-summary-tree__list__item.hover span {
+.archibald-curriculum-ui__summary-tree__list__item.hover span {
   background: #eee;
 }
-.archibald-summary-tree__list__item.hover > span {
+.archibald-curriculum-ui__summary-tree__list__item.hover > span {
   transform-origin: 10% 50%;
   transform: scale(1.2);
   transition: transform .05s ease-in-out;
@@ -271,33 +270,40 @@
   white-space: normal;
   max-height: none;
 }
-.archibald-summary-tree__list__item.child-hovered > span {
+.archibald-curriculum-ui__summary-tree__list__item.child-hovered > span {
   background: #ddd;
 }
-.archibald-row-wrapper {
+.archibald-curriculum-ui__row {
   overflow: hidden;
 }
-.archibald-item-info {
+
+.archibald-curriculum-ui__item-info-wrapper {
+  float: right;
+}
+
+/**
+ * Item info element.
+ */
+.archibald-curriculum-ui-item-info {
   height: 300px; /* Warning! Same as .archibald-column! */
   position: relative;
-  width: 30px; /* Warning! This is also referenced in JS, see $('#archibald-item-info-collapse').click(). */
-  float: right;
+  width: 30px; /* Warning! This is also referenced in JS! */
   -webkit-transition: width .5s;
   -moz-transition: width .5s;
   -ms-transition: width .5s;
   -o-transition: width .5s;
   transition: width .5s;
 }
-.archibald-item-info--expanded {
-  width: 300px; /* Warning! This is also referenced in JS, see $('#archibald-item-info-collapse').click(). */
+.archibald-curriculum-ui-item-info--expanded {
+  width: 300px; /* Warning! This is also referenced in JS! */
 }
-.archibald-item-info h4 {
+.archibald-curriculum-ui-item-info h4 {
   height: 1em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
-.archibald-item-info__label {
+.archibald-curriculum-ui-item-info__label {
   transform: rotate(-90deg);
   transform-origin: left top 0px;
   position: absolute;
@@ -308,14 +314,14 @@
   font-size: 1.2em;
   line-height: 1.8;
 }
-.archibald-item-info__label:hover {
+.archibald-curriculum-ui-item-info__label:hover {
   cursor: pointer;
   background-color: #ddd;
 }
-.archibald-item-info__content {
+.archibald-curriculum-ui-item-info__content {
   margin-left: 40px;
 }
-.archibald-item-info__content__empty {
+.archibald-curriculum-ui-item-info__content__empty {
   font-style: italic;
   color: #ddd;
   font-size: 1.2em;
@@ -323,8 +329,8 @@
   display: block;
   text-align: center;
 }
-.archibald-item-info__type__label,
-.archibald-item-info__type__description__label {
+.archibald-curriculum-ui-item-info__type__label,
+.archibald-curriculum-ui-item-info__type__description__label {
   font-weight: bold;
 }
 .archibald-cycle-selection {
@@ -415,7 +421,7 @@
   border-width: 1px 1px 1px 0;
 }
 .lp21 .archibald-cycle-selection__filter::before,
-.lp21 .archibald-summary__cycles__cycle::before {
+.lp21 .archibald-curriculum-ui__summary__cycles__cycle::before {
   content: '';
   position: absolute;
   left: -10px;
@@ -441,8 +447,8 @@
 .lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-23::before,
 .lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
 .lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after/*,
-.lp21 .archibald-summary-tree__list__item span::before,
-.lp21 .archibald-summary-tree__list__item span::after*/ {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item span::before,
+.lp21 .archibald-curriculum-ui__summary-tree__list__item span::after*/ {
   content: '';
   border-left: 6px solid gray;
   position: absolute;
@@ -452,7 +458,7 @@
 }
 .lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
 .lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after/*,
-.lp21 .archibald-summary-tree__list__item span::after*/ {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item span::after*/ {
   border-left-width: 4px;
 }
 .lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after {
@@ -483,58 +489,58 @@
 .lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123 {
   border-left-color:  #97C941;
 }
-.lp21 .archibald-summary__cycles__cycle--cycle-1 {
+.lp21 .archibald-curriculum-ui__summary__cycles__cycle--cycle-1 {
   background-color: #E39B2D;
 }
-.lp21 .archibald-summary__cycles__cycle--cycle-2 {
+.lp21 .archibald-curriculum-ui__summary__cycles__cycle--cycle-2 {
   background-color: #2F8FCE;
 }
-.lp21 .archibald-summary__cycles__cycle--cycle-3 {
+.lp21 .archibald-curriculum-ui__summary__cycles__cycle--cycle-3 {
   background-color: #97C941;
 }
 /* For the left border, 3 takes precedence, so is last. */
 /*
 .lp21 .archibald-column__wrapper__list__item.has-cycle-1,
-.lp21 .archibald-summary-tree__list__item.has-cycle-1 > span {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item.has-cycle-1 > span {
   border-left-color: #E39B2D;
 }
 .lp21 .archibald-column__wrapper__list__item.has-cycle-2,
-.lp21 .archibald-summary-tree__list__item.has-cycle-2 > span {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item.has-cycle-2 > span {
   border-left-color: #2F8FCE;
 }
 .lp21 .archibald-column__wrapper__list__item.has-cycle-3,
-.lp21 .archibald-summary-tree__list__item.has-cycle-3 > span {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item.has-cycle-3 > span {
   border-left-color: #97C941;
 }
 */
 /* For the middle border, 2 takes precedence, so is last. */
 .lp21 .archibald-cycle-selection__filter--cycle-3::before/*,
 .lp21 .archibald-column__wrapper__list__item.has-cycle-3::before,
-.lp21 .archibald-summary-tree__list__item.has-cycle-3 > span::before*/ {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item.has-cycle-3 > span::before*/ {
   border-left-color: #97C941;
 }
 .lp21 .archibald-cycle-selection__filter--cycle-1::before/*,
 .lp21 .archibald-column__wrapper__list__item.has-cycle-1::before,
-.lp21 .archibald-summary-tree__list__item.has-cycle-1 > span::before*/ {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item.has-cycle-1 > span::before*/ {
   border-left-color: #E39B2D;
 }
 .lp21 .archibald-cycle-selection__filter--cycle-2::before/*,
 .lp21 .archibald-column__wrapper__list__item.has-cycle-2::before,
-.lp21 .archibald-summary-tree__list__item.has-cycle-2 > span::before*/ {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item.has-cycle-2 > span::before*/ {
   border-left-color: #2F8FCE;
 }
 /* For the right border, 3 takes precedence, so is last. */
 /*
 .lp21 .archibald-column__wrapper__list__item.has-cycle-3::after,
-.lp21 .archibald-summary-tree__list__item.has-cycle-3 > span::after {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item.has-cycle-3 > span::after {
   border-left-color: #97C941;
 }
 .lp21 .archibald-column__wrapper__list__item.has-cycle-2::after,
-.lp21 .archibald-summary-tree__list__item.has-cycle-2 > span::after {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item.has-cycle-2 > span::after {
   border-left-color: #2F8FCE;
 }
 .lp21 .archibald-column__wrapper__list__item.has-cycle-1::after,
-.lp21 .archibald-summary-tree__list__item.has-cycle-1 > span::after {
+.lp21 .archibald-curriculum-ui__summary-tree__list__item.has-cycle-1 > span::after {
   border-left-color: #E39B2D;
 }
 */

@@ -348,12 +348,6 @@ Core.prototype = {
         };
 
     this.settings = _.extend( defaults, settings || {} );
-
-    // Make sure all event listeners are re-attached.
-    this.off();
-    for ( var event in this.settings.events ) {
-      this.on( event, this.settings.events[ event ] );
-    }
   },
 
   // Get the application settings.

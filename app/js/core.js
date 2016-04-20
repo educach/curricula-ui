@@ -30,6 +30,9 @@ var Core = function( items, wrapper, settings ) {
   // IDs in certain conditions.
   this.id = ++Core.count;
 
+  // Store the settings. This must be done first.
+  this.setSettings( settings );
+
   // Initialize the item database. This parses the raw data items and
   // initializes them as reusable models.
   if ( items ) {
@@ -40,9 +43,6 @@ var Core = function( items, wrapper, settings ) {
   if ( wrapper ) {
     this.setWrapper( wrapper );
   }
-
-  // Store the settings.
-  this.setSettings( settings );
 
   // Initialize the column database. This will hold all column views (yes,
   // views) that are currently available "on screen". This way of referencing
@@ -95,6 +95,12 @@ Core.prototype = {
   // @param {Object} wrapper
   //    The jQuery object that serves as a wrapper for the application.
   setWrapper: function( wrapper ) {
+    // If we already had a wrapper, empty it.
+    if ( typeof this.$el !== 'undefined' && this.$el ) {
+      this.$el.empty();
+    }
+
+    // Set the new wrapper, or re-use the old one if none is given.
     this.$el = wrapper || this.$el;
 
     // We prefer having an ID for our wrapper. This will prevent conflicting
@@ -103,6 +109,9 @@ Core.prototype = {
     if ( typeof this.$el[ 0 ].id === 'undefined' || this.$el[ 0 ].id === '' ) {
       this.$el[ 0 ].id = 'archibald-curriculum-ui-core-' + this.id;
     }
+
+    // Render the application markup.
+    this.$el.html( Core.appTemplate() );
 
     // Recompute the amount of columns we can show.
     this.computeMaxCols();
@@ -132,6 +141,7 @@ Core.prototype = {
           summaryView:  Archibald.SummaryTreeView,
 
           // Behavior settings.
+          recursiveCheckPrompt:        false,
           recursiveCheckPromptMessage: "This will also uncheck all child items. Are you sure you want to continue?",
 
           // Event callbacks.
@@ -176,13 +186,8 @@ Core.prototype = {
                 true
               );
 
-              // Bind to the item:select events.
-              newColumn.on( 'item:select', defaults.events[ 'item:select' ] );
-
               // @todo Code these other events!!
               /*
-              newColumn.on('item:select', updateItemInfo);
-              newColumn.on('item:change', updateHierarchy);
               newColumn.on('column:go-back', goBack);
               newColumn.on('column:go-to-root', goToRoot);
               */
@@ -218,6 +223,12 @@ Core.prototype = {
 
               // Show the new column.
               newColumn.expand();
+            },
+            // This callback will handle the recursive checking or unchecking of
+            // parents and children items, respectively, upon changing the state
+            // of one item.
+            "item:change": function( item, columnCollection, column ) {
+              that.recursiveCheck( item, that.settings.recursiveCheckPrompt );
             }
           }
         };
@@ -339,7 +350,7 @@ Core.prototype = {
     }
 
     // Add it to the wrapper.
-    this.$el.append( column.render().$el );
+    this.$el.find( '.archibald-curriculum-ui__editor' ).append( column.render().$el );
 
     // Activate the nanoScroller plugin.
     // @todo Handle this in Drupal scope?
@@ -351,8 +362,10 @@ Core.prototype = {
     this.columnDatabase.add({ column: column });
 
     // Bind our event listener, if it exists.
-    if ( typeof this.settings.events[ 'item:select' ] !== 'undefined' ) {
-      column.on( 'item:select', this.settings.events[ 'item:select' ] );
+    for ( var event in { 'item:select': 1, 'item:change': 1 } ) {
+      if ( typeof this.settings.events[ event ] !== 'undefined' ) {
+        column.on( event, this.settings.events[ event ] );
+      }
     }
 
     // Allow all events to bubble up.
@@ -522,7 +535,7 @@ Core.prototype = {
   //    (optional) The width of the application wrapper. If not given the width
   //    will be computed based on the application wrapper's current width.
   computeMaxCols: function( width ) {
-    width = typeof width === 'number' ? width : this.$el.width();
+    width = typeof width === 'number' ? width : this.$el.find( '.archibald-curriculum-ui__editor').width();
 
     // Recompute the amount of columns we can show. For widths less than 600,
     // we only show 1. For widths between 600 and 900, we show 2; between 900
@@ -544,7 +557,7 @@ Core.prototype = {
       throw "Resizing is only available if the responsive logic is activated. Call activateResponsiveLogic() first.";
     }
 
-    var width = typeof newWidth === 'number' ? newWidth : this.$el.width(),
+    var width = typeof newWidth === 'number' ? newWidth : this.$el.find( '.archibald-curriculum-ui__editor').width(),
         oldMaxCols = this.maxCols;
 
     // Recompute the amount of columns we can show.
@@ -669,11 +682,33 @@ Core.count = 0;
 // A template for the dynamic CSS rules we inject for the responsive logic. See
 // `ArchibaldCurriculum.Core#activateResponsiveLogic()` and
 // `ArchibaldCurriculum.Core#resize()`.
+// @todo Don't use Core.* for this; either Settings or Archibald.templates
 Core.cssTemplate = _.template( '\
 #<%= id %> .archibald-column__wrapper,\
 #<%= id %> .archibald-column {\
   width: <%= width %>px;\
 }\
+' );
+
+// @todo
+// - nano classes?
+// - IDs
+// - Don't use Core.* for this; either Settings or Archibald.templates
+// - item info
+Core.appTemplate = _.template( '\
+<div class="archibald-curriculum-ui">\
+  <div class="archibald-curriculum-ui__row">\
+    <h3><%= typeof editorLabel !== "undefined" ? editorLabel : "Editor" %></h3>\
+    <div class="archibald-curriculum-ui__item-info-wrapper"></div>\
+    <div class="archibald-curriculum-ui__editor archibald-curriculum-ui__row">\
+    </div>\
+  </div>\
+  <div class="archibald-curriculum-ui__row archibald-curriculum-ui__summary" id="archibald-curriculum-ui__summary">\
+    <h3 class="archibald-curriculum-ui__summary__label"><i id="archibald-curriculum-ui__summary-collapse" class="icon-minus"></i> <%= typeof summaryLabel !== "undefined" ? summaryLabel : "Summary" %></h3>\
+    <div class="archibald-curriculum-ui__summary__content" id="archibald-curriculum-ui__summary-content">\
+    </div>\
+  </div>\
+</div>\
 ' );
 
 // Extend core prototype with Backbone Events.

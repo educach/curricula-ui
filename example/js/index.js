@@ -14,15 +14,8 @@ var appInit = function() {
         recursiveCheckPrompt: $('#archibald-confirm-opt-out').is(':checked')
       });
 
-      var itemDatabase = app.getItemDatabase();
-      app.activateResponsiveLogic();
-
-      // Re-usable function for handling "go back" events.
-      // Whenever the "Back" button is clicked, we want to show the parent
-      // column again.
-      var goBack = function(columnCollection, column, e) {
-        // It is possible some items were highlighted. Unhighlight them.
-        app.unhighlightItems();
+      // Create the initial column.
+      app.createRootColumn(true);
 
       // Activate the responsive logic.
       app.activateResponsiveLogic();
@@ -65,12 +58,7 @@ var appInit = function() {
           app.getColumnRightSiblings(firstColumn.get('column'))
         );
 
-        // Make sure the first column is expanded.
-        firstColumn.get('column').expand();
-      };
 
-      // Create the initial column.
-      var column = app.createColumn(itemDatabase.where({ parentId: "root" }), true);
 
       // Summary logic.
       // Set the summary DOM wrapper.

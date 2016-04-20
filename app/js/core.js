@@ -383,6 +383,23 @@ Core.prototype = {
     return this.columnDatabase;
   },
 
+  // Prepare the application root column.
+  //
+  // This requires the item database to be set. If this method is called when
+  // there already are columns, it will throw an error.
+  //
+  // @param {Boolean} editable
+  //    (optional) Whether the column items are editable or not. Defaults to
+  //    false.
+  //
+  // @returns {ArchibaldCurriculum.ItemListView}
+  createRootColumn: function( editable ) {
+    if ( this.columnDatabase.length ) {
+      throw "Cannot create a root column: there is already a column present.";
+    }
+    return this.createColumn( this.itemDatabase.where({ parentId: "root" }), editable );
+  },
+
   // Prepare a new column.
   //
   // @param {Array} items

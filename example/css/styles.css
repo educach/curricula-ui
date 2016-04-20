@@ -1,0 +1,23 @@
+.confirm-opt-out {
+  float: right;
+  font-size: .9em;
+  margin-top: 2em;
+}
+.confirm-opt-out label {
+  font-weight: normal;
+}
+.full-screen {
+  padding: 3px;
+  display: none;
+  cursor: pointer;
+  float: right;
+  font-size: .9em;
+  margin-top: 2.1em;
+  margin-right: 2em;
+}
+.has-fullscreen .full-screen {
+  display: inline-block;
+}
+.full-screen:hover {
+  background-color: #eee;
+}

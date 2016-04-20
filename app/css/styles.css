@@ -1,26 +1,3 @@
-.archibald-confirm-opt-out {
-  float: right;
-  font-size: .9em;
-  margin-top: 2em;
-}
-.archibald-confirm-opt-out label {
-  font-weight: normal;
-}
-.archibald-full-screen {
-  padding: 3px;
-  display: none;
-  cursor: pointer;
-  float: right;
-  font-size: .9em;
-  margin-top: 2.1em;
-  margin-right: 2em;
-}
-.has-fullscreen .archibald-full-screen {
-  display: inline-block;
-}
-.archibald-full-screen:hover {
-  background-color: #eee;
-}
 .archibald-curriculum-ui {
   overflow: auto;
   background: white;

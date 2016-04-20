@@ -195,12 +195,6 @@ Core.prototype = {
                 true
               );
 
-              // @todo Code these other events!!
-              /*
-              newColumn.on('column:go-back', goBack);
-              newColumn.on('column:go-to-root', goToRoot);
-              */
-
               // Make sure none of its children are "expanded".
               var expandedItems = that.itemDatabase.where({
                 parentId: item.get( 'id' ),
@@ -238,6 +232,61 @@ Core.prototype = {
             // of one item.
             "item:change": function( item, columnCollection, column ) {
               that.recursiveCheck( item, that.settings.recursiveCheckPrompt );
+            },
+            // Re-usable function for handling "go back" events.
+            // Whenever the "Back" button is clicked,
+            // This callback will handle the "go back" events.  Whenever the
+            // "Back" button is clicked, we want to show the parent column
+            // again.
+            "column:go-back": function( columnCollection, column ) {
+              // It is possible some items were highlighted. Unhighlight them.
+              that.unhighlightItems();
+
+              // Remove the item info.
+              that.updateItemInfo();
+
+              // If there's a previous column, show it, and collapse the last one.
+              var prev = _.last( that.getColumnLeftSiblings( column ) ),
+                  last = _.last( that.getColumnRightSiblings( column ) );
+
+              if ( prev ) {
+                prev.get( 'column' ).expand();
+              }
+
+              if ( last ) {
+                that.columnDatabase.remove( last );
+              }
+
+              // Remove the expanded attribute on the new last column items.
+              last = that.columnDatabase.last();
+              var expandedItems = last.get( 'column' ).collection.where({ expanded: true });
+              if ( expandedItems.length ) {
+                for ( var i in expandedItems ) {
+                  expandedItems[ i ].set( 'expanded', false );
+                }
+              }
+            },
+            // This callback will handle the "go to root" events.  Whenever the
+            // "Top" button is clicked, we want to show only the top-most parent
+            // column.
+            "column:go-to-root": function( columnCollection, column ) {
+              // It is possible some items were highlighted or expanded. Remove
+              // these attributes.
+              that.unhighlightItems();
+              that.resetExpandedItems();
+
+              // Remove the item info.
+              that.updateItemInfo();
+
+              // Fetch the first column, and "collapse" all others. We don't
+              // actually collapse them, we completely remove them instead.
+              var firstColumn = that.columnDatabase.first();
+              that.columnDatabase.remove(
+                that.getColumnRightSiblings( firstColumn.get( 'column' ) )
+              );
+
+              // Make sure the first column is expanded.
+              firstColumn.get( 'column' ).expand();
             }
           }
         };
@@ -371,9 +420,15 @@ Core.prototype = {
     this.columnDatabase.add({ column: column });
 
     // Bind our event listener, if it exists.
-    for ( var event in { 'item:select': 1, 'item:change': 1 } ) {
-      if ( typeof this.settings.events[ event ] !== 'undefined' ) {
-        column.on( event, this.settings.events[ event ] );
+    var eventList = [
+      'item:select',
+      'item:change',
+      'column:go-back',
+      'column:go-to-root'
+    ];
+    for ( var event in eventList ) {
+      if ( typeof this.settings.events[ eventList[ event ] ] !== 'undefined' ) {
+        column.on( eventList[ event ], this.settings.events[ eventList[ event ] ] );
       }
     }
 

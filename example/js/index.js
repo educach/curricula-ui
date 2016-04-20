@@ -24,8 +24,8 @@ var appInit = function() {
         // It is possible some items were highlighted. Unhighlight them.
         app.unhighlightItems();
 
-        // Remove the item info.
-        updateItemInfo();
+      // Activate the responsive logic.
+      app.activateResponsiveLogic();
 
         // If there's a previous column, show it, and collapse the last one.
         var prev = _.last(app.getColumnLeftSiblings(column)),

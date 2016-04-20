@@ -355,6 +355,22 @@ Core.prototype = {
       column.on( 'item:select', this.settings.events[ 'item:select' ] );
     }
 
+    // Allow all events to bubble up.
+    var that = this;
+    column.on( 'all', function( event ) {
+      // Get the remaining arguments, removing the event name.
+      var args = Array.prototype.slice.call( arguments, 1 );
+
+      // Add the application itself.
+      args.push( that );
+
+      // Bubble it up.
+      that.triggerEvent.apply(
+        that,
+        [ 'column', event ].concat( args )
+      );
+    } );
+
     return column;
   },
 

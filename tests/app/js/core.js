@@ -65,7 +65,8 @@ QUnit.test( "column collection events", function( assert ) {
  * Test the column creation helper.
  */
 QUnit.test( "column creation helper", function( assert ) {
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
+  var doneBubbleEvent = assert.async(),
+      app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
       column = app.createColumn( _testGetJSONItems()[ 'root' ] );
 
   // Check the defaults.
@@ -86,6 +87,22 @@ QUnit.test( "column creation helper", function( assert ) {
   column = app.createColumn( _testGetJSONItems()[ 'root' ], true, true );
   assert.ok( column.isCollapsed(), "The column is collapsed." );
   assert.ok( column.settings.editable, "The column is editable." );
+
+  // Check that all events on the column are correctly bubbled up.
+  app.on( 'column:item:select', function( item, columnCollection, eventColumn, eventApp ) {
+    assert.equal(
+      column,
+      eventColumn,
+      "The passed arguments are correctly proxied from the original event."
+    );
+    assert.equal(
+      app,
+      eventApp,
+      "The application is correctly passed to the event."
+    );
+    doneBubbleEvent();
+  } );
+  column.childViews[ 0 ].triggerSelect();
 });
 
 /**

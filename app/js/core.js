@@ -25,7 +25,7 @@
 // adheres to *BEM* notation for the markup, and overrides should follow suit.
 Archibald.templates =  _.extend( {
 
-  // CSS rules
+  // CSS rules.
   //
   // A template for the dynamic CSS rules we inject for the responsive logic.
   // See `ArchibaldCurriculum.Core#activateResponsiveLogic()` and
@@ -36,7 +36,7 @@ Archibald.templates =  _.extend( {
   width: <%= width %>px;\
 }',
 
-  // Main application markup
+  // Main application markup.
   //
   // This defines the main application body markup, which will be injected into
   // the DOM wrapper that contains the application.

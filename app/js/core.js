@@ -90,6 +90,9 @@ Core.prototype = {
   // Prepare a reference to the summary view.
   summaryView: null,
 
+  // Prepare a reference to the item info view.
+  itemInfoView: null,
+
   // Set or refresh the application DOM wrapper.
   //
   // @param {Object} wrapper
@@ -112,6 +115,9 @@ Core.prototype = {
 
     // Render the application markup.
     this.$el.html( Core.appTemplate() );
+
+    // Add the item info element to the markup.
+    this.updateItemInfo();
 
     // Recompute the amount of columns we can show.
     this.computeMaxCols();
@@ -150,6 +156,9 @@ Core.prototype = {
             // only applies to an item that actually has children. If a new column
             // is to be created, collapse all sibling columns to the "right".
             "item:select": function( item, columnCollection, column ) {
+              // Update the item information.
+              that.updateItemInfo( item );
+
               // If this item has no children, or it is "expanded", we don't add a
               // new column.
               if ( !item.get( 'hasChildren' ) || item.get( 'expanded' ) ) {
@@ -672,6 +681,60 @@ Core.prototype = {
         this,
         [ category + ':' + chain.slice( 0, i ).join( ':' ) ].concat( args )
       );
+    }
+  },
+
+
+  // Update the item information.
+  //
+  // If no item is passed, will render an "empty" item information drawer.
+  //
+  // @param {ArchibaldCurriculum.ItemModel} item
+  //    (optional) The item for which we want to render the information, or null
+  //    to reset the information drawer.
+  updateItemInfo: function( item ) {
+    // Do we already have an item info view? If not, create it now, and add it
+    // to our application markup.
+    if ( !this.itemInfoView || !this.itemInfoView.$el.length ) {
+      this.itemInfoView = new this.settings.itemInfoView();
+      this.$el.find( '.archibald-curriculum-ui__item-info-wrapper' ).empty().append(
+        this.itemInfoView.render().$el
+      );
+
+      // Pass the new width to the resize function. This will allow us to
+      // still have CSS transitions, without relying on complex JS events,
+      // which are hard to control and could slow down the application.
+      // WARNING: this width is hard coded!! See CSS file!!
+      // We use the total expanded width minus the collapsed width, which
+      // gives us the difference in width for the wrapper.
+      var itemInfoWidth = 270, // 300 - 30
+          that = this;
+
+      this.itemInfoView.on( 'collapse', function() {
+        that.resize( that.$el.find( '.archibald-curriculum-ui__editor').width() + itemInfoWidth );
+      });
+      this.itemInfoView.on( 'expand', function() {
+        that.resize( that.$el.find( '.archibald-curriculum-ui__editor').width() - itemInfoWidth);
+      });
+
+      // Bubble up all item info events.
+      this.itemInfoView.on( 'all', function( event ) {
+        // Get the remaining arguments, removing the event name.
+        var args = Array.prototype.slice.call( arguments, 1 );
+
+        // Add the application itself.
+        args.push( that );
+
+        // Bubble it up.
+        that.triggerEvent.apply(
+          that,
+          [ 'item-info', event ].concat( args )
+        );
+      } );
+    } else {
+      // Reset the item info model, and re-render.
+      this.itemInfoView.model = typeof item !== 'undefined' ? item : null;
+      this.itemInfoView.render();
     }
   }
 };

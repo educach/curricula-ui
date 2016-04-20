@@ -10,40 +10,12 @@ var appInit = function() {
     dataType: 'json',
     success: function( items ) {
       // First, create a large database of all items.
-      var app = new ArchibaldCurriculum.Core( items );
+      var app = new ArchibaldCurriculum.Core(items, $('#app'), {
+        recursiveCheckPrompt: $('#archibald-confirm-opt-out').is(':checked')
+      });
+
       var itemDatabase = app.getItemDatabase();
-
-      // Fetch the row and pass it to the application as the DOM wrapper.
-      app.setWrapper($('#archibald-editor-content'));
-
       app.activateResponsiveLogic();
-
-      // Re-usable function for updating the item information.
-      var updateItemInfo = function(itemModel, columnCollection, column, e) {
-        if (typeof updateItemInfo.view !== 'undefined') {
-          updateItemInfo.view.remove();
-        }
-        if (typeof itemModel === 'undefined') {
-          // @todo This must be done in clean way.
-          $('#archibald-item-info-content').empty().html('<span class="archibald-item-info__content__empty">Select an item to see its information</span>');
-        }
-        else {
-          updateItemInfo.view = new ArchibaldCurriculum.ItemInfoView({ model: itemModel });
-          $('#archibald-item-info-content').empty().append(updateItemInfo.view.render().$el);
-        }
-      };
-
-      // Re-usable function for handling "change" events.
-      // This callback will handle the recursive checking or unchecking of
-      // parents and children items, respectively, upon changing the state
-      // of one item.
-      var updateHierarchy = function(itemModel, columnCollection, column, e) {
-        app.recursiveCheck(
-          itemModel,
-          $('#archibald-confirm-opt-out').is(':checked'),
-          "This will also uncheck all child items. Are you sure you want to continue?"
-        );
-      };
 
       // Re-usable function for handling "go back" events.
       // Whenever the "Back" button is clicked, we want to show the parent
@@ -99,8 +71,6 @@ var appInit = function() {
 
       // Create the initial column.
       var column = app.createColumn(itemDatabase.where({ parentId: "root" }), true);
-      column.on('item:select', updateItemInfo);
-      column.on('item:change', updateHierarchy);
 
       // Summary logic.
       // Set the summary DOM wrapper.
@@ -173,27 +143,8 @@ var appInit = function() {
 
       // Item info logic.
       // Add the scrollbar.
-      $('#archibald-item-info').nanoScroller();
+      // $('#archibald-item-info').nanoScroller();
 
-      // Allow the item info to be collapsed.
-      $('#archibald-item-info-collapse').click(function() {
-        $(this).find('i').toggleClass('icon-plus').toggleClass('icon-minus');
-        $('#archibald-item-info').toggleClass('archibald-item-info--expanded');
-
-        // Pass the new width to the resize function. This will allow us to
-        // still have CSS transitions, without relying on complex JS events,
-        // which are hard to control and could slow down the application.
-        // WARNING: this width is hard coded!! See CSS file!!
-        // We use the total expanded width minus the collapsed width, which
-        // gives us the difference in width for the wrapper.
-        var itemInfoWidth = 270; // 300 - 30;
-        if ($('#archibald-item-info').hasClass('archibald-item-info--expanded')) {
-          app.resize(app.getWrapper().width() - itemInfoWidth);
-        }
-        else {
-          app.resize(app.getWrapper().width() + itemInfoWidth);
-        }
-      });
 
       // Opt out of confirm dialog logic.
       // Careful, cookies don't like Booleans... and jQuery.cookie() has a

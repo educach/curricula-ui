@@ -394,7 +394,7 @@ Archibald.ItemListView = Backbone.View.extend({
           that.triggerItemEvent( 'select', model );
         })
         .on( 'render', function() {
-          that.triggerItemEvent( 'render', model );
+          that.triggerItemEvent( 'render', model, item );
         });
 
       // Render the item and add it to our markup.
@@ -442,8 +442,12 @@ Archibald.ItemListView = Backbone.View.extend({
   },
 
   // Helper function to trigger an `item:*` event.
-  triggerItemEvent: function( event, itemModel ) {
-    this.trigger( 'item:' + event, itemModel, this.collection, this );
+  triggerItemEvent: function( event, itemModel, itemView ) {
+    if ( typeof itemView !== 'undefined' ) {
+      this.trigger( 'item:' + event, itemModel, itemView, this.collection, this );
+    } else {
+      this.trigger( 'item:' + event, itemModel, this.collection, this );
+    }
   },
 
   // Event handler for when the *Back* button is clicked. Triggers a

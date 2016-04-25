@@ -521,14 +521,6 @@ Core.prototype = {
       column.collapse();
     }
 
-    // Add it to the wrapper.
-    this.$el.find( '.archibald-curriculum-ui__editor' ).append( column.render().$el );
-
-    // Activate the nanoScroller plugin.
-    if ( typeof $.fn.nanoScroller !== 'undefined' ) {
-      column.$el.find( '.nano' ).nanoScroller();
-    }
-
     // Add our new column to our column database.
     this.columnDatabase.add({ column: column });
 
@@ -560,6 +552,14 @@ Core.prototype = {
         [ 'column', event ].concat( args )
       );
     } );
+
+    // Add it to the wrapper.
+    this.$el.find( '.archibald-curriculum-ui__editor' ).append( column.render().$el );
+
+    // Activate the nanoScroller plugin.
+    if ( typeof $.fn.nanoScroller !== 'undefined' ) {
+      column.$el.find( '.nano' ).nanoScroller();
+    }
 
     return column;
   },

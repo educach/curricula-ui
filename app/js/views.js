@@ -392,6 +392,9 @@ Archibald.ItemListView = Backbone.View.extend({
         })
         .on( 'select', function() {
           that.triggerItemEvent( 'select', model );
+        })
+        .on( 'render', function() {
+          that.triggerItemEvent( 'render', model );
         });
 
       // Render the item and add it to our markup.

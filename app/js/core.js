@@ -424,7 +424,11 @@ Core.prototype = {
         selectedItem.set( 'highlighted', true );
 
         // @todo Make this a method of the View itself!
-        //column.$el.find('.nano').nanoScroller({ scrollTo: $('#archibald-column__wrapper__list__item-' + selectedItem.get('id')) });
+        if ( typeof $.fn.nanoScroller !== 'undefined' ) {
+          column.$el.find( '.nano' ).nanoScroller({
+            scrollTo: $( '#archibald-column__wrapper__list__item-' + selectedItem.get( 'id' ) )
+          });
+        }
         $( 'body, html' ).stop().animate({
           scrollTop: (that.$el.offset().top - 50 ) + 'px'
         });
@@ -520,7 +524,6 @@ Core.prototype = {
     this.$el.find( '.archibald-curriculum-ui__editor' ).append( column.render().$el );
 
     // Activate the nanoScroller plugin.
-    // @todo Handle this in Drupal scope?
     if ( typeof $.fn.nanoScroller !== 'undefined' ) {
       column.$el.find( '.nano' ).nanoScroller();
     }
@@ -880,6 +883,12 @@ Core.prototype = {
       this.itemInfoView.on( 'expand', function() {
         that.resize( that.$el.find( '.archibald-curriculum-ui__editor').width() - itemInfoWidth);
       });
+
+      if ( typeof $.fn.nanoScroller !== 'undefined' ) {
+        this.itemInfoView.on( 'render', function() {
+          this.$el.find( '.nano' ).nanoScroller();
+        });
+      }
 
       // Bubble up all item info events.
       this.itemInfoView.on( 'all', function( event ) {

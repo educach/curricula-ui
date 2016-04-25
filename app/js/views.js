@@ -78,12 +78,14 @@ Archibald.templates =  _.extend( {
 <h3 class="archibald-curriculum-ui-item-info__label">\
   <%= typeof itemInfoLabel !== "undefined" ? itemInfoLabel : "Item info" %>\
 </h3>\
-<div class="archibald-curriculum-ui-item-info__content">\
-  <% if ( typeof name === "undefined" ) { %>\
-    <span class="archibald-curriculum-ui-item-info-view__empty">Select an item to see its information</span>\
-  <% } else { %>\
-    <%= name %>\
-  <% } %>\
+<div class="archibald-curriculum-ui-item-info__content nano">\
+  <div class="nano-content">\
+    <% if ( typeof name === "undefined" ) { %>\
+      <span class="archibald-curriculum-ui-item-info-view__empty">Select an item to see its information</span>\
+    <% } else { %>\
+      <%= name %>\
+    <% } %>\
+  </div>\
 </div>\
 ',
 

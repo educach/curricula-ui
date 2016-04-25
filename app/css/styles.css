@@ -282,6 +282,9 @@
 .archibald-curriculum-ui-item-info__content {
   margin-left: 40px;
 }
+.archibald-curriculum-ui-item-info__content.nano.has-scrollbar {
+  width: auto !important;
+}
 .archibald-curriculum-ui-item-info__content__empty {
   font-style: italic;
   color: #ddd;

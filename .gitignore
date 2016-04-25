@@ -6,6 +6,7 @@
 /docs/
 /build/
 
+/example/json/lp21_full.json
 *.log
 *.sublime-*
 

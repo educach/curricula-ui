@@ -10,7 +10,7 @@ var appInit = function() {
       // app:render event.
       var app = new ArchibaldCurriculum.Core(items);
 
-      // Bind our event listener.
+      // Bind our event listener, so we can add some custom markup on render.
       app.on( 'app:render', function() {
         app.getWrapper().prepend('\
         <div class="opts">\
@@ -24,11 +24,8 @@ var appInit = function() {
         ');
       });
 
-      // Set the remaining options now.
+      // Setting the wrapper will trigger the rendering.
       app.setWrapper($('#app'));
-      app.setSettings({
-        recursiveCheckPrompt: $('#confirm-opt-out').is(':checked')
-      });
 
       // Create the initial column.
       app.createRootColumn(true);
@@ -36,10 +33,9 @@ var appInit = function() {
       // Activate the responsive logic.
       app.activateResponsiveLogic();
 
+
+      // Custom logic.
       // Opt out of confirm dialog logic.
-      // Careful, cookies don't like Booleans... and jQuery.cookie() has a
-      // really hard time returning data that can be cast to a boolean. Use
-      // integer casting and strict comparison instead.
       $('#confirm-opt-out').change(function() {
         // Update the settings. Don't use setSettings() again, as we don't need
         // everything to be re-computed. We just want to update the prompt
@@ -47,17 +43,15 @@ var appInit = function() {
         app.settings.recursiveCheckPrompt = $('#confirm-opt-out').is(':checked');
 
         // Set a cookie to remember the selection.
+        // Careful, cookies don't like Booleans... and jQuery.cookie() has a
+        // really hard time returning data that can be cast to a boolean. Use
+        // integer casting and strict comparison instead.
         $.cookie('archibald_confirm_opt_out', $('#confirm-opt-out').is(':checked') ? 0 : 1, { expires: 7, path: '/' });
-      }).attr('checked', parseInt($.cookie('archibald_confirm_opt_out')) === 0);
-
-
-
-
+      }).attr('checked', parseInt($.cookie('archibald_confirm_opt_out')) === 0).change();
 
       // Allow the summary to be collapsed.
-      $('#archibald-summary-collapse').click(function() {
-        $(this).toggleClass('icon-plus').toggleClass('icon-minus');
-        $('#archibald-summary').toggleClass('archibald-summary--collapsed');
+      app.getWrapper().find('.archibald-curriculum-ui__summary-wrapper__label').click(function() {
+        app.getWrapper().find('.archibald-curriculum-ui__summary-wrapper').toggleClass('archibald-curriculum-ui__summary-wrapper--collapsed');
       });
 
       // Full screen logic.
@@ -149,21 +143,6 @@ var appInit = function() {
           }
         });
       }
-
-      // LP21 logic.
-      // Allow the filtering of items based on cycle data.
-      $('#archibald-lp21-filters').change(function(e) {
-        $('#archibald-row')
-          .removeClass('lp21-show-cycle-1')
-          .removeClass('lp21-show-cycle-2')
-          .removeClass('lp21-show-cycle-3');
-
-        $('#archibald-lp21-filter-warning').toggleClass('hidden', !$('#archibald-lp21-filters input:not(:checked)').length);
-
-        $('#archibald-lp21-filters input:checked').each(function() {
-          $('#archibald-row').addClass('lp21-show-' + this.value);
-        });
-      });
     }
   });
 };

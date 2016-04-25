@@ -138,27 +138,11 @@
   right: 10px;
   top: 14px;
 }
-.archibald-curriculum-ui-summary {
+.archibald-curriculum-ui__summary-wrapper {
   position: relative;
   border-top: 5px solid gray;
   min-height: 30px;
   width: 100%;
-}
-.archibald-curriculum-ui-summary--collapsed {
-  height: 30px;
-}
-.archibald-curriculum-ui-summary--collapsed .archibald-curriculum-ui-summary__label {
-  font-size: 12px;
-  margin: 0.5em;
-}
-#archibald-curriculum-ui-summary-collapse {
-  position: absolute;
-  z-index: 900;
-  top: 0;
-  right: 5px;
-  background-color: white;
-  border: 5px solid white;
-  cursor: pointer;
 }
 .archibald-curriculum-ui-summary__cycles {
   display: none;

@@ -24,3 +24,9 @@
 .full-screen:hover {
   background-color: #eee;
 }
+.archibald-curriculum-ui__summary-wrapper--collapsed {
+  height: 3.5em;
+}
+.archibald-curriculum-ui__summary-wrapper--collapsed .archibald-curriculum-ui__summary-wrapper__label {
+  margin: 0.5em;
+}

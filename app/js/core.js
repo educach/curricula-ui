@@ -52,8 +52,8 @@ Archibald.templates =  _.extend( {
     </div>\
   </div>\
   <div class="archibald-curriculum-ui__row archibald-curriculum-ui__summary-wrapper">\
-    <h3 class="archibald-curriculum-ui__summary__label"><i id="archibald-curriculum-ui__summary-collapse" class="icon-minus"></i> <%= typeof summaryLabel !== "undefined" ? summaryLabel : "Summary" %></h3>\
-    <div class="archibald-curriculum-ui__summary__content" id="archibald-curriculum-ui__summary-content">\
+    <h3 class="archibald-curriculum-ui__summary-wrapper__label"><%= typeof summaryLabel !== "undefined" ? summaryLabel : "Summary" %></h3>\
+    <div class="archibald-curriculum-ui__summary-wrapper__content">\
     </div>\
   </div>\
 </div>\
@@ -430,7 +430,7 @@ Core.prototype = {
       } );
 
       // Append the summary to our application wrapper.
-      this.$el.find( '.archibald-curriculum-ui__summary-wrapper' ).append( this.summaryView.render().$el );
+      this.$el.find( '.archibald-curriculum-ui__summary-wrapper__content' ).html( this.summaryView.render().$el );
     }
   },
 

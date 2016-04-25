@@ -7,7 +7,9 @@
 /build/
 
 /example/json/lp21_full.json
+/example/json/convert_lp21.php
 /example/json/obfuscate.php
+/example/json/load_per.php
 *.log
 *.sublime-*
 

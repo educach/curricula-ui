@@ -435,6 +435,9 @@ QUnit.test( "summary item selection", function( assert ) {
       app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
       column = app.createRootColumn();
 
+  // Set an item as being expanded. We will check it later.
+  app.getItemDatabase().get( 'id-3' ).set( 'expanded', true ),
+
   app.summaryView.on( 'summary:select-item', function() {
     // There should be 3 visible columns.
     assert.equal(

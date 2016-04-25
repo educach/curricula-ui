@@ -67,7 +67,14 @@ QUnit.test( "column collection events", function( assert ) {
 QUnit.test( "column creation helper", function( assert ) {
   var doneBubbleEvent = assert.async(),
       app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
-      column = app.createColumn( _testGetJSONItems()[ 'root' ] );
+      column = app.createRootColumn();
+
+  assert.throws(
+    function() {
+      app.createRootColumn();
+    },
+    "Trying to create a root column when columns already exist throws an error."
+  );
 
   // Check the defaults.
   assert.notOk( column.isCollapsed(), "The column is not collapsed by default." );

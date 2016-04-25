@@ -426,7 +426,7 @@ Core.prototype = {
         // @todo Make this a method of the View itself!
         if ( typeof $.fn.nanoScroller !== 'undefined' ) {
           column.$el.find( '.nano' ).nanoScroller({
-            scrollTo: $( '#archibald-column__wrapper__list__item-' + selectedItem.get( 'id' ) )
+            scrollTo: column.$el.find( '[data-model-id="' + selectedItem.get( 'id' ) + '"]' )
           });
         }
         $( 'body, html' ).stop().animate({

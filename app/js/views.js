@@ -194,8 +194,8 @@ Archibald.ItemView = Backbone.View.extend({
       .toggleClass( this.className + '--expanded', !!this.model.get( 'expanded' ) )
       .toggleClass( this.className + '--highlighted', !!this.model.get( 'highlighted' ) ) ;
 
-    // Same thing for the ID, which is based on the model's ID.
-    this.$el.attr( 'id', this.className + '-' + this.model.get( 'id' ) );
+    // Set an attribute based on the model's ID.
+    this.$el.attr( 'data-model-id', this.model.get( 'id' ) );
 
     // Prepare the template variables based on the model's values. We also pass
     // some of our view's attributes.

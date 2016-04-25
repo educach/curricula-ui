@@ -1,9 +1,8 @@
 (function($) {
 
 var appInit = function() {
-  var variant = window.location.search.replace( "?", "" ) || 'lp21';
   $.ajax({
-    url: 'json/' + variant + '_full.json',
+    url: 'json/full.json',
     dataType: 'json',
     success: function( items ) {
       // We don't pass in the wrapper, otherwise we cannot react to the

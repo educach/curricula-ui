@@ -430,7 +430,7 @@ Core.prototype = {
           });
         }
         $( 'body, html' ).stop().animate({
-          scrollTop: (that.$el.offset().top - 50 ) + 'px'
+          scrollTop: ( that.$el.offset().top - 50 ) + 'px'
         });
       } );
 
@@ -881,7 +881,7 @@ Core.prototype = {
         that.resize( that.$el.find( '.archibald-curriculum-ui__editor').width() + itemInfoWidth );
       });
       this.itemInfoView.on( 'expand', function() {
-        that.resize( that.$el.find( '.archibald-curriculum-ui__editor').width() - itemInfoWidth);
+        that.resize( that.$el.find( '.archibald-curriculum-ui__editor').width() - itemInfoWidth );
       });
 
       if ( typeof $.fn.nanoScroller !== 'undefined' ) {

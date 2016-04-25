@@ -87,23 +87,6 @@
 .archibald-column__wrapper__list__item--active {
   background-color: #ccc;
 }
-.archibald-column__wrapper__list__item--level-2 {
-  padding-left: 60px;
-}
-.archibald-column__wrapper__list__item--level-3 {
-  padding-left: 90px;
-}
-.archibald-column__wrapper__list__item--is-group {
-  border-bottom: 2px solid #555;
-}
-.archibald-column__wrapper__list__item--is-not-selectable-group {
-  font-size: 1.1em;
-  font-weight: bold;
-  background: #eee;
-}
-.archibald-column__wrapper__list__item--is-not-selectable-group input {
-  display: none !important;
-}
 @keyframes archibald-column__wrapper__list__item--highlighted {
   0%, 100% {
     background-color: #F0F567;

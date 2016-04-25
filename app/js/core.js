@@ -454,6 +454,7 @@ Core.prototype = {
         this.itemDatabase.add( new Archibald.ItemModel({
           id:          items[ group ][ i ].id,
           name:        items[ group ][ i ].name,
+          type:        items[ group ][ i ].type,
           data:        items[ group ][ i ].data,
           parentId:    group,
           hasChildren: !!(

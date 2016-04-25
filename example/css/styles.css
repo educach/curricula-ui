@@ -30,3 +30,15 @@
 .archibald-curriculum-ui__summary-wrapper--collapsed .archibald-curriculum-ui__summary-wrapper__label {
   margin: 0.5em;
 }
+.archibald-column__wrapper__list__item--is_group {
+  border-bottom: 2px solid #555;
+  font-size: 1.1em;
+  font-weight: bold;
+  background: #eee;
+}
+.archibald-column__wrapper__list__item--level-2 {
+  padding-left: 60px;
+}
+.archibald-column__wrapper__list__item--level-3 {
+  padding-left: 90px;
+}

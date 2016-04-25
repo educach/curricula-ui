@@ -194,6 +194,20 @@ Archibald.ItemView = Backbone.View.extend({
       .toggleClass( this.className + '--expanded', !!this.model.get( 'expanded' ) )
       .toggleClass( this.className + '--highlighted', !!this.model.get( 'highlighted' ) ) ;
 
+    // We check all the data elements we have. If some of the root data elements
+    // are boolean values, we treat them as modifier flags for convenience.
+    if ( typeof this.model.get( 'data' ) !== 'undefined' ) {
+      var data = this.model.get( 'data' );
+      for ( var key in data ) {
+        if ( typeof data[ key ] === 'boolean' ) {
+          this.$el.toggleClass( this.className + '--' + this.cleanupClassName( key ), !!data[ key ] );
+        }
+      }
+    }
+
+    // Finally, add a modifier class based on the element's type.
+    this.$el.addClass( this.className + '--' + this.cleanupClassName( this.model.get( 'type' ) ) );
+
     // Set an attribute based on the model's ID.
     this.$el.attr( 'data-model-id', this.model.get( 'id' ) );
 
@@ -283,6 +297,11 @@ Archibald.ItemView = Backbone.View.extend({
   triggerActiveChange: function() {
     var state = this.model.get( 'active' );
     this.trigger( state ? 'active' : 'unactive', state, this.model, this );
+  },
+
+  // Cleanup string that's to be used as a class name.
+  cleanupClassName: function( string ) {
+    return string.replace( /([^a-z0-9_\-]+)/gi, '' );
   }
 });
 

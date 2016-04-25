@@ -42,6 +42,7 @@ Archibald.ItemModel = Backbone.Model.extend({
     active:      false,
     expanded:    false,
     hasChildren: false,
+    highlighted: false,
     data:        {}
   },
   // The model validates itself, checking that it received a valid name, as well

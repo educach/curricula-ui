@@ -428,6 +428,57 @@ QUnit.test( "triggering events", function( assert ) {
 });
 
 /**
+ * Test the summary item selection.
+ */
+QUnit.test( "summary item selection", function( assert ) {
+  var doneSelectEvent = assert.async(),
+      app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
+      column = app.createRootColumn();
+
+  app.summaryView.on( 'summary:select-item', function() {
+    // There should be 3 visible columns.
+    assert.equal(
+      3,
+      app.getColumnDatabase().length,
+      "There are 3 expanded columns"
+    );
+    // Items 1 and 5 should be expanded.
+    assert.ok(
+      app.getItemDatabase().get( 'id-1' ).get( 'expanded' ),
+      "Item id-1 is correctly expanded."
+    );
+    assert.ok(
+      app.getItemDatabase().get( 'id-5' ).get( 'expanded' ),
+      "Item id-5 is correctly expanded."
+    );
+    assert.notOk(
+      app.getItemDatabase().get( 'id-3' ).get( 'expanded' ),
+      "Item id-3 is correctly collapsed."
+    );
+    // Item 6 should be highlighted.
+    assert.ok(
+      app.getItemDatabase().get( 'id-6' ).get( 'highlighted' ),
+      "Item id-6 is correctly highlighted."
+    );
+    doneSelectEvent();
+  });
+
+  // Activate items, so they "appear" in the summary.
+  var item6 = app.getItemDatabase().get( 'id-6' );
+  item6.set( 'active', true );
+  app.recursiveCheck( item6 );
+
+  // For performance reasons, the `ArchibaldCurriculum.SummaryTreeView` doesn't
+  // render on immediately. For this reason, we need to wait a few ms before
+  // triggering our click. See `ArchibaldCurriculum.SummaryTreeView#render()`
+  // for more information.
+  setTimeout( function() {
+    // Now, simulate a click on this item.
+    app.summaryView.$el.find( '[data-model-id="id-6"]' ).click();
+  }, 20 );
+});
+
+/**
  * Define a test item database, mimicking the structure a JSON file would
  * contain.
  */

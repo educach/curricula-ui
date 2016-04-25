@@ -401,6 +401,7 @@ Core.prototype = {
             expandedItems[ i ].set( 'expanded', false );
           }
         }
+        that.unhighlightItems();
 
         // Now, loop through the selected item's hierarchy, and trigger the
         // "item:select" event, updating the column reference every time.

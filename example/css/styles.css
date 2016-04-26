@@ -42,3 +42,14 @@
 .archibald-column__wrapper__list__item--level-3 {
   padding-left: 90px;
 }
+.archibald-column__wrapper__list__item--level-4 {
+  padding-left: 120px;
+}
+.archibald-column__wrapper__list__item--title {
+  cursor: pointer;
+}
+.archibald-column__wrapper__list__item__per-selection {
+  margin-top: 1em;
+  font-size: .9em;
+  font-style: italic;
+}

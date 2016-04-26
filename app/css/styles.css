@@ -48,6 +48,11 @@
   -ms-transition: opacity .5s;
   -o-transition: opacity .5s;
   transition: opacity .5s;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .archibald-column--collapsed .archibald-column__button {
   opacity: 0;

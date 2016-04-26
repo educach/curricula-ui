@@ -32,7 +32,7 @@
 // This defines the default templates used by the views in the application. They
 // can be overridden in various cases, as needed. Archibald Curriculum strictly
 // adheres to *BEM* notation for the markup, and overrides should follow suit.
-Archibald.templates =  _.extend( {
+Archibald.templates = _.extend({
 
   // A single item.
   //
@@ -114,7 +114,7 @@ Archibald.templates =  _.extend( {
 </li>\
 '
 
-}, Archibald.templates || {} );
+}, Archibald.templates || {});
 
 
 // Item view
@@ -160,10 +160,10 @@ Archibald.ItemView = Backbone.View.extend({
     }
 
     // Store the passed settings, providing defaults.
-    this.settings = _.extend( {
+    this.settings = _.extend({
       // Whether the item is editable or not. Defaults to `false`.
       editable: false
-    }, settings || {} );
+    }, settings || {});
 
     // The view will react on model state changes, either re-rendering itself
     // or removing itself completely from the DOM. When such events are
@@ -340,12 +340,12 @@ Archibald.ItemListView = Backbone.View.extend({
     }
 
     // Store the passed settings, providing defaults.
-    this.settings = _.extend( {
+    this.settings = _.extend({
       // Whether the child items are editable or not. Defaults to `false`.
-      editable: false,
+      editable:  false,
       // What View to use for the child view. Defaults to `Archibald.ItemView`.
       childView: Archibald.ItemView
-    }, settings || {} );
+    }, settings || {});
 
     // The view will react on collection state changes, re-rendering itself
     // every time. When such events are triggered by the collection, the view
@@ -609,7 +609,7 @@ Archibald.SummaryTreeView = Backbone.View.extend({
       html = '<ul class="archibald-curriculum-ui-summary__list">';
       children.forEach( function( model ) {
         // Render a single item. Recursively get the child markup by calling
-        //  `SummaryTreeView#recursiveRender()` again.
+        // `SummaryTreeView#recursiveRender()` again.
         var variables = model.toJSON();
         variables.children = that.recursiveRender( model.get( 'id' ) );
         html += that.tpl( variables );

@@ -23,7 +23,7 @@
 // This defines the default templates used by the core application. They
 // can be overridden in various cases, as needed. Archibald Curriculum strictly
 // adheres to *BEM* notation for the markup, and overrides should follow suit.
-Archibald.templates =  _.extend( {
+Archibald.templates =  _.extend({
 
   // CSS rules.
   //
@@ -59,7 +59,7 @@ Archibald.templates =  _.extend( {
 </div>\
 '
 
-}, Archibald.templates || {} );
+}, Archibald.templates || {});
 
 // Core
 // ----
@@ -164,7 +164,7 @@ Core.prototype = {
 
     // Render the application markup.
     this.$el.html( this.settings.templates.app() );
-    this.triggerEvent( 'app' , 'render', this );
+    this.triggerEvent( 'app', 'render', this );
 
     // Add the item info element to the markup.
     this.updateItemInfo();
@@ -272,8 +272,7 @@ Core.prototype = {
                     var column = element.get( 'column' );
                     if ( leftSiblingsCount - i >= that.maxCols ) {
                       column.collapse();
-                    }
-                    else {
+                    } else {
                       column.expand();
                     }
                   });

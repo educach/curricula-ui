@@ -690,7 +690,7 @@ Core.prototype = {
             that.resize();
           } );
         })
-        .appendTo( 'body' );
+        .appendTo( that.$el );
 
       // Trigger the initial math.
       that.resize();

@@ -614,6 +614,18 @@ Archibald.SummaryTreeView = Backbone.View.extend({
         // `SummaryTreeView#recursiveRender()` again.
         var variables = model.toJSON();
         variables.children = that.recursiveRender( model.get( 'id' ) );
+
+        // Cleanup the name. Some elements contain HTML, and our summary tree is
+        // quite fragile.
+        var tmp;
+        for ( var i in variables.name ) {
+          // Trick to strip an element of all markup.
+          // See http://stackoverflow.com/questions/5002111/javascript-how-to-strip-html-tags-from-string
+          tmp = document.createElement( 'div' );
+          tmp.innerHTML = variables.name[ i ];
+          variables.name[ i ] = tmp.textContent || tmp.innerText || variables.name[ i ];
+        }
+
         html += that.tpl( variables );
       });
       html += '</ul>';

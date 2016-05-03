@@ -36,8 +36,8 @@
 // attribute.
 Archibald.ItemModel = Backbone.Model.extend({
   defaults: {
-    name:        null,
-    type:        null,
+    name:        undefined,
+    type:        undefined,
     parentId:    "root",
     active:      false,
     expanded:    false,

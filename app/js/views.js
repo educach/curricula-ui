@@ -206,7 +206,9 @@ Archibald.ItemView = Backbone.View.extend({
     }
 
     // Finally, add a modifier class based on the element's type.
-    this.$el.addClass( this.className + '--' + this.cleanupClassName( this.model.get( 'type' ) ) );
+    if ( typeof this.model.get( 'type' ) !== 'undefined' ) {
+      this.$el.addClass( this.className + '--' + this.cleanupClassName( this.model.get( 'type' ) ) );
+    }
 
     // Set an attribute based on the model's ID.
     this.$el.attr( 'data-model-id', this.model.get( 'id' ) );

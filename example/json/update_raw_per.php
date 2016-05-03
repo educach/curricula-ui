@@ -242,4 +242,4 @@ foreach ($json as &$group) {
   }
 }
 
-file_put_contents(__DIR__ . '/per_example.json', json_encode($json, JSON_PRETTY_PRINT));
+file_put_contents(__DIR__ . '/per_example.json', json_encode($json/*, JSON_PRETTY_PRINT*/));

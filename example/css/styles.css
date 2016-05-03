@@ -53,3 +53,37 @@
   font-size: .9em;
   font-style: italic;
 }
+.archibald-per-table {
+  border-collapse: collapse;
+  background: white;
+}
+.archibald-per-table__cell {
+  vertical-align: top;
+  padding: 10px;
+  border: 1px solid #bbb;
+}
+.archibald-per-table__cell--title {
+  font-weight: bold;
+}
+.archibald-per-table__cell--level-1 {
+  background: #fb0;
+  color: white;
+  font-size: 1.3em;
+}
+.archibald-per-table__cell--level-2 {
+  font-size: 1.1em;
+  background: #fbf5d6;
+}
+.archibald-per-table__cell--active {
+  background: #ddd;
+}
+.archibald-per-table__cell--progression label {
+  margin: 0;
+  font-weight: normal;
+  font-size: 1em;
+  cursor: pointer;
+}
+.archibald-per-table__cell--progression input {
+  float: left;
+  margin-right: 1em;
+}

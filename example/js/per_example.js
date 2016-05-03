@@ -57,21 +57,83 @@ var appInit = function() {
       });
 
       app.on( 'column:item:select', function( itemModel, itemView, columnCollection, column, eventApp ) {
-        if ( itemModel.get( 'type' ) === 'title' ) {
-          var $window = $( window );
+        if ( itemModel.get( 'type' ) === 'objective' ) {
 
-          console.log( itemModel.get( 'data' ) );
+          if (
+            typeof itemModel.get( 'data' ) !== 'undefined' &&
+            typeof itemModel.get( 'data' ).per_table !== 'undefined'
+          ) {
+            var $window = $( window ),
+                $table = $( '<table class="archibald-per-table"></table>' ),
+                perTable = itemModel.get( 'data' ).per_table,
+                $row, $cell, cellContent;
 
-          $( '#modal' ).dialog({
-            height: $window.height() - 200,
-            width: $window.width() - 200,
-            buttons: [{
-              text: "OK",
-              click: function() {
-                $( this ).dialog( 'close' );
+            for ( var rowId in perTable ) {
+              $row = $( '<tr></tr>' );
+              for ( var cellId in perTable[ rowId ] ) {
+                $cell = $( '<td class="archibald-per-table__cell"></td>' );
+                $cell.addClass( 'archibald-per-table__cell--' + perTable[ rowId ][ cellId ].type );
+
+                if ( typeof perTable[ rowId ][ cellId ].level !== 'undefined' ) {
+                  $cell.addClass( 'archibald-per-table__cell--level-' + perTable[ rowId ][ cellId ].level );
+                }
+
+                $cell.attr({
+                  colspan: typeof perTable[ rowId ][ cellId ].colspan !== 'undefined' ?
+                    perTable[ rowId ][ cellId ].colspan :
+                    1,
+                  rowspan: typeof perTable[ rowId ][ cellId ].rowspan !== 'undefined' ?
+                    perTable[ rowId ][ cellId ].rowspan :
+                    1,
+                  'data-school-years': typeof perTable[ rowId ][ cellId ].school_years !== 'undefined' ?
+                    perTable[ rowId ][ cellId ].school_years :
+                    '',
+                });
+
+                cellContent = '';
+                _.each( perTable[ rowId ][ cellId ].content, function( item ) {
+                  cellContent += '<div class="archibald-per-table__cell__item">';
+
+                  if ( perTable[ rowId ][ cellId ].is_selectable ) {
+                    cellContent += '<label><input name="progressions-' + item.id + '" type="checkbox" /> ';
+                    cellContent += item.value;
+                    cellContent += '</label>';
+                  } else {
+                    cellContent += item.value;
+                  }
+                  cellContent += '</div>';
+                } );
+                $cell.html( cellContent );
+
+                if ( perTable[ rowId ][ cellId ].is_selectable ) {
+                  // As long as one item is selected, highlight the whole cell.
+                  (function( $cell ) {
+                    $cell.find( 'input' ).change( function() {
+                      if ( $cell.find( 'input:checked' ).length ) {
+                        $cell.addClass( 'archibald-per-table__cell--active' );
+                      } else {
+                        $cell.removeClass( 'archibald-per-table__cell--active' );
+                      }
+                    });
+                  })( $cell );
+                }
+
+                $row.append( $cell );
               }
-            }]
-          });
+              $table.append( $row );
+            }
+
+            $( '#modal' ).html( $table ).dialog({
+              height: $window.height() - 100,
+              width: $window.width() - 400,
+              buttons: [{
+                text: "OK",
+                click: function() {
+                  $( this ).dialog( 'close' );
+                }
+              }]
+            });
+          }
         }
       });
 

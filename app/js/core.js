@@ -424,9 +424,12 @@ Core.prototype = {
 
         // @todo Make this a method of the View itself!
         if ( typeof $.fn.nanoScroller !== 'undefined' ) {
-          column.$el.find( '.nano' ).nanoScroller({
-            scrollTo: column.$el.find( '[data-model-id="' + selectedItem.get( 'id' ) + '"]' )
-          });
+          var $element = column.$el.find( '[data-model-id="' + selectedItem.get( 'id' ) + '"]' );
+          if ( $element.length ) {
+            column.$el.find( '.nano' ).nanoScroller({
+              scrollTo: $element
+            });
+          }
         }
         $( 'body, html' ).stop().animate({
           scrollTop: ( that.$el.offset().top - 50 ) + 'px'

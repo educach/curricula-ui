@@ -438,7 +438,7 @@ QUnit.test( "summary item selection", function( assert ) {
   // Set an item as being expanded. We will check it later.
   app.getItemDatabase().get( 'id-3' ).set( 'expanded', true ),
 
-  app.summaryView.on( 'summary:select-item', function() {
+  app.on( 'summary:item:select', function() {
     // There should be 3 visible columns.
     assert.equal(
       3,

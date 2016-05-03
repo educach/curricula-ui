@@ -539,7 +539,7 @@ Archibald.SummaryTreeView = Backbone.View.extend({
   tpl: _.template( Archibald.templates.summaryList ),
 
   // The summary view can react to multiple events, most importantly the `click`
-  // event. This will trigger a `summary:select-item` event, which will allow
+  // event. This will trigger a `item:select` event, which will allow
   // other parts of the application to react accordingly. Other events are
   // `mouseover` and `mouseout`  events. These trigger the toggling of CSS
   // classes, which can be used to highlight structural information.
@@ -652,14 +652,14 @@ Archibald.SummaryTreeView = Backbone.View.extend({
   },
 
   // Event handler for clicking on an item in the tree. Stop the bubbling up
-  // of the event, and trigger a `summary:select-item` event, so other parts
+  // of the event, and trigger a `item:select` event, so other parts
   // of the application can react to it.
   triggerSelect: function( e ) {
     e.stopPropagation();
     var itemModel = this.collection.get(
       this.$( e.currentTarget ).attr( 'data-model-id' )
     );
-    this.trigger( 'summary:select-item', itemModel, this.collection, this );
+    this.trigger( 'item:select', itemModel, this.collection, this );
   }
 });
 

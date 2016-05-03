@@ -366,7 +366,7 @@ Core.prototype = {
       });
 
       var that = this;
-      this.summaryView.on( 'summary:select-item', function( selectedItem, collection, summaryView ) {
+      this.summaryView.on( 'item:select', function( selectedItem, collection, summaryView ) {
         // First, fully collapse all the columns, except the "root" one. Get
         // the first column element from the database.
         var column = that.columnDatabase.first().get( 'column' );
@@ -435,6 +435,21 @@ Core.prototype = {
 
       // Append the summary to our application wrapper.
       this.$el.find( '.archibald-curriculum-ui__summary-wrapper__content' ).html( this.summaryView.render().$el );
+
+      // Allow all events to bubble up.
+      this.summaryView.on( 'all', function( event ) {
+        // Get the remaining arguments, removing the event name.
+        var args = Array.prototype.slice.call( arguments, 1 );
+
+        // Add the application itself.
+        args.push( that );
+
+        // Bubble it up.
+        that.triggerEvent.apply(
+          that,
+          [ 'summary', event ].concat( args )
+        );
+      } );
     }
   },
 

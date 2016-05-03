@@ -10,6 +10,16 @@ foreach ($json as &$group) {
     if (isset($item['data'])) {
       $item['data'] = (array) $item['data'];
 
+      // Use the new isSelectable key.
+      if (isset($item['data']['is_selectable_group'])) {
+        $item['data']['isSelectable'] = $item['data']['is_selectable_group'];
+        unset($item['data']['is_selectable_group']);
+      }
+
+      if (!isset($json[$item['id']])) {
+        $json[$item['id']] = array();
+      }
+
       // We first start constructing the table of titles and progressions.
       $table = array();
 
@@ -17,9 +27,23 @@ foreach ($json as &$group) {
         $schoolYears = array();
         foreach ($item['data']['raw_per']['progressions'] as $progressionsData) {
           foreach ($progressionsData['items'] as $progressionsDataItem) {
+            // Use this opportunity to add the progression items to the
+            // database.
+            foreach ($progressionsDataItem['contenus'] as $progression) {
+              $json[$item['id']][$progression['id']] = array(
+                'id' => 'progressions-' . $progression['id'],
+                'type' => 'progression',
+                'name' => [ str_replace(["\r\n", "\n", "\r"], '', $progression['texte']) ],
+                'data' => array(
+                  'perSchoolYears' => $progressionsData['annees'],
+                ),
+                'hasChildren' => false,
+              );
+            }
+
             // Add the item to the appropriate rows.
             foreach ($progressionsDataItem['lignes'] as $rowNumber) {
-              // we need to add the colspan information. This is deduced from
+              // We need to add the colspan information. This is deduced from
               // the school years. School years are grouped in columns:
               // - Cycle 1: 1-2 and 3-4
               // - Cycle 2: 5-6 and 7-8
@@ -61,15 +85,15 @@ foreach ($json as &$group) {
                 'school_years' => implode('-', $progressionsData['annees']),
                 'content' => array_map(function($content) {
                   return array(
-                    'id' => $content['id'],
+                    'id' => 'progressions-' . $content['id'],
                     'value' => $content['texte'],
                   );
                 }, $progressionsDataItem['contenus']),
                 // Some progressions don't make any sense, like
                 // "Genre conseillés:". Try to filter these out.
-                'is_selectable' => true,
+                'isSelectable' => true,
                 /* Check with FriTic; this one is really tricky...
-                'is_selectable' =>
+                'isSelectable' =>
                   count($progressionsDataItem['contenus']) > 2 ||
                   !preg_match('/:$/', trim($progressionsDataItem['contenus'][0]['texte'])),
                 */
@@ -77,6 +101,14 @@ foreach ($json as &$group) {
             }
           }
         }
+
+        // Now, some elements are sneaky: they are defined *twice* for the same
+        // row, just not in the same place. On the official site, these are
+        // supposed to be merged via colspan (if possible; sometimes a cell sits
+        // between them). In order to check this, we iterate over each row, and
+        // check the IDs. If the same IDs is present twice for the same row,
+        // with the same rowspan.
+        // @todo Merging!!
 
         // Add empty cells where needed. Some rows don't have enough cells to
         // span the entire width, and the existing cells are not *supposed* to
@@ -101,7 +133,7 @@ foreach ($json as &$group) {
                 'colspan' => 1,
                 'school_years' => $missingYear,
                 'content' => [],
-                'is_selectable' => false,
+                'isSelectable' => false,
               );
             }
 
@@ -114,7 +146,6 @@ foreach ($json as &$group) {
             });
           }
         }
-
       }
 
       if (!empty($item['data']['raw_per']['titres'])) {
@@ -122,7 +153,11 @@ foreach ($json as &$group) {
         foreach ($item['data']['raw_per']['titres'] as $titleData) {
           // Add the item to the appropriate rows.
           foreach ($titleData['lignes'] as $rowNumber) {
-            $titleRows[$rowNumber] = $rowNumber;
+            // Store the row numbers that are in fact title rows.
+            if (!isset($titleRows[$rowNumber])) {
+              $titleRows[$rowNumber] = $rowNumber;
+            }
+
             $table[$rowNumber][] = array(
               'type' => 'title',
               // Titles never span rows. Colspans are computed below, but given
@@ -135,16 +170,18 @@ foreach ($json as &$group) {
                 );
               }, $titleData['contenus']),
               'level' => (int) $titleData['niveau'],
-              'is_selectable' => false,
+              'isSelectable' => false,
             );
           }
         }
 
-        // The colspan for titles are much more complicated. We simply need to
-        // deduce the number of columns, and see if any of our rows containing
-        // titles are "missing" cells. If so, we need to span.
+        // The colspan for titles are much more complicated. We need to deduce
+        // the number of columns, and see if any of our rows containing titles
+        // are "missing" cells. If so, we need to span.
         // First, get the maximum "width" of the table, which will define our
-        // maximum colspan.
+        // maximum colspan. For that, we iterate over each row, adding up all
+        // the colspan values (default to 1). The row with the highest value
+        // will be used as a reference.
         $max = 0;
         foreach ($table as $row) {
           $colspanTotal = 0;
@@ -156,14 +193,14 @@ foreach ($json as &$group) {
 
         // Now, iterate over all rows containing titles, and make sure we set
         // the correct colspan values. It is useful to note that titles *never*
-        // span rows; only columns.
+        // span rows; they only span columns.
         foreach ($titleRows as $titleRowId) {
-          $row =& $table[$titleRowId];
+          $row = $table[$titleRowId];
           if (count($row) < $max) {
-            // Using end() here doesn't work, as we cannot get the cell by
-            // reference using end().
-            $lastCell =& $row[count($row) - 1];
-            $lastCell['colspan'] = $max - count($row) + 1;
+            // We simply let the last title span the appropriate amount of
+            // columns. This should be correct in 99% of cases...
+            $rowCount = count($row);
+            $table[$titleRowId][$rowCount - 1]['colspan'] = $max - $rowCount + 1;
           }
         }
 
@@ -171,30 +208,7 @@ foreach ($json as &$group) {
         ksort($table);
 
         // Now add the table to the objective item.
-        $item['data']['per_table'] = $table;
-
-
-        /*
-        if (!isset($json[$item['id']])) {
-          $json[$item['id']] = array();
-        }
-
-        foreach ($item['data']['raw_per']['titres'] as $titleData) {
-          // Only show level 1 items.
-          if ((int) $titleData['niveau'] === 1) {
-            $json[$item['id']][] = array(
-              'id' => 'titres-' . md5(serialize($titleData['contenus'])),
-              'type' => 'title',
-              'name' => $titleData['contenus'],
-              'data' => array(
-                'is_selectable' => false,
-                'per_table' => $table,
-              ),
-              'hasChildren' => false,
-            );
-          }
-        }
-        */
+        $item['data']['perTable'] = $table;
       }
 
       /*
@@ -212,7 +226,7 @@ foreach ($json as &$group) {
                 'type' => 'progression',
                 'name' => [ str_replace(array("\r\n", "\n"), '', $progression['texte']) ],
                 'data' => array(
-                  'per_school_years' => $progressionsData['annees'],
+                  'perSchoolYears' => $progressionsData['annees'],
                 ),
                 'hasChildren' => false,
               );
@@ -221,6 +235,9 @@ foreach ($json as &$group) {
         }
       }
       //*/
+
+      // Remove the raw data.
+      unset($item['data']['raw_per']);
     }
   }
 }

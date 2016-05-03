@@ -55,12 +55,12 @@
 }
 .archibald-per-table {
   border-collapse: collapse;
-  background: white;
 }
 .archibald-per-table__cell {
   vertical-align: top;
   padding: 10px;
   border: 1px solid #bbb;
+  background: white;
 }
 .archibald-per-table__cell--title {
   font-weight: bold;
@@ -76,6 +76,10 @@
 }
 .archibald-per-table__cell--active {
   background: #ddd;
+}
+.archibald-per-table__cell--empty {
+  background: transparent;
+  border-style: dashed;
 }
 .archibald-per-table__cell--progression label {
   margin: 0;

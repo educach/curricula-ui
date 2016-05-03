@@ -4,7 +4,7 @@ Archibald.templates = Archibald.templates || {};
 
 // We want to alter the display of certain items.
 Archibald.templates.item = '\
-<% if ( editable && ( typeof data === "undefined" || typeof data.is_selectable === "undefined" || data.is_selectable )) { %>\
+<% if ( editable && ( typeof data === "undefined" || typeof data.isSelectable === "undefined" || data.isSelectable )) { %>\
   <input type="checkbox"<% if ( active ) { %> checked<% } %>/>\
 <% } %>\
 <% for ( var i in name ) { %>\
@@ -61,11 +61,11 @@ var appInit = function() {
 
           if (
             typeof itemModel.get( 'data' ) !== 'undefined' &&
-            typeof itemModel.get( 'data' ).per_table !== 'undefined'
+            typeof itemModel.get( 'data' ).perTable !== 'undefined'
           ) {
             var $window = $( window ),
                 $table = $( '<table class="archibald-per-table"></table>' ),
-                perTable = itemModel.get( 'data' ).per_table,
+                perTable = itemModel.get( 'data' ).perTable,
                 $row, $cell, cellContent;
 
             for ( var rowId in perTable ) {
@@ -85,8 +85,8 @@ var appInit = function() {
                   rowspan: typeof perTable[ rowId ][ cellId ].rowspan !== 'undefined' ?
                     perTable[ rowId ][ cellId ].rowspan :
                     1,
-                  'data-school-years': typeof perTable[ rowId ][ cellId ].school_years !== 'undefined' ?
-                    perTable[ rowId ][ cellId ].school_years :
+                  'data-per-school-years': typeof perTable[ rowId ][ cellId ].perSchoolYears !== 'undefined' ?
+                    perTable[ rowId ][ cellId ].perSchoolYears :
                     '',
                 });
 
@@ -94,8 +94,11 @@ var appInit = function() {
                 _.each( perTable[ rowId ][ cellId ].content, function( item ) {
                   cellContent += '<div class="archibald-per-table__cell__item">';
 
-                  if ( perTable[ rowId ][ cellId ].is_selectable ) {
-                    cellContent += '<label><input name="progressions-' + item.id + '" type="checkbox" /> ';
+                  if ( perTable[ rowId ][ cellId ].isSelectable ) {
+                    var model = app.getItemDatabase().get( item.id ),
+                        checked = model ? model.get( 'active' ) : false;
+                    cellContent += '<label><input data-model-id="' + item.id + '" type="checkbox" ' + ( checked ? ' checked="checked"' : '' ) + ' /> ';
+
                     cellContent += item.value;
                     cellContent += '</label>';
                   } else {
@@ -105,16 +108,26 @@ var appInit = function() {
                 } );
                 $cell.html( cellContent );
 
-                if ( perTable[ rowId ][ cellId ].is_selectable ) {
-                  // As long as one item is selected, highlight the whole cell.
+                if ( perTable[ rowId ][ cellId ].isSelectable ) {
                   (function( $cell ) {
                     $cell.find( 'input' ).change( function() {
+                      // Upon checking an item, actually select the
+                      // corresponding model.
+                      var $this = $( this );
+                      if ( $this.attr( 'data-model-id' ) ) {
+                        var model = app.getItemDatabase().get( $this.attr( 'data-model-id' ) );
+                        model.set( 'active', $this.is( ':checked' ) );
+                        app.recursiveCheck( model, app.settings.recursiveCheckPrompt );
+                      }
+
+                      // As long as one item is selected, highlight the whole
+                      // cell.
                       if ( $cell.find( 'input:checked' ).length ) {
                         $cell.addClass( 'archibald-per-table__cell--active' );
                       } else {
                         $cell.removeClass( 'archibald-per-table__cell--active' );
                       }
-                    });
+                    }).change();
                   })( $cell );
                 }
 
@@ -126,6 +139,8 @@ var appInit = function() {
             $( '#modal' ).html( $table ).dialog({
               height: $window.height() - 100,
               width: $window.width() - 400,
+              position: { my: 'center', at: 'center', of: app.getWrapper() },
+              show: 200,
               buttons: [{
                 text: "OK",
                 click: function() {
@@ -136,6 +151,31 @@ var appInit = function() {
           }
         }
       });
+
+      // If the selected item is a "progression d'apprentissage", core will
+      // not scroll to it. Trigger that logic ourselves.
+      app.on( 'summary:item:select', function( selectedItem, collection, summaryView ) {
+        if ( selectedItem.get( 'type' ) === 'progression' ) {
+          // @todo Make this a method of the View itself!
+          if ( typeof $.fn.nanoScroller !== 'undefined' ) {
+            var $element = app.getWrapper().find( '[data-model-id="' + selectedItem.get( 'parentId' ) + '"]' );
+            if ( $element.length ) {
+              // @todo Too much hardcoded stuff!!
+              $element.parents( '.archibald-column' ).find( '.nano' ).nanoScroller({
+                scrollTo: $element
+              });
+            }
+          }
+
+          // Scroll the dialog as well. Give the dialog some time to open up and
+          // render.
+          setTimeout( function() {
+            $( '#modal' ).stop().animate({
+              scrollTop: ( $( '#modal' ).find( '[data-model-id="' + selectedItem.get( 'id' ) + '"]' ).offset().top - 100 ) + 'px'
+            });
+          }, 200 );
+        }
+      } );
 
       // Setting the wrapper will trigger the rendering.
       app.setWrapper( $( '#app' ) );

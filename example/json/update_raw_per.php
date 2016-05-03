@@ -82,7 +82,7 @@ foreach ($json as &$group) {
               $table[$rowNumber][] = array(
                 'type' => 'progression',
                 'colspan' => $colspan,
-                'school_years' => implode('-', $progressionsData['annees']),
+                'perSchoolYears' => implode('-', $progressionsData['annees']),
                 'content' => array_map(function($content) {
                   return array(
                     'id' => 'progressions-' . $content['id'],
@@ -121,7 +121,7 @@ foreach ($json as &$group) {
         foreach ($table as $rowNumber => $row) {
           $coveredYears = array();
           foreach ($row as $cell) {
-            $coveredYears[] = $cell['school_years'];
+            $coveredYears[] = $cell['perSchoolYears'];
           }
 
           $missingYears = array_diff($schoolYears, $coveredYears);
@@ -131,7 +131,7 @@ foreach ($json as &$group) {
               $table[$rowNumber][] = array(
                 'type' => 'empty',
                 'colspan' => 1,
-                'school_years' => $missingYear,
+                'perSchoolYears' => $missingYear,
                 'content' => [],
                 'isSelectable' => false,
               );
@@ -140,8 +140,8 @@ foreach ($json as &$group) {
             // Re-order the cells in the table, to make sure the empty ones pad
             // at the correct place.
             usort($table[$rowNumber], function($a, $b) {
-              $aYear = (int) @reset(explode('-', $a['school_years']));
-              $bYear = (int) @reset(explode('-', $b['school_years']));
+              $aYear = (int) @reset(explode('-', $a['perSchoolYears']));
+              $bYear = (int) @reset(explode('-', $b['perSchoolYears']));
               return $aYear > $bYear;
             });
           }
@@ -209,6 +209,7 @@ foreach ($json as &$group) {
 
         // Now add the table to the objective item.
         $item['data']['perTable'] = $table;
+        $item['data']['perSchoolYears'] = array_values($schoolYears);
       }
 
       /*

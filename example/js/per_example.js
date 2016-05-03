@@ -64,9 +64,35 @@ var appInit = function() {
             typeof itemModel.get( 'data' ).perTable !== 'undefined'
           ) {
             var $window = $( window ),
+                $wrapper = $( '<div class="archibald-per-modal"></div>' ),
                 $table = $( '<table class="archibald-per-table"></table>' ),
                 perTable = itemModel.get( 'data' ).perTable,
                 $row, $cell, cellContent;
+
+            if ( typeof itemModel.get( 'data' ).perSchoolYears !== 'undefined' ) {
+              var $schoolYearFilter = $( '<div class="archibald-per-filter"></div>' ),
+                  filter;
+
+              $schoolYearFilter.append( '<strong>Année(s) scolaire(s):</strong>' );
+
+              for ( var i in itemModel.get( 'data' ).perSchoolYears ) {
+                filter = '<label class="archibald-per-filter__filter">';
+                filter += '<input type="checkbox" value="' + itemModel.get( 'data' ).perSchoolYears[ i ] + '" checked /> ';
+                filter += itemModel.get( 'data' ).perSchoolYears[ i ];
+                filter += '</label>';
+                $schoolYearFilter.append( filter );
+                $wrapper.addClass( 'archibald-per-filter--' + itemModel.get( 'data' ).perSchoolYears[ i ] );
+              }
+
+              $schoolYearFilter.find( 'input' ).change(function() {
+                var $this = $( this );
+                $wrapper.toggleClass( 'archibald-per-filter--' + this.value, $this.is( ':checked' ) );
+              });
+
+              $wrapper.append( $schoolYearFilter );
+            }
+
+            $wrapper.append( $table );
 
             for ( var rowId in perTable ) {
               $row = $( '<tr></tr>' );
@@ -136,7 +162,7 @@ var appInit = function() {
               $table.append( $row );
             }
 
-            $( '#modal' ).html( $table ).dialog({
+            $( '#modal' ).empty().html( $wrapper ).dialog({
               height: $window.height() - 100,
               width: $window.width() - 400,
               position: { my: 'center', at: 'center', of: app.getWrapper() },

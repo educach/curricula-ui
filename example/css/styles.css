@@ -81,6 +81,14 @@
   background: transparent;
   border-style: dashed;
 }
+.archibald-per-table__cell--progression,
+.archibald-per-table__cell--empty {
+  display: none;
+}
+.archibald-per-filter--1-2 .archibald-per-table__cell[data-per-school-years="1-2"],
+.archibald-per-filter--3-4 .archibald-per-table__cell[data-per-school-years="3-4"] {
+  display: table-cell;
+}
 .archibald-per-table__cell--progression label {
   margin: 0;
   font-weight: normal;
@@ -89,5 +97,13 @@
 }
 .archibald-per-table__cell--progression input {
   float: left;
+  margin-right: 1em;
+}
+.archibald-per-filter strong {
+  font-size: 1.1em;
+  margin-right: 1em;
+}
+.archibald-per-filter__filter {
+  margin-bottom: 2em;
   margin-right: 1em;
 }

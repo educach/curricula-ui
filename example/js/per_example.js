@@ -5,7 +5,7 @@ Archibald.templates = Archibald.templates || {};
 // We want to alter the display of certain items.
 Archibald.templates.item = '\
 <% if ( editable && ( typeof data === "undefined" || typeof data.isSelectable === "undefined" || data.isSelectable )) { %>\
-  <input type="checkbox"<% if ( active ) { %> checked<% } %>/>\
+  <input type="checkbox" value="model-<%= id %>"<% if ( active ) { %> checked<% } %>/>\
 <% } %>\
 <% for ( var i in name ) { %>\
   <%= name[ i ] %>\
@@ -123,7 +123,7 @@ var appInit = function() {
                   if ( perTable[ rowId ][ cellId ].isSelectable ) {
                     var model = app.getItemDatabase().get( item.id ),
                         checked = model ? model.get( 'active' ) : false;
-                    cellContent += '<label><input data-model-id="' + item.id + '" type="checkbox" ' + ( checked ? ' checked="checked"' : '' ) + ' /> ';
+                    cellContent += '<label><input value="model-' + item.id + '" type="checkbox" ' + ( checked ? ' checked="checked"' : '' ) + ' /> ';
 
                     cellContent += item.value;
                     cellContent += '</label>';
@@ -140,8 +140,8 @@ var appInit = function() {
                       // Upon checking an item, actually select the
                       // corresponding model.
                       var $this = $( this );
-                      if ( $this.attr( 'data-model-id' ) ) {
-                        var model = app.getItemDatabase().get( $this.attr( 'data-model-id' ) );
+                      if ( $this.val() ) {
+                        var model = app.getItemDatabase().get( $this.val().replace( 'model-', '' ) );
                         model.set( 'active', $this.is( ':checked' ) );
                         app.recursiveCheck( model, app.settings.recursiveCheckPrompt );
                       }

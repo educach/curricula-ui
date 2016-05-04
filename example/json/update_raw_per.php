@@ -16,6 +16,12 @@ foreach ($json as &$group) {
         unset($item['data']['is_selectable_group']);
       }
 
+      // And the perCode key.
+      if (isset($item['data']['per_code'])) {
+        $item['data']['perCode'] = $item['data']['per_code'];
+        unset($item['data']['per_code']);
+      }
+
       if (!isset($json[$item['id']])) {
         $json[$item['id']] = array();
       }
@@ -146,6 +152,10 @@ foreach ($json as &$group) {
             });
           }
         }
+
+        // Sort the table rows; we have to do it here already, because not all
+        // objectives have titles.
+        ksort($table);
       }
 
       if (!empty($item['data']['raw_per']['titres'])) {
@@ -204,10 +214,12 @@ foreach ($json as &$group) {
           }
         }
 
-        // Sort the table rows.
+        // Sort the table rows again.
         ksort($table);
+      }
 
-        // Now add the table to the objective item.
+      // Now add the table to the objective item.
+      if (!empty($table)) {
         $item['data']['perTable'] = $table;
         $item['data']['perSchoolYears'] = array_values($schoolYears);
       }

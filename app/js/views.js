@@ -40,7 +40,7 @@ Archibald.templates = _.extend({
   // in a list.
   item: '\
 <% if ( editable ) { %>\
-  <input type="checkbox"<% if ( active ) { %> checked<% } %>/>\
+  <input type="checkbox" value="model-<%= id %>"<% if ( active ) { %> checked<% } %>/>\
 <% } %>\
 <% for ( var i in name ) { %>\
   <%= name[ i ] %>\
@@ -212,6 +212,9 @@ Archibald.ItemView = Backbone.View.extend({
 
     // Set an attribute based on the model's ID.
     this.$el.attr( 'data-model-id', this.model.get( 'id' ) );
+
+    // And set an ID as well.
+    this.$el.attr( 'id', this.className + '--' + this.model.get( 'id' ) );
 
     // Prepare the template variables based on the model's values. We also pass
     // some of our view's attributes.

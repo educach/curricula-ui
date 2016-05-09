@@ -39,37 +39,8 @@ var appInit = function() {
         ');
       });
 
-      app.on( 'column:item:render', function( itemModel, itemView, columnCollection, column, eventApp ) {
-        if (
-          typeof itemModel.get( 'data' ) !== 'undefined' &&
-          typeof itemModel.get( 'data' ).level !== 'undefined'
-        ) {
-          itemView.$el.addClass( itemView.className + '--level-' + itemModel.get( 'data' ).level );
-        }
-
-        if ( itemModel.get( 'type' ) === 'title' ) {
-          itemView.$el.append( '\
-<div class="archibald-column__wrapper__list__item__per-selection">\
-  <a>Sélectionner progressions d\'apprentissage&hellip;</a>\
-</div>\
-' );
-        }
-      });
-
-      app.on( 'column:item:change', function( itemModel, itemView, columnCollection, column, eventApp ) {
-        if (
-          typeof itemModel.get( 'data' ) !== 'undefined' &&
-          typeof itemModel.get( 'data' ).isSelectable !== 'undefined' &&
-          !itemModel.get( 'data' ).isSelectable &&
-          itemModel.get( 'active' )
-        ) {
-          itemModel.set( 'active', false );
-        }
-      } );
-
-      app.on( 'column:item:select', function( itemModel, itemView, columnCollection, column, eventApp ) {
+      var openModal = function( itemModel, itemView, columnCollection, column, eventApp ) {
         if ( itemModel.get( 'type' ) === 'objective' ) {
-
           if (
             typeof itemModel.get( 'data' ) !== 'undefined' &&
             typeof itemModel.get( 'data' ).perTable !== 'undefined'
@@ -176,8 +147,8 @@ var appInit = function() {
             $( '#modal' ).empty().html( $wrapper ).dialog({
               height: $window.height() - 100,
               width: $window.width() - 400,
-              position: { my: 'center', at: 'center', of: app.getWrapper() },
-              show: 200,
+              position: { my: 'center center-50px', at: 'center', of: app.getWrapper() },
+              show: 100,
               buttons: [{
                 text: "OK",
                 click: function() {
@@ -187,12 +158,46 @@ var appInit = function() {
             });
           }
         }
+      };
+
+      app.on( 'column:item:render', function( itemModel, itemView, columnCollection, column, eventApp ) {
+        if (
+          typeof itemModel.get( 'data' ) !== 'undefined' &&
+          typeof itemModel.get( 'data' ).level !== 'undefined'
+        ) {
+          itemView.$el.addClass( itemView.className + '--level-' + itemModel.get( 'data' ).level );
+        }
+
+        if ( itemModel.get( 'type' ) === 'objective' ) {
+          itemView.$el.append( '\
+<div class="archibald-column__wrapper__list__item__per-selection">\
+  <a>Sélectionner progressions d\'apprentissage&hellip;</a>\
+</div>\
+' );
+          itemView.$el.find( '.archibald-column__wrapper__list__item__per-selection a' ).click(function( e ) {
+            e.stopPropagation();
+            openModal( itemModel, itemView, columnCollection, column, eventApp );
+          });
+        }
       });
+
+      app.on( 'column:item:change', function( itemModel, itemView, columnCollection, column, eventApp ) {
+        if (
+          typeof itemModel.get( 'data' ) !== 'undefined' &&
+          typeof itemModel.get( 'data' ).isSelectable !== 'undefined' &&
+          !itemModel.get( 'data' ).isSelectable &&
+          itemModel.get( 'active' )
+        ) {
+          itemModel.set( 'active', false );
+        }
+      } );
 
       // If the selected item is a "progression d'apprentissage", core will
       // not scroll to it. Trigger that logic ourselves.
       app.on( 'summary:item:select', function( selectedItem, collection, summaryView ) {
         if ( selectedItem.get( 'type' ) === 'progression' ) {
+          var timeOut = 100;
+
           // @todo Make this a method of the View itself!
           if ( typeof $.fn.nanoScroller !== 'undefined' ) {
             var $element = app.getWrapper().find( '[data-model-id="' + selectedItem.get( 'parentId' ) + '"]' );
@@ -201,6 +206,11 @@ var appInit = function() {
               $element.parents( '.archibald-column' ).find( '.nano' ).nanoScroller({
                 scrollTo: $element
               });
+
+              setTimeout( function() {
+                $element.find( '.archibald-column__wrapper__list__item__per-selection a' ).click();
+              }, 400 );
+              timeOut = 600;
             }
           }
 
@@ -210,7 +220,7 @@ var appInit = function() {
             $( '#modal' ).stop().animate({
               scrollTop: ( $( '#modal' ).find( '[value="model-' + selectedItem.get( 'id' ) + '"]' ).offset().top - 100 ) + 'px'
             });
-          }, 200 );
+          }, timeOut );
         }
       } );
 

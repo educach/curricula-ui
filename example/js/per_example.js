@@ -56,6 +56,17 @@ var appInit = function() {
         }
       });
 
+      app.on( 'column:item:change', function( itemModel, itemView, columnCollection, column, eventApp ) {
+        if (
+          typeof itemModel.get( 'data' ) !== 'undefined' &&
+          typeof itemModel.get( 'data' ).isSelectable !== 'undefined' &&
+          !itemModel.get( 'data' ).isSelectable &&
+          itemModel.get( 'active' )
+        ) {
+          itemModel.set( 'active', false );
+        }
+      } );
+
       app.on( 'column:item:select', function( itemModel, itemView, columnCollection, column, eventApp ) {
         if ( itemModel.get( 'type' ) === 'objective' ) {
 
@@ -197,7 +208,7 @@ var appInit = function() {
           // render.
           setTimeout( function() {
             $( '#modal' ).stop().animate({
-              scrollTop: ( $( '#modal' ).find( '[data-model-id="' + selectedItem.get( 'id' ) + '"]' ).offset().top - 100 ) + 'px'
+              scrollTop: ( $( '#modal' ).find( '[value="model-' + selectedItem.get( 'id' ) + '"]' ).offset().top - 100 ) + 'px'
             });
           }, 200 );
         }
@@ -211,7 +222,6 @@ var appInit = function() {
 
       // Activate the responsive logic.
       app.activateResponsiveLogic();
-
 
       // Custom logic.
       // Opt out of confirm dialog logic.

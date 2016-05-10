@@ -109,8 +109,6 @@ QUnit.test( "view events", function( assert ) {
   // Click on the element.
   view2.render();
   view2.$el.click();
-  // A click on the checkbox should not bubble up.
-  view2.$el.find('input').click();
 
   var doneDblClickEvent = assert.async( 2 ),
       item3 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], id: 3, active: false }),

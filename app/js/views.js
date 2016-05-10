@@ -155,9 +155,9 @@ Archibald.ItemView = Backbone.View.extend({
   // *editable* items.
   events: {
     "change input": "updateModel",
+    "click input":  "updateModel",
     "click":        "triggerSelect",
-    "dblclick":     "doubleClick",
-    "click input":  "preventBubble"
+    "dblclick":     "doubleClick"
   },
 
   // Upon initialization, the view checks if a usable model is provided. If not,
@@ -265,19 +265,7 @@ Archibald.ItemView = Backbone.View.extend({
 
   // Event handler for when the view is clicked. This triggers a `select` event.
   triggerSelect: function() {
-    // Double clicking an element will also trigger the click event twice. This
-    // can lead to confusing behavior. It is not possible to cleanly distinguish
-    // between the 2 events, but we can trick it (kind of...). We add a timeout
-    // for a single click. If a second click occurs before the timeout ends, we
-    // clear the timeout and set it again. If the double-click event is
-    // triggered, we clear the timeout as well (see `ItemView#doubleClick()`).
-    var that = this;
-    if ( typeof this.clickTimeout !== 'undefined' ) {
-      clearTimeout( this.clickTimeout );
-    }
-    this.clickTimeout = setTimeout( function() {
-      that.trigger( 'select', that.model, that );
-    }, 200 );
+    this.trigger( 'select', this.model, this );
   },
 
   // Event handler for when the view is double-clicked. This is a shortcut for
@@ -290,23 +278,9 @@ Archibald.ItemView = Backbone.View.extend({
     // handler more than once.
     e.stopPropagation();
 
-    // If necessary, prevent the triggering of the "single" click event.
-    if ( typeof this.clickTimeout !== 'undefined' ) {
-      clearTimeout( this.clickTimeout );
-    }
-
     this.model.set( 'active', !this.$el.find( 'input' ).is( ':checked' ) );
     this.trigger( 'model:change', this.model, this );
     this.triggerActiveChange();
-  },
-
-  // Event handler for when the checkbox is clicked. Because clicking on the
-  // checkbox will trigger both the `change` event and a `click` event, it
-  // would bubble up and trigger the `select` event as well. However, this is
-  // undesirable, and could lead to confusion. This is why we stop the bubbling
-  // of this particular click.
-  preventBubble: function( e ) {
-    e.stopPropagation();
   },
 
   // Helper function to trigger an *active* state chance event. Will trigger

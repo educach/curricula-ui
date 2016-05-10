@@ -24,6 +24,17 @@
 .full-screen:hover {
   background-color: #eee;
 }
+.search {
+  float: right;
+  cursor: pointer;
+  font-size: .9em;
+  margin-top: 2.1em;
+  margin-right: 2em;
+  padding: 3px;
+}
+.search:hover {
+  background-color: #eee;
+}
 .archibald-curriculum-ui__summary-wrapper--collapsed {
   height: 3.5em;
 }

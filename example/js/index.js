@@ -19,6 +19,9 @@ var appInit = function() {
           <div class="full-screen" id="full-screen">\
             <i class="icon-fullscreen"></i> Full screen\
           </div>\
+          <div class="search" id="search">\
+            <i class="icon-search"></i> Search\
+          </div>\
         </div>\
         ');
       });
@@ -52,6 +55,11 @@ var appInit = function() {
       app.getWrapper().find('.archibald-curriculum-ui__summary-wrapper__label').click(function() {
         app.getWrapper().find('.archibald-curriculum-ui__summary-wrapper').toggleClass('archibald-curriculum-ui__summary-wrapper--collapsed');
       });
+
+      // Show search.
+      $( '#search' ).click( function() {
+        app.showSearch( true );
+      } );
 
       // Full screen logic.
       if (

@@ -22,6 +22,14 @@ foreach ($json as &$group) {
         unset($item['data']['per_code']);
       }
 
+      // Add cycle information.
+      if (!isset($item['data']['cycle'])) {
+        $match;
+        if (preg_match('/^cycles-(\d+)/', $item['id'], $match)) {
+          $item['data']['cycle'] = $match[1];
+        }
+      }
+
       if (!isset($json[$item['id']])) {
         $json[$item['id']] = array();
       }

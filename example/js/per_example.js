@@ -35,6 +35,9 @@ var appInit = function() {
           <div class="full-screen" id="full-screen">\
             <i class="icon-fullscreen"></i> Full screen\
           </div>\
+          <div class="search" id="search">\
+            <i class="icon-search"></i> Search\
+          </div>\
         </div>\
         ');
       });
@@ -194,7 +197,7 @@ var appInit = function() {
 
       // If the selected item is a "progression d'apprentissage", core will
       // not scroll to it. Trigger that logic ourselves.
-      app.on( 'summary:item:select', function( selectedItem, collection, summaryView ) {
+      app.on( 'summary:item:select search:select', function( selectedItem, collection, view ) {
         if ( selectedItem.get( 'type' ) === 'progression' ) {
           var timeOut = 100;
 
@@ -221,6 +224,23 @@ var appInit = function() {
               scrollTop: ( $( '#modal' ).find( '[value="model-' + selectedItem.get( 'id' ) + '"]' ).offset().top - 100 ) + 'px'
             });
           }, timeOut );
+        }
+      } );
+
+      app.on( 'search:results', function( results, collection ) {
+        // Many objectives have the same name. Add cycle information so we can
+        // distinguish them, unless the element has an objective code.
+        var item;
+        for ( var i = results.length - 1; i >= 0; --i ) {
+          item = collection.get( results[ i ].value );
+          if (
+            item &&
+            typeof item.get( 'data' ) !== 'undefined' &&
+            typeof item.get( 'data' ).perCode === 'undefined' &&
+            typeof item.get( 'data' ).cycle !== 'undefined'
+           ) {
+            results[ i ].label += ' (cycle ' + item.get( 'data' ).cycle + ')';
+          }
         }
       } );
 
@@ -251,6 +271,11 @@ var appInit = function() {
       // Allow the summary to be collapsed.
       app.getWrapper().find( '.archibald-curriculum-ui__summary-wrapper__label' ).click( function() {
         app.getWrapper().find( '.archibald-curriculum-ui__summary-wrapper' ).toggleClass( 'archibald-curriculum-ui__summary-wrapper--collapsed' );
+      } );
+
+      // Show search.
+      $( '#search' ).click( function() {
+        app.showSearch( true );
       } );
 
       // Full screen logic.

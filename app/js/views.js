@@ -714,7 +714,7 @@ Archibald.SearchView = Backbone.View.extend({
   isMatch: function( term, item ) {
     // @todo What about special chars? 'e' should match 'é', 'è', and 'e'.
     // @todo Remove special chars that have meaning, like "(" or "[".
-    var regExp = new RegExp( '^' + term.replace( /([^a-z0-9_\-\u00E0-\u00FC]+)/gi, '' ), 'gi' ),
+    var regExp = new RegExp( term.replace( /([^a-z0-9_\-\u00E0-\u00FC]+)/gi, '' ), 'gi' ),
         name = item.get( 'name' );
 
     return (

@@ -192,19 +192,28 @@ QUnit.test( "collection events", function( assert ) {
  * child view events.
  */
 QUnit.test( "child view events", function( assert ) {
-  assert.expect();
+  assert.expect( 2 );
 
   var doneSelectEvent = assert.async(),
-      item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
+      doneChangeEvent = assert.async(),
+      item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], id: 1 }),
       collection1 = new ArchibaldCurriculum.ItemCollection([ item1 ]),
-      view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1 });
+      view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1, editable: true });
   view1.on( 'item:select', function() {
     assert.ok( true, "The view triggers a item:select event on clicking on a child view." );
     doneSelectEvent();
   });
+  view1.on( 'item:change', function() {
+    assert.ok( true, "The view triggers a item:change event on changing the model of a child view. This is only triggered when clicking on the input, not by updating the model itself." );
+    doneChangeEvent();
+  });
   view1.render();
   item1.set( 'name', [ "Some new name" ] );
-  view1.$el.find('li').click();
+  view1.$el.find( 'li' ).click();
+  // This won't trigger anything.
+  item1.set( 'active', true );
+  // This will.
+  view1.$el.find( 'input' ).change();
 });
 
 /**

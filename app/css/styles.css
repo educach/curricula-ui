@@ -363,6 +363,26 @@
 .archibald-per-school-year-selection__filter + .archibald-per-school-year-selection__filter {
   margin-left: 1em;
 }
+.archibald-curriculum-ui-search {
+  position: fixed;
+  top: 100px;
+  /* Trick from http://www.sitepoint.com/css-center-position-absolute-div/ */
+  left: 50%;
+  margin-left: -250px;
+  padding: 20px;
+  background: white;
+  width: 500px;
+  text-align: center;
+  box-shadow: 0 0 20px #000;
+  box-sizing: border-box;
+}
+.archibald-curriculum-ui-search__input {
+  width: 90%;
+  margin-right: 1em;
+}
+.archibald-curriculum-ui-search__cancel {
+  cursor: pointer;
+}
 
 /**
  * Lehrplan 21 specific styles.
@@ -524,6 +544,16 @@
 }
 .icon-minus {
   background-position: -433px -96px;
+}
+.icon-close {
+  width: 14px;
+  height: 14px;
+  background-position: -313px 0;
+}
+.icon-search {
+  width: 14px;
+  height: 14px;
+  background-position: -49px 0;
 }
 .icon-fullscreen {
   width: 14px;

@@ -112,6 +112,15 @@ Archibald.templates = _.extend({
   </span>\
   <%= children %>\
 </li>\
+',
+
+  // Search.
+  //
+  // Used for the quick search component, which allows users to quickly jump
+  // to a specific item.
+  search: '\
+<input type="text" class="archibald-curriculum-ui-search__input" />\
+<i class="archibald-curriculum-ui-search__cancel icon icon-close" />\
 '
 
 }, Archibald.templates || {});
@@ -663,6 +672,139 @@ Archibald.SummaryTreeView = Backbone.View.extend({
       this.$( e.currentTarget ).attr( 'data-model-id' )
     );
     this.trigger( 'item:select', itemModel, this.collection, this );
+  }
+});
+
+
+// Search view
+// -----------
+//
+// This view allows users to search for items in the database. It filters the
+// application collection, and shows a number of selectable results.
+Archibald.SearchView = Backbone.View.extend({
+  className: 'archibald-curriculum-ui-search',
+
+  // It uses the `search` template from our templates list.
+  tpl: _.template( Archibald.templates.search ),
+
+  events: {
+    'click .archibald-curriculum-ui-search__cancel': 'triggerCancel',
+  },
+
+  // Upon initialization, the view checks if a usable collection is provided.
+  // If not, it will throw an exception.
+  initialize: function() {
+    if ( !this.collection ) {
+      throw "Cannot initialize an SearchView without a collection.";
+    }
+  },
+
+  // Upon removing a view, make sure the autocomplete is completely destroyed
+  // as well.
+  remove: function() {
+    this.$el.find( 'input' ).autocomplete( 'destroy' );
+    this.$el.remove();
+    this.stopListening();
+    return this;
+  },
+
+  // Helper method to see if an item from the database matches the searched
+  // term. This method can be overridden if needed, to provide more fine-grained
+  // searches.
+  isMatch: function( term, item ) {
+    // @todo What about special chars? 'e' should match 'é', 'è', and 'e'.
+    // @todo Remove special chars that have meaning, like "(" or "[".
+    var regExp = new RegExp( term, 'gi' ),
+        name = item.get( 'name' );
+
+    return (
+      // First try the ID, as it is the easiest and fastest to match.
+      regExp.test( item.get( 'id' ) ) ||
+      // Next try the first name. Most items have only one, so this will save
+      // an expensive `join()` call.
+      regExp.test( name[ 0 ] ) ||
+      // Still no match, so we check if we need to join, and if so, join with
+      // spaces. This is the most expensive one, so we really try to avoid it
+      // if possible.
+      ( name.length > 1 && regExp.test( name.join( ' ' ) ) )
+    );
+  },
+
+  // Render the search component.
+  render: function() {
+    this.$el.empty();
+    this.$el.append( this.tpl() );
+
+    var that = this;
+
+    // We cannot use the `events` hash of our view, because it tends to get
+    // completely removed often. Instead, bind our click handler here.
+    this.$el.find( '.archibald-curriculum-ui-search__cancel' ).click(function() {
+      that.triggerClose();
+    });
+
+    // Activate the jQuery UI Autocomplete widget.
+    this.$el.find( 'input' ).autocomplete({
+      select: function( event, ui ) {
+        that.trigger( 'select', that.collection.get( ui.item.value ), that.collection, that );
+      },
+      source: function( request, response ) {
+        // Methods like `each()` or `filter()` loop over all items before
+        // exiting. We don't want that. As soon as we find 10, we stop.
+        // Databases can contain many thousands of items, and performance is
+        // important. This is why we use the `every()` method, and scope the
+        // data variable outside of it. This will allow us to stop iterating as
+        // soon as we have 10 elements to show.
+        var data = [],
+            i = 10,
+            tmp, name;
+
+        that.collection.every( function( item ) {
+          if ( i ) {
+            // We haven't found 10 items yet. Check if this item matches the
+            // search term.
+            if ( that.isMatch( request.term, item ) ) {
+              // Trick to strip an element of all markup.
+              // See http://stackoverflow.com/questions/5002111/javascript-how-to-strip-html-tags-from-string
+              name = item.get( 'name' ).join( ' ' );
+              tmp = document.createElement( 'div' );
+              tmp.innerHTML = name;
+              name = tmp.textContent || tmp.innerText || name;
+
+              data.push({
+                label: name,
+                value: item.get( 'id' )
+              });
+
+              --i;
+            }
+
+            // Continue filtering the items.
+            return true;
+          }
+          // i === 0, so we must stop now.
+          return false;
+        } );
+
+        // Allow other parts of the application to alter the results, if needed.
+        that.trigger( 'results', data, that.collection, that );
+
+        // Pass the response back.
+        response( data );
+      }
+    });
+
+    // Trigger a `render` event, so other parts of the application can interact
+    // with it.
+    this.trigger( 'render', this.collection, this );
+
+    // Allow the chaining of method calls.
+    return this;
+  },
+
+  // Trigger a cancel event.
+  triggerCancel: function() {
+    this.trigger( 'cancel', this.collection, this );
   }
 });
 

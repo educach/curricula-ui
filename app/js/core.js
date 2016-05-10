@@ -139,6 +139,9 @@ Core.prototype = {
   // Prepare a reference to the summary view.
   summaryView: null,
 
+  // Prepare a reference to the search view.
+  searchView: null,
+
   // Prepare a reference to the item info view.
   itemInfoView: null,
 
@@ -172,6 +175,9 @@ Core.prototype = {
     // Activate the summary logic.
     this.activateSummary();
 
+    // Activate the search logic.
+    this.activateSearch();
+
     // Recompute the amount of columns we can show.
     this.computeMaxCols();
   },
@@ -195,10 +201,12 @@ Core.prototype = {
           itemListView: Archibald.ItemListView,
           itemInfoView: Archibald.ItemInfoView,
           summaryView:  Archibald.SummaryTreeView,
+          searchView:   Archibald.SearchView,
 
           // Behavior settings.
           recursiveCheckPrompt:        false,
           recursiveCheckPromptMessage: "This will also uncheck all child items. Are you sure you want to continue?",
+          useSearch:                   true,
 
           // Templates.
           templates: {
@@ -288,6 +296,80 @@ Core.prototype = {
             "item:change": function( item, columnCollection, column ) {
               that.recursiveCheck( item, that.settings.recursiveCheckPrompt );
             },
+            // This callback will handle the selection of an item and the
+            // expanding of the editor columns to show that specific item.
+            // Although it was originally used for the summary:item:select
+            // event, it can also be used in other situations, like the
+            // search:item:select event.
+            "summary:item:select": function( selectedItem, collection ) {
+              // First, fully collapse all the columns, except the "root" one. Get
+              // the first column element from the database.
+              var column = that.columnDatabase.first().get( 'column' );
+
+              // Expand it.
+              column.expand();
+
+              // Remove all other columns on the right.
+              that.columnDatabase.remove(
+                that.getColumnRightSiblings( column )
+              );
+
+              // Construct the hierarchy as an array.
+              var items = [],
+                  item = selectedItem;
+              while ( item.get( 'parentId' ) !== 'root' ) {
+                items.push( item );
+                item = collection.get( item.get( 'parentId' ) );
+              }
+              items.push( item );
+
+              // Reverse it, and remove the last item (we don't expand the selected
+              // item).
+              items.reverse().pop();
+
+              // Make sure none of the items in the database are "expanded" or
+              // "highlighted".
+              var expandedItems = that.itemDatabase.where({ expanded: true });
+              if ( expandedItems.length ) {
+                for ( var i in expandedItems ) {
+                  expandedItems[ i ].set( 'expanded', false );
+                }
+              }
+              that.unhighlightItems();
+
+              // Now, loop through the selected item's hierarchy, and trigger the
+              // "item:select" event, updating the column reference every time.
+              for ( var i in items ) {
+                column.trigger(
+                  'item:select',
+                  items[ i ],
+                  new ArchibaldCurriculum.ItemCollection(),
+                  column,
+                  {}
+                );
+
+                // Update the column reference, so we trigger it on the correct one
+                // on the next pass.
+                column = that.columnDatabase.last().get( 'column' );
+              }
+
+              // Finally, highlight the selected item, and scroll to it, both in the
+              // main window AND inside the column.
+              selectedItem.set( 'highlighted', true );
+
+              // @todo Make this a method of the View itself!
+              if ( typeof $.fn.nanoScroller !== 'undefined' ) {
+                var $element = column.$el.find( '[data-model-id="' + selectedItem.get( 'id' ) + '"]' );
+                if ( $element.length ) {
+                  column.$el.find( '.nano' ).nanoScroller({
+                    scrollTo: $element
+                  });
+                }
+              }
+              $( 'body, html' ).stop().animate({
+                scrollTop: ( that.$el.offset().top - 50 ) + 'px'
+              });
+            },
             // Re-usable function for handling "go back" events.
             // Whenever the "Back" button is clicked,
             // This callback will handle the "go back" events.  Whenever the
@@ -366,75 +448,7 @@ Core.prototype = {
       });
 
       var that = this;
-      this.summaryView.on( 'item:select', function( selectedItem, collection, summaryView ) {
-        // First, fully collapse all the columns, except the "root" one. Get
-        // the first column element from the database.
-        var column = that.columnDatabase.first().get( 'column' );
-
-        // Expand it.
-        column.expand();
-
-        // Remove all other columns on the right.
-        that.columnDatabase.remove(
-          that.getColumnRightSiblings( column )
-        );
-
-        // Construct the hierarchy as an array.
-        var items = [],
-            item = selectedItem;
-        while ( item.get( 'parentId' ) !== 'root' ) {
-          items.push( item );
-          item = collection.get( item.get( 'parentId' ) );
-        }
-        items.push( item );
-
-        // Reverse it, and remove the last item (we don't expand the selected
-        // item).
-        items.reverse().pop();
-
-        // Make sure none of the items in the database are "expanded" or
-        // "highlighted".
-        var expandedItems = that.itemDatabase.where({ expanded: true });
-        if ( expandedItems.length ) {
-          for ( var i in expandedItems ) {
-            expandedItems[ i ].set( 'expanded', false );
-          }
-        }
-        that.unhighlightItems();
-
-        // Now, loop through the selected item's hierarchy, and trigger the
-        // "item:select" event, updating the column reference every time.
-        for ( var i in items ) {
-          column.trigger(
-            'item:select',
-            items[ i ],
-            new ArchibaldCurriculum.ItemCollection(),
-            column,
-            {}
-          );
-
-          // Update the column reference, so we trigger it on the correct one
-          // on the next pass.
-          column = that.columnDatabase.last().get( 'column' );
-        }
-
-        // Finally, highlight the selected item, and scroll to it, both in the
-        // main window AND inside the column.
-        selectedItem.set( 'highlighted', true );
-
-        // @todo Make this a method of the View itself!
-        if ( typeof $.fn.nanoScroller !== 'undefined' ) {
-          var $element = column.$el.find( '[data-model-id="' + selectedItem.get( 'id' ) + '"]' );
-          if ( $element.length ) {
-            column.$el.find( '.nano' ).nanoScroller({
-              scrollTo: $element
-            });
-          }
-        }
-        $( 'body, html' ).stop().animate({
-          scrollTop: ( that.$el.offset().top - 50 ) + 'px'
-        });
-      } );
+      this.summaryView.on( 'item:select', this.settings.events[ 'summary:item:select' ] );
 
       // Append the summary to our application wrapper.
       this.$el.find( '.archibald-curriculum-ui__summary-wrapper__content' ).html( this.summaryView.render().$el );
@@ -453,6 +467,68 @@ Core.prototype = {
           [ 'summary', event ].concat( args )
         );
       } );
+    }
+  },
+
+  // Activate the application search logic.
+  activateSearch: function() {
+    if ( this.settings.useSearch && ( !this.searchView || !this.searchView.$el.length ) ) {
+      var that = this;
+      this.searchView = new this.settings.searchView({
+        collection: this.itemDatabase
+      });
+
+      // Add a keyboard shortcut for the search component. When a user uses
+      // Ctrl+Shift+F, show the search field.
+      $( this.$el[0].ownerDocument ).keyup( function( e ) {
+        if ( e.key.toLowerCase() === 'f' && e.shiftKey && e.ctrlKey ) {
+          that.showSearch( true );
+        } else if ( e.key.toLowerCase() === 'escape' ) {
+          that.searchView.remove();
+        }
+      })
+
+      // On cancel, completely remove the search component from the application.
+      this.searchView.on( 'cancel', function( collection, view ) {
+        that.searchView.remove();
+      });
+
+      // On selecting an element, expand the editor to it. We use the same event
+      // as the summary:item:select event, because the passed arguments are
+      // almost identical. We also close the element.
+      this.searchView.on( 'select', this.settings.events[ 'summary:item:select' ] );
+      this.searchView.on( 'select', function( collection, view ) {
+        that.searchView.remove();
+      });
+
+      // Allow all events to bubble up.
+      this.searchView.on( 'all', function( event ) {
+        // Get the remaining arguments, removing the event name.
+        var args = Array.prototype.slice.call( arguments, 1 );
+
+        // Add the application itself.
+        args.push( that );
+
+        // Bubble it up.
+        that.triggerEvent.apply(
+          that,
+          [ 'search', event ].concat( args )
+        );
+      } );
+    }
+  },
+
+  // Show the search component.
+  //
+  // Show the search component element on screen. If the `focus` parameter is
+  // set to `true`, the search input will immediately get focus.
+  //
+  // @param {Boolean} focus
+  //    Give focus to the search input. Defaults to false.
+  showSearch: function( focus ) {
+    this.$el.append( this.searchView.render().$el );
+    if ( focus ) {
+      this.searchView.$el.find( 'input' ).focus();
     }
   },
 

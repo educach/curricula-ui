@@ -740,7 +740,7 @@ Archibald.SearchView = Backbone.View.extend({
     // We cannot use the `events` hash of our view, because it tends to get
     // completely removed often. Instead, bind our click handler here.
     this.$el.find( '.archibald-curriculum-ui-search__cancel' ).click(function() {
-      that.triggerClose();
+      that.triggerCancel();
     });
 
     // Activate the jQuery UI Autocomplete widget.

@@ -303,7 +303,7 @@ Archibald.ItemView = Backbone.View.extend({
   // Event handler for when the checkbox is clicked. Because clicking on the
   // checkbox will trigger both the `change` event and a `click` event, it
   // would bubble up and trigger the `select` event as well. However, this is
-  // undesirable, and could leed to confusion. This is why we stop the bubbling
+  // undesirable, and could lead to confusion. This is why we stop the bubbling
   // of this particular click.
   preventBubble: function( e ) {
     e.stopPropagation();

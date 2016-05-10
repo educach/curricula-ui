@@ -363,7 +363,15 @@
 .archibald-per-school-year-selection__filter + .archibald-per-school-year-selection__filter {
   margin-left: 1em;
 }
-.archibald-curriculum-ui-search {
+.archibald-curriculum-ui-search__overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, .5);
+}
+.archibald-curriculum-ui-search__wrapper {
   position: fixed;
   top: 100px;
   /* Trick from http://www.sitepoint.com/css-center-position-absolute-div/ */
@@ -373,8 +381,22 @@
   background: white;
   width: 500px;
   text-align: center;
+  border: 3px solid #aaa;
+  -webkit-box-shadow: 0 0 20px #000;
+  -moz-box-shadow: 0 0 20px #000;
+  -ms-box-shadow: 0 0 20px #000;
+  -o-box-shadow: 0 0 20px #000;
   box-shadow: 0 0 20px #000;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
   box-sizing: border-box;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
 }
 .archibald-curriculum-ui-search__input {
   width: 90%;
@@ -382,6 +404,9 @@
 }
 .archibald-curriculum-ui-search__cancel {
   cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 /**

@@ -119,8 +119,11 @@ Archibald.templates = _.extend({
   // Used for the quick search component, which allows users to quickly jump
   // to a specific item.
   search: '\
-<input type="text" class="archibald-curriculum-ui-search__input" />\
-<i class="archibald-curriculum-ui-search__cancel icon icon-close" />\
+<div class="archibald-curriculum-ui-search__overlay"></div>\
+<div class="archibald-curriculum-ui-search__wrapper">\
+  <input type="text" class="archibald-curriculum-ui-search__input" />\
+  <i class="archibald-curriculum-ui-search__cancel icon icon-close" />\
+</div>\
 '
 
 }, Archibald.templates || {});
@@ -687,10 +690,6 @@ Archibald.SearchView = Backbone.View.extend({
   // It uses the `search` template from our templates list.
   tpl: _.template( Archibald.templates.search ),
 
-  events: {
-    'click .archibald-curriculum-ui-search__cancel': 'triggerCancel',
-  },
-
   // Upon initialization, the view checks if a usable collection is provided.
   // If not, it will throw an exception.
   initialize: function() {
@@ -739,7 +738,7 @@ Archibald.SearchView = Backbone.View.extend({
 
     // We cannot use the `events` hash of our view, because it tends to get
     // completely removed often. Instead, bind our click handler here.
-    this.$el.find( '.archibald-curriculum-ui-search__cancel' ).click(function() {
+    this.$el.find( '.archibald-curriculum-ui-search__cancel, .archibald-curriculum-ui-search__overlay' ).click(function() {
       that.triggerCancel();
     });
 

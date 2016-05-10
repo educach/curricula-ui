@@ -55,7 +55,11 @@ QUnit.test( "model events", function( assert ) {
  * arguments.
  */
 QUnit.test( "rendering", function( assert ) {
-  var item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
+  var item1 = new ArchibaldCurriculum.ItemModel({
+        name: [ "Model name" ],
+        id:   1,
+        data: { boolKey: true, otherBoolKey: false }
+      }),
       view1 = new ArchibaldCurriculum.ItemView({ model: item1, editable: true }),
       view2 = new ArchibaldCurriculum.ItemView({ model: item1, editable: false }),
       view3 = new ArchibaldCurriculum.ItemView({ model: item1 });
@@ -67,6 +71,8 @@ QUnit.test( "rendering", function( assert ) {
   assert.ok( view1.$el.find( 'input' ).length, "An editable view has an input." );
   assert.notOk( view2.$el.find( 'input' ).length, "A non-editable (explicit) view has no input." );
   assert.notOk( view3.$el.find( 'input' ).length, "A non-editable (implicit) view has no input." );
+  assert.ok( view3.$el.hasClass( view3.className + '--boolKey' ), "Truthy boolean data items are added as classes." );
+  assert.notOk( view3.$el.hasClass( view3.className + '--otherBoolKey' ), "Falsy boolean data items are not added as classes." );
 });
 
 /**
@@ -78,7 +84,7 @@ QUnit.test( "view events", function( assert ) {
 
   var doneCheckboxEvent = assert.async( 2 ),
       checked = false,
-      item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], active: checked }),
+      item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], id: 1, active: checked }),
       view1 = new ArchibaldCurriculum.ItemView({ model: item1, editable: true });
   view1.on( 'model:change', function( itemModel, itemView, e ) {
     // The active (checked) state should have changed.
@@ -93,7 +99,7 @@ QUnit.test( "view events", function( assert ) {
   view1.$el.find('input').change();
 
   var doneClickEvent = assert.async(),
-      item2 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
+      item2 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], id: 2 }),
       view2 = new ArchibaldCurriculum.ItemView({ model: item2, editable: true });
   view2.on( 'select', function() {
     assert.ok( true, "The view triggers a select event on being clicked." );
@@ -106,7 +112,7 @@ QUnit.test( "view events", function( assert ) {
   view2.$el.find('input').click();
 
   var doneDblClickEvent = assert.async( 2 ),
-      item3 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], active: false }),
+      item3 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], id: 3, active: false }),
       view3 = new ArchibaldCurriculum.ItemView({ model: item3, editable: true });
   view3.on( 'active', function( state, itemModel, itemView ) {
     assert.ok( true, "The view triggers a active event on being double-clicked." );

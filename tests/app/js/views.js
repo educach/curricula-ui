@@ -58,7 +58,7 @@ QUnit.test( "rendering", function( assert ) {
   var item1 = new ArchibaldCurriculum.ItemModel({
         name: [ "Model name" ],
         id:   1,
-        data: { boolKey: true, otherBoolKey: false }
+        data: { boolKey: true, otherBoolKey: false, 'complex|key-[éèà!?]': true }
       }),
       view1 = new ArchibaldCurriculum.ItemView({ model: item1, editable: true }),
       view2 = new ArchibaldCurriculum.ItemView({ model: item1, editable: false }),
@@ -73,6 +73,7 @@ QUnit.test( "rendering", function( assert ) {
   assert.notOk( view3.$el.find( 'input' ).length, "A non-editable (implicit) view has no input." );
   assert.ok( view3.$el.hasClass( view3.className + '--boolKey' ), "Truthy boolean data items are added as classes." );
   assert.notOk( view3.$el.hasClass( view3.className + '--otherBoolKey' ), "Falsy boolean data items are not added as classes." );
+  assert.ok( view3.$el.hasClass( view3.className + '--complexkey-' ), "Complex key names are cleaned up before being added as classes." );
 });
 
 /**

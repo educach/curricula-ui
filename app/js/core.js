@@ -544,17 +544,13 @@ Core.prototype = {
 
     for ( var group in items ) {
       for ( var i in items[ group ] ) {
-        this.itemDatabase.add( new Archibald.ItemModel({
-          id:          items[ group ][ i ].id,
-          name:        items[ group ][ i ].name,
-          type:        items[ group ][ i ].type,
-          data:        items[ group ][ i ].data,
+        this.itemDatabase.add( new Archibald.ItemModel( _.extend( {
           parentId:    group,
           hasChildren: !!(
             typeof items[ items[ group ][ i ].id ] !== 'undefined' &&
             items[ items[ group ][ i ].id ].length
           )
-        }) );
+        }, items[ group ][ i ] ) ) );
       }
     }
   },

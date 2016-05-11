@@ -36,15 +36,14 @@
 // attribute.
 Archibald.ItemModel = Backbone.Model.extend({
   defaults: {
-    name:         undefined,
-    type:         undefined,
-    parentId:     "root",
-    active:       false,
-    expanded:     false,
-    hasChildren:  false,
-    highlighted:  false,
-    dependencies: [],
-    data:         {}
+    name:        undefined,
+    type:        undefined,
+    parentId:    "root",
+    active:      false,
+    expanded:    false,
+    hasChildren: false,
+    highlighted: false,
+    data:        {}
   },
   // The model validates itself, checking that it received a valid name, as well
   // as a non-null parent identifier.

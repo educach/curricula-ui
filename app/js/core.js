@@ -292,20 +292,9 @@ Core.prototype = {
             },
             // This callback will handle the recursive checking or unchecking of
             // parents and children items, respectively, upon changing the state
-            // of one item. It also checks for item dependencies, activating
-            // them as well, if needed. De-activating an item does *not*
-            // automatically deactivate dependencies, though.
+            // of one item.
             "item:change": function( item, columnCollection, column ) {
               that.recursiveCheck( item, that.settings.recursiveCheckPrompt );
-              if ( item.get( 'active' ) && item.get( 'dependencies').length ) {
-                var dependency;
-                for ( var i = item.get( 'dependencies').length - 1; i >= 0; --i ) {
-                  dependency = that.itemDatabase.get( item.get( 'dependencies')[ i ] );
-                  if ( dependency ) {
-                    dependency.set( 'active', true );
-                  }
-                }
-              }
             },
             // This callback will handle the selection of an item and the
             // expanding of the editor columns to show that specific item.
@@ -556,20 +545,15 @@ Core.prototype = {
     for ( var group in items ) {
       for ( var i in items[ group ] ) {
         this.itemDatabase.add( new Archibald.ItemModel({
-          id:           items[ group ][ i ].id,
-          name:         items[ group ][ i ].name,
-          type:         items[ group ][ i ].type,
-          data:         items[ group ][ i ].data,
-          parentId:     group,
-          hasChildren:  typeof items[ group ][ i ].hasChildren !== 'undefined' ?
-            items[ group ][ i ].hasChildren :
-            !!(
-              typeof items[ items[ group ][ i ].id ] !== 'undefined' &&
-              items[ items[ group ][ i ].id ].length
-            ),
-          dependencies: typeof items[ group ][ i ].dependencies !== 'undefined' ?
-            items[ group ][ i ].dependencies :
-            [],
+          id:          items[ group ][ i ].id,
+          name:        items[ group ][ i ].name,
+          type:        items[ group ][ i ].type,
+          data:        items[ group ][ i ].data,
+          parentId:    group,
+          hasChildren: !!(
+            typeof items[ items[ group ][ i ].id ] !== 'undefined' &&
+            items[ items[ group ][ i ].id ].length
+          )
         }) );
       }
     }

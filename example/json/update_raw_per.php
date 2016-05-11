@@ -11,9 +11,15 @@ foreach ($json as &$group) {
       $item['data'] = (array) $item['data'];
 
       // Use the new isSelectable key.
-      if (isset($item['data']['is_selectable_group'])) {
-        $item['data']['isSelectable'] = $item['data']['is_selectable_group'];
-        unset($item['data']['is_selectable_group']);
+      if (isset($item['data']['isSelectableGroup'])) {
+        $item['data']['isSelectable'] = $item['data']['isSelectableGroup'];
+        unset($item['data']['isSelectableGroup']);
+      }
+
+      // Same goes for the isGroup key.
+      if (isset($item['data']['is_group'])) {
+        $item['data']['isGroup'] = $item['data']['is_group'];
+        unset($item['data']['is_group']);
       }
 
       // And the perCode key.

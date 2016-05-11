@@ -16,6 +16,25 @@ Archibald.templates.item = '\
 <% } %>\
 ';
 
+Archibald.templates.summaryList = '\
+<li\
+  data-model-id="<%= id %>"\
+  class="\
+  archibald-curriculum-ui-summary__list__item\
+  archibald-curriculum-ui-summary__list__item--<%= type %>\
+  <% if ( typeof data !== "undefined" && typeof data.isGroup !== "undefined" && data.isGroup ) { %>archibald-curriculum-ui-summary__list__item--isGroup<%  } %>\
+  "\
+>\
+  <span>\
+    <% for ( var i in name ) { %>\
+      <%= name[ i ] %>\
+      <% if ( i < name.length - 1 ) {%><hr /><% } %>\
+    <% } %>\
+  </span>\
+  <%= children %>\
+</li>\
+';
+
 var appInit = function() {
   $.ajax({
     url: 'json/per_example.json',
@@ -163,6 +182,47 @@ var appInit = function() {
         }
       };
 
+      var dependencyCheck = function( item, prompt ) {
+        prompt = !!prompt;
+
+        // If there are no dependencies, simply ignore.
+        if (
+          typeof item.get( 'dependencies') === 'undefined' ||
+          !item.get( 'dependencies').length
+        ) {
+          return;
+        }
+
+        var dependency;
+        for ( var i = item.get( 'dependencies').length - 1; i >= 0; --i ) {
+          dependency = app.getItemDatabase().get( item.get( 'dependencies')[ i ] );
+          if ( dependency ) {
+            // If our item is active, activate the dependency.
+            if ( item.get( 'active' ) ) {
+              dependency.set( 'active', true );
+            } else {
+              // Check if, for any our dependency, there are no longer any
+              // dependents active. If so, we deactivate the dependency.
+              var dependents = app.getItemDatabase().filter(function( model ) {
+                return (
+                  model.get( 'active' ) &&
+                  typeof model.get( 'dependencies') !== 'undefined' &&
+                  model.get( 'dependencies' ).indexOf( dependency.get( 'id' ) ) !== -1
+                );
+              });
+
+              if ( !dependents.length ) {
+                // No more active dependents. Deactivate.
+                dependency.set( 'active', false );
+              }
+            }
+
+            // This is recursive.
+            dependencyCheck( dependency );
+          }
+        }
+      };
+
       app.on( 'column:item:render', function( itemModel, itemView, columnCollection, column, eventApp ) {
         if (
           typeof itemModel.get( 'data' ) !== 'undefined' &&
@@ -193,6 +253,8 @@ var appInit = function() {
         ) {
           itemModel.set( 'active', false );
         }
+
+        dependencyCheck( itemModel, true );
       } );
 
       // If the selected item is a "progression d'apprentissage", core will

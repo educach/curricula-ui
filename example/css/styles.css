@@ -41,7 +41,11 @@
 .archibald-curriculum-ui__summary-wrapper--collapsed .archibald-curriculum-ui__summary-wrapper__label {
   margin: 0.5em;
 }
-.archibald-column__wrapper__list__item--is_group {
+.archibald-curriculum-ui-summary__list__item--isGroup {
+  font-weight: bold;
+  background: #eee;
+}
+.archibald-column__wrapper__list__item--isGroup {
   border-bottom: 2px solid #555;
   font-size: 1.1em;
   font-weight: bold;

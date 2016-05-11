@@ -94,15 +94,10 @@ Archibald.templates = _.extend({
   // This template is meant to be used recursively. It is used to construct a
   // summary of the current application state. It is mainly used by
   // `SummaryTreeView`.
-  // @todo Remove hasCycle information.
   summaryList: '\
 <li\
   data-model-id="<%= id %>"\
-  class="archibald-curriculum-ui-summary__list__item\
-    <% if ( typeof hasCycle1 !== "undefined" && hasCycle1 ) {%>has-cycle-1<% } %>\
-    <% if ( typeof hasCycle2 !== "undefined" && hasCycle2 ) {%>has-cycle-2<% } %>\
-    <% if ( typeof hasCycle3 !== "undefined" && hasCycle3 ) {%>has-cycle-3<% } %>\
-  "\
+  class="archibald-curriculum-ui-summary__list__item"\
 >\
   <span>\
     <% for ( var i in name ) { %>\

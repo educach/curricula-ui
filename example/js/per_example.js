@@ -244,6 +244,10 @@ var appInit = function() {
         }
       });
 
+      app.getItemDatabase().on( 'change:active', function( itemModel ) {
+        dependencyCheck( itemModel, true );
+      } );
+
       app.on( 'column:item:change', function( itemModel, itemView, columnCollection, column, eventApp ) {
         if (
           typeof itemModel.get( 'data' ) !== 'undefined' &&
@@ -253,8 +257,6 @@ var appInit = function() {
         ) {
           itemModel.set( 'active', false );
         }
-
-        dependencyCheck( itemModel, true );
       } );
 
       // If the selected item is a "progression d'apprentissage", core will

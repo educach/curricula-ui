@@ -59,7 +59,98 @@ var appInit = function() {
           </div>\
         </div>\
         ');
+
+        app.getWrapper().find( '.archibald-curriculum-ui__editor' ).after('\
+        <div class="select-school-years" id="select-school-years">\
+          <h4>Sélectionner des années scolaires:</h4>\
+          <label><input class="select-school-years__input" type="checkbox" value="1-2" />1<sup>re</sup> &ndash; 2<sup>e</sup></label>\
+          <label><input class="select-school-years__input" type="checkbox" value="3-4" />3<sup>e</sup> &ndash; 4<sup>e</sup></label>\
+          <label><input class="select-school-years__input" type="checkbox" value="5-6" />5<sup>e</sup> &ndash; 6<sup>e</sup></label>\
+          <label><input class="select-school-years__input" type="checkbox" value="7-8" />7<sup>e</sup> &ndash; 8<sup>e</sup></label>\
+          <label><input class="select-school-years__input" type="checkbox" value="9" />9<sup>e</sup></label>\
+          <label><input class="select-school-years__input" type="checkbox" value="10" />10<sup>e</sup></label>\
+          <label><input class="select-school-years__input" type="checkbox" value="11" />11<sup>e</sup></label>\
+          <div id="select-school-years-message" class="select-school-years--message"></div>\
+        </div>\
+        ');
+
+        $( '#select-school-years input' ).click(function() {
+          $( this ).toggleClass( 'select-school-years__input--hand-selected' );
+        });
       });
+
+      // Set settings, and hijack some.
+      app.setSettings();
+      var oldItemSelectEventHandler = app.settings.events[ "item:select" ];
+      app.settings.events[ "item:select" ] = function( item, columnCollection, column ) {
+        // We hijack this event. If the item is an objective, we don't trigger
+        // the core event handler.
+        if ( item.get( 'type' ) !== 'objective' ) {
+          oldItemSelectEventHandler( item, columnCollection, column );
+        }
+      };
+
+      // When an objective is rendered, remove the has-children modifier class.
+      app.on( 'column:item:render', function( itemModel, itemView, columnCollection, columnView ) {
+        if ( itemModel.get( 'type' ) === 'objective' ) {
+          itemView.$el.removeClass( itemView.className + '--has-children' );
+        }
+      } );
+
+      var checkSchoolYears = function( schoolYears ) {
+        var selectedItems = app.getItemDatabase().where({
+              active: true
+            }),
+            checkAndLock = [],
+            $input;
+
+        if ( typeof checkSchoolYears.tpl === 'undefined' ) {
+          checkSchoolYears.tpl = _.template('\
+            <% for ( var i in items ) { %>\
+              <%= items[ i ] %><% if ( items.length > 1 && i < items.length-1 ) {\
+                if ( i == items.length-2 ) { %> et <% } else { %>, <% }\
+              } %>\
+            <% } %>\
+            <% if ( items.length > 1 ) { %>sont<% } else { %>est<% } %> verouillé<% if ( items.length > 1 ) { %>s<% } %>, car  <% if ( items.length > 1 ) { %>ils sont<% } else { %>il est<% } %> implicitement sélectionné<% if ( items.length > 1 ) { %>s<% } %> par rapport aux éléments actifs.\
+          ');
+        }
+
+        // Reset the checkboxes and message first.
+        $( '#select-school-years input' ).each(function() {
+          var $this = $( this );
+          $this.prop({
+            checked: $this.hasClass('select-school-years__input--hand-selected'),
+            disabled: false
+          });
+        });
+        $( '#select-school-years-message' ).html( '' );
+
+        // Now, check all active items. If one of them has the current school
+        // years, check and lock.
+        _.each( selectedItems, function( item ) {
+          if (
+            typeof item.get( 'data' ) !== 'undefined' &&
+            typeof item.get( 'data' ).perSchoolYears !== 'undefined' &&
+            item.get( 'type' ) !== 'objective'
+          ) {
+            checkAndLock = checkAndLock.concat( item.get( 'data' ).perSchoolYears );
+          }
+        } );
+
+        checkAndLock = _.unique( checkAndLock );
+        if ( checkAndLock.length ) {
+          _.each( checkAndLock, function( item ) {
+            $( '#select-school-years input[value="' + item + '"]' ).prop({
+              checked: true,
+              disabled: true
+            });
+          } );
+
+          $( '#select-school-years-message' ).html( checkSchoolYears.tpl({
+            items: checkAndLock
+          }));
+        }
+      }
 
       var openModal = function( itemModel, itemView, columnCollection, column, eventApp ) {
         if ( itemModel.get( 'type' ) === 'objective' ) {
@@ -246,6 +337,13 @@ var appInit = function() {
 
       app.getItemDatabase().on( 'change:active', function( itemModel ) {
         dependencyCheck( itemModel, true );
+        if (
+          typeof itemModel.get( 'data' ) !== 'undefined' &&
+          typeof itemModel.get( 'data' ).perSchoolYears !== 'undefined' &&
+          itemModel.get( 'type' ) !== 'objective'
+        ) {
+          checkSchoolYears();
+        }
       } );
 
       app.on( 'column:item:change', function( itemModel, itemView, columnCollection, column, eventApp ) {

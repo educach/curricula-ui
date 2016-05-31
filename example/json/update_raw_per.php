@@ -36,6 +36,11 @@ foreach ($json as &$group) {
         }
       }
 
+      // Temp hack. Upon new loads, this will be correct.
+      if ($item['type'] == 'objective') {
+        $item['hasChildren'] = true;
+      }
+
       if (!isset($json[$item['id']])) {
         $json[$item['id']] = array();
       }
@@ -50,15 +55,54 @@ foreach ($json as &$group) {
             // Use this opportunity to add the progression items to the
             // database.
             foreach ($progressionsDataItem['contenus'] as $progression) {
-              $json[$item['id']][$progression['id']] = array(
-                'id' => 'progressions-' . $progression['id'],
-                'type' => 'progression',
-                'name' => [ str_replace(["\r\n", "\n", "\r"], '', $progression['texte']) ],
-                'data' => array(
-                  'perSchoolYears' => $progressionsData['annees'],
-                ),
-                'hasChildren' => false,
-              );
+              if (!empty($json[$item['id']][$progression['id']])) {
+                $json[$item['id']][$progression['id']]['data']['perSchoolYears'] = array_merge(
+                  $json[$item['id']][$progression['id']]['data']['perSchoolYears'],
+                  array_filter(array_map(function($item) {
+                    switch ($item) {
+                      case 1:
+                        return '1-2';
+                      case 3:
+                        return '3-4';
+                      case 5:
+                        return '5-6';
+                      case 7:
+                        return '7-8';
+                      case 9:
+                      case 10:
+                      case 11:
+                        return (string) $item;
+                    }
+                    return null;
+                  }, $progressionsData['annees']))
+                );
+              } else {
+                $json[$item['id']][$progression['id']] = array(
+                  'id' => 'progressions-' . $progression['id'],
+                  'type' => 'progression',
+                  'name' => [ str_replace(["\r\n", "\n", "\r"], '', $progression['texte']) ],
+                  'data' => array(
+                    'perSchoolYears' => array_filter(array_map(function($item) {
+                      switch ($item) {
+                        case 1:
+                          return '1-2';
+                        case 3:
+                          return '3-4';
+                        case 5:
+                          return '5-6';
+                        case 7:
+                          return '7-8';
+                        case 9:
+                        case 10:
+                        case 11:
+                          return (string) $item;
+                      }
+                      return null;
+                    }, $progressionsData['annees'])),
+                  ),
+                  'hasChildren' => false,
+                );
+              }
             }
 
             // Add the item to the appropriate rows.

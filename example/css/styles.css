@@ -128,3 +128,24 @@
   margin-bottom: 2em;
   margin-right: 1em;
 }
+.select-school-years {
+  margin-top: 10px;
+  padding: 10px;
+  background: #eee;
+  overflow: hidden;
+}
+.select-school-years h4 {
+  display: inline-block;
+  font-size: 1.1em;
+  margin-right: .5em;
+}
+.select-school-years label {
+  margin-right: .5em;
+}
+.select-school-years--message {
+  font-size: .9em;
+  font-style: italic;
+}
+.archibald-column__wrapper__list__item--objective .icon-chevron-right {
+  display: none;
+}

@@ -74,7 +74,7 @@ var appInit = function() {
                 $row, $cell, cellContent;
 
             if ( typeof itemModel.get( 'data' ).perSchoolYears !== 'undefined' ) {
-              var $schoolYearFilter = $( '<div class="archibald-per-filter"></div>' ),
+              /*var $schoolYearFilter = $( '<div class="archibald-per-filter"></div>' ),
                   filter;
 
               $schoolYearFilter.append( '<strong>Filtrer par année(s) scolaire(s):</strong>' );
@@ -93,7 +93,7 @@ var appInit = function() {
                 $wrapper.toggleClass( 'archibald-per-filter--' + this.value, $this.is( ':checked' ) );
               });
 
-              $wrapper.append( $schoolYearFilter );
+              $wrapper.append( $schoolYearFilter );*/
             }
 
             $wrapper.append( $table );

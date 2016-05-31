@@ -99,7 +99,7 @@
 }
 .archibald-per-table__cell--progression,
 .archibald-per-table__cell--empty {
-  display: none;
+  /*display: none;*/
 }
 .archibald-per-filter--1-2 .archibald-per-table__cell[data-per-school-years~="1-2"],
 .archibald-per-filter--3-4 .archibald-per-table__cell[data-per-school-years~="3-4"],

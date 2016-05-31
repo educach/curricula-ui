@@ -77,7 +77,7 @@ var appInit = function() {
               var $schoolYearFilter = $( '<div class="archibald-per-filter"></div>' ),
                   filter;
 
-              $schoolYearFilter.append( '<strong>Année(s) scolaire(s):</strong>' );
+              $schoolYearFilter.append( '<strong>Filtrer par année(s) scolaire(s):</strong>' );
 
               for ( var i in itemModel.get( 'data' ).perSchoolYears ) {
                 filter = '<label class="archibald-per-filter__filter">';

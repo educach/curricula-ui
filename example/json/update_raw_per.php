@@ -63,6 +63,8 @@ foreach ($json as &$group) {
 
             // Add the item to the appropriate rows.
             foreach ($progressionsDataItem['lignes'] as $rowNumber) {
+              $rowNumber = (int) $rowNumber;
+
               // We need to add the colspan information. This is deduced from
               // the school years. School years are grouped in columns:
               // - Cycle 1: 1-2 and 3-4
@@ -98,10 +100,10 @@ foreach ($json as &$group) {
                 }
               }
 
-              // @todo Rowspan!!
               $table[$rowNumber][] = array(
                 'type' => 'progression',
                 'colspan' => $colspan,
+                'rowspan' => 1,
                 'perSchoolYears' => implode('-', $progressionsData['annees']),
                 'content' => array_map(function($content) {
                   return array(
@@ -109,10 +111,10 @@ foreach ($json as &$group) {
                     'value' => $content['texte'],
                   );
                 }, $progressionsDataItem['contenus']),
-                // Some progressions don't make any sense, like
-                // "Genre conseillés:". Try to filter these out.
                 'isSelectable' => true,
                 /* Check with FriTic; this one is really tricky...
+                // Some progressions don't make any sense, like
+                // "Genre conseillés:". Try to filter these out.
                 'isSelectable' =>
                   count($progressionsDataItem['contenus']) > 2 ||
                   !preg_match('/:$/', trim($progressionsDataItem['contenus'][0]['texte'])),
@@ -125,10 +127,42 @@ foreach ($json as &$group) {
         // Now, some elements are sneaky: they are defined *twice* for the same
         // row, just not in the same place. On the official site, these are
         // supposed to be merged via colspan (if possible; sometimes a cell sits
-        // between them). In order to check this, we iterate over each row, and
-        // check the IDs. If the same IDs is present twice for the same row,
-        // with the same rowspan.
-        // @todo Merging!!
+        // between them) or rowspan. In order to check this, we iterate over
+        // each row, and check the IDs. If the same IDs is present twice for the
+        // same row, increase the colspan. We do the same for the cells across
+        // rows, which is a bit trickier.
+
+        // Start with the colspan. Calculate a hash for each cell. This will
+        // make comparisons easier (I hope). If we find that a previous cell
+        // already has the same hash, we remove the current one and make the
+        // previous one span.
+        foreach ($table as $rowNumber => $row) {
+          $prevCell = null;
+          $j = 0;
+          foreach ($row as $i => $cell) {
+            $cell['_hash'] = md5(serialize($cell['content']));
+
+            // We can only check if this is not the 1st cell in the row.
+            if ($prevCell) {
+              // If the hashes match, remove the current cell and span the
+              // previous one. Also add the school years to this one.
+              if ($prevCell['_hash'] == $cell['_hash']) {
+                $table[$rowNumber][$j]['perSchoolYears'] .= ' ' . $cell['perSchoolYears'];
+                $table[$rowNumber][$j]['colspan']++;
+                $table[$rowNumber][$i] = null;
+
+                // Don't re-assign $prevCell and $j.
+                continue;
+              }
+            }
+
+            $j = $i;
+            $prevCell = $cell;
+          }
+
+          // Remove empty cells.
+          $table[$rowNumber] = array_filter($table[$rowNumber]);
+        }
 
         // Add empty cells where needed. Some rows don't have enough cells to
         // span the entire width, and the existing cells are not *supposed* to
@@ -141,7 +175,7 @@ foreach ($json as &$group) {
         foreach ($table as $rowNumber => $row) {
           $coveredYears = array();
           foreach ($row as $cell) {
-            $coveredYears[] = $cell['perSchoolYears'];
+            $coveredYears = array_merge($coveredYears, explode(' ', $cell['perSchoolYears']));
           }
 
           $missingYears = array_diff($schoolYears, $coveredYears);
@@ -150,6 +184,7 @@ foreach ($json as &$group) {
             foreach ($missingYears as $missingYear) {
               $table[$rowNumber][] = array(
                 'type' => 'empty',
+                'rowspan' => 1,
                 'colspan' => 1,
                 'perSchoolYears' => $missingYear,
                 'content' => [],
@@ -167,9 +202,55 @@ foreach ($json as &$group) {
           }
         }
 
-        // Sort the table rows; we have to do it here already, because not all
-        // objectives have titles.
-        ksort($table);
+        // Sort the table rows; we have to do it here, because otherwise the
+        // rowspans will be all messed up.
+        ksort($table, SORT_NUMERIC);
+
+        // Now, finally compute the rowspans. We use a similar approach to the
+        // one used for the colspans.
+        $map = array();
+        $j = null;
+        foreach ($table as $rowNumber => $row) {
+          foreach ($row as $i => $cell) {
+            // Make sur we're at least in the 2nd row (starts at 1).
+            if ($rowNumber > 1) {
+              // Empty cells are not checked.
+              if ($cell['type'] == 'empty') {
+                continue;
+              }
+
+              // Do we have an indication against what to check? If not, simply
+              // check against the cell "right" above.
+              if (isset($map[$i]) && isset($table[$map[$i]][$i])) {
+                $j = $map[$i];
+              } elseif (isset($table[$rowNumber-1][$i])) {
+                $j = $rowNumber-1;
+              } else {
+                // Edge-case. Skip.
+                continue;
+              }
+
+              // Check the cells.
+              if (md5(serialize($cell['content'])) == md5(serialize($table[$j][$i]['content']))) {
+                $table[$j][$i]['rowspan']++;
+                $table[$rowNumber][$i] = null;
+
+                // On the next run, the current cell won't exist anymore, so
+                // $table[$rowNumber-1][$i] won't work. We use a map to specify
+                // against which row each column should be checked. Update it
+                // now.
+                $map[$i] = $j;
+              } else {
+                // The next row, for this column, should check against the
+                // current cell.
+                $map[$i] = $rowNumber;
+              }
+            }
+          }
+
+          // Remove empty cells.
+          $table[$rowNumber] = array_filter($table[$rowNumber]);
+        }
       }
 
       if (!empty($item['data']['raw_per']['titres'])) {
@@ -229,7 +310,7 @@ foreach ($json as &$group) {
         }
 
         // Sort the table rows again.
-        ksort($table);
+        ksort($table, SORT_NUMERIC);
       }
 
       // Now add the table to the objective item.
@@ -269,4 +350,4 @@ foreach ($json as &$group) {
   }
 }
 
-file_put_contents(__DIR__ . '/per_example.json', json_encode($json/*, JSON_PRETTY_PRINT*/));
+file_put_contents(__DIR__ . '/per_example.json', json_encode($json/**/, JSON_PRETTY_PRINT/**/));

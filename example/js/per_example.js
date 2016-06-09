@@ -164,29 +164,6 @@ var appInit = function() {
                 perTable = itemModel.get( 'data' ).perTable,
                 $row, $cell, cellContent;
 
-            if ( typeof itemModel.get( 'data' ).perSchoolYears !== 'undefined' ) {
-              /*var $schoolYearFilter = $( '<div class="archibald-per-filter"></div>' ),
-                  filter;
-
-              $schoolYearFilter.append( '<strong>Filtrer par année(s) scolaire(s):</strong>' );
-
-              for ( var i in itemModel.get( 'data' ).perSchoolYears ) {
-                filter = '<label class="archibald-per-filter__filter">';
-                filter += '<input type="checkbox" value="' + itemModel.get( 'data' ).perSchoolYears[ i ] + '" checked /> ';
-                filter += itemModel.get( 'data' ).perSchoolYears[ i ];
-                filter += '</label>';
-                $schoolYearFilter.append( filter );
-                $wrapper.addClass( 'archibald-per-filter--' + itemModel.get( 'data' ).perSchoolYears[ i ] );
-              }
-
-              $schoolYearFilter.find( 'input' ).change(function() {
-                var $this = $( this );
-                $wrapper.toggleClass( 'archibald-per-filter--' + this.value, $this.is( ':checked' ) );
-              });
-
-              $wrapper.append( $schoolYearFilter );*/
-            }
-
             $wrapper.append( $table );
 
             for ( var rowId in perTable ) {
@@ -228,7 +205,7 @@ var appInit = function() {
                   cellContent += '</div>';
                 } );
                 $cell.html( cellContent );
-console.log($cell);
+
                 if ( perTable[ rowId ][ cellId ].isSelectable ) {
                   (function( $cell ) {
                     $cell.find( 'input' ).change( function() {

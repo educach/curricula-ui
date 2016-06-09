@@ -102,6 +102,9 @@ foreach ($json as &$group) {
 
                 $table[$i][$j] = array(
                   'type' => $cell['type'] == 'titre' ? 'title' : $cell['type'],
+                  // @todo For certain titles, this colspan can be too much. It
+                  // seams browsers just deal with this fine, but it's still
+                  // not elegant. Try to figure out the max colspan?
                   'colspan' => $cell['colspan'],
                   'rowspan' => $cell['rowspan'],
                   //'perSchoolYears' => implode('-', $progressionsData['annees']),
@@ -112,8 +115,9 @@ foreach ($json as &$group) {
                     );
                   }, $cell['contenus']),
                   'isSelectable' => $cell['type'] == 'progression',
-                  // @todo
-                  'level' => $cell['type'] == 'titre' ? 1 : null,
+                  'level' => $cell['type'] == 'titre' ?
+                    (!empty($cell['niveau']) ? $cell['niveau'] : 1) :
+                    null,
                   // Check with FriTic; this one is really tricky...
                   // Some progressions don't make any sense, like
                   // "Genre conseillés:". Try to filter these out.

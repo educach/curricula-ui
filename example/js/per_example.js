@@ -111,7 +111,7 @@ var appInit = function() {
                 if ( i == items.length-2 ) { %> et <% } else { %>, <% }\
               } %>\
             <% } %>\
-            <% if ( items.length > 1 ) { %>sont<% } else { %>est<% } %> verouillé<% if ( items.length > 1 ) { %>s<% } %>, car  <% if ( items.length > 1 ) { %>ils sont<% } else { %>il est<% } %> implicitement sélectionné<% if ( items.length > 1 ) { %>s<% } %> par rapport aux éléments actifs.\
+            <% if ( items.length > 1 ) { %>sont<% } else { %>est<% } %> verouillée<% if ( items.length > 1 ) { %>s<% } %>, car  <% if ( items.length > 1 ) { %>elles sont<% } else { %>elle est<% } %> implicitement sélectionnée<% if ( items.length > 1 ) { %>s<% } %> par rapport aux éléments actifs.\
           ');
         }
 

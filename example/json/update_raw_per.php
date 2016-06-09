@@ -137,9 +137,23 @@ foreach ($json as &$group) {
               }
             }
           }
+
           if (!empty($table[$i])) {
-            // Remove keys, only keep a list.
-            $table[$i] = array_values($table[$i]);
+            // If this line contains only empty cells, remove it.
+            $found = FALSE;
+            foreach ($table[$i] as $cellToCheck) {
+              if ($cellToCheck['type'] != 'empty') {
+                $found = TRUE;
+                break;
+              }
+            }
+            if (!$found) {
+              // Unset this row.
+              unset($table[$i]);
+            } else {
+              // Remove keys, only keep a list.
+              $table[$i] = array_values($table[$i]);
+            }
           }
         }
         // Remove keys, only keep a list.

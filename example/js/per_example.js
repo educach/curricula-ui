@@ -228,7 +228,7 @@ var appInit = function() {
                   cellContent += '</div>';
                 } );
                 $cell.html( cellContent );
-
+console.log($cell);
                 if ( perTable[ rowId ][ cellId ].isSelectable ) {
                   (function( $cell ) {
                     $cell.find( 'input' ).change( function() {

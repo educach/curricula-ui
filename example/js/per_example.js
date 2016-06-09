@@ -35,6 +35,26 @@ Archibald.templates.summaryList = '\
 </li>\
 ';
 
+Archibald.templates.perLockedSchoolYearsMessage = _.template('\
+  <% for ( var i in items ) { %>\
+    <%= items[ i ] %><% if ( items.length > 1 && i < items.length-1 ) {\
+      if ( i == items.length-2 ) { %> et <% } else { %>, <% }\
+    } %>\
+  <% } %>\
+  <% if ( items.length > 1 ) { %>sont<% } else { %>est<% } %> verouillée<% if ( items.length > 1 ) { %>s<% } %>, car  <% if ( items.length > 1 ) { %>elles sont<% } else { %>elle est<% } %> implicitement sélectionnée<% if ( items.length > 1 ) { %>s<% } %> par rapport aux éléments actifs.\
+');
+
+Archibald.templates.perSelectedSchoolYearsMessage = _.template('\
+  <% if ( items.length ) { %>\
+    <h4>Années scolaires sélectionnées:</h4>\
+    <% for ( var i in items ) { %>\
+      <span class="summary-school-years__school-year"><%= items[ i ] %></span><% if ( items.length > 1 && i < items.length-1 ) {\
+        if ( i == items.length-2 ) { %> et <% } else { %>, <% }\
+      } %>\
+    <% } %>\
+  <% } %>\
+');
+
 var appInit = function() {
   $.ajax({
     url: 'json/per_example.json',
@@ -74,8 +94,19 @@ var appInit = function() {
         </div>\
         ');
 
+        app.getWrapper().find( '.archibald-curriculum-ui__summary-wrapper__content' ).before('\
+        <div class="summary-school-years" id="summary-school-years">\
+        </div>\
+        ');
+
         $( '#select-school-years input' ).click(function() {
           $( this ).toggleClass( 'select-school-years__input--hand-selected' );
+        }).change(function() {
+          $( '#summary-school-years' ).html( Archibald.templates.perSelectedSchoolYearsMessage({
+            items: $( '#select-school-years input:checked' ).map(function() {
+              return this.value;
+            }).get()
+          }) );
         });
       });
 
@@ -104,17 +135,6 @@ var appInit = function() {
             checkAndLock = [],
             $input;
 
-        if ( typeof checkSchoolYears.tpl === 'undefined' ) {
-          checkSchoolYears.tpl = _.template('\
-            <% for ( var i in items ) { %>\
-              <%= items[ i ] %><% if ( items.length > 1 && i < items.length-1 ) {\
-                if ( i == items.length-2 ) { %> et <% } else { %>, <% }\
-              } %>\
-            <% } %>\
-            <% if ( items.length > 1 ) { %>sont<% } else { %>est<% } %> verouillée<% if ( items.length > 1 ) { %>s<% } %>, car  <% if ( items.length > 1 ) { %>elles sont<% } else { %>elle est<% } %> implicitement sélectionnée<% if ( items.length > 1 ) { %>s<% } %> par rapport aux éléments actifs.\
-          ');
-        }
-
         // Reset the checkboxes and message first.
         $( '#select-school-years input' ).each(function() {
           var $this = $( this );
@@ -140,13 +160,15 @@ var appInit = function() {
         checkAndLock = _.unique( checkAndLock );
         if ( checkAndLock.length ) {
           _.each( checkAndLock, function( item ) {
+            // Using attr() doesn't seem to work, revert to prop(). But prop()
+            // doesn't trigger a change event, so trigger it by hand.
             $( '#select-school-years input[value="' + item + '"]' ).prop({
               checked: true,
               disabled: true
-            });
+            }).change();
           } );
 
-          $( '#select-school-years-message' ).html( checkSchoolYears.tpl({
+          $( '#select-school-years-message' ).html( Archibald.templates.perLockedSchoolYearsMessage({
             items: checkAndLock
           }));
         }

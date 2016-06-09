@@ -146,6 +146,19 @@
   font-size: .9em;
   font-style: italic;
 }
+.summary-school-years {
+  background: #fbf5d6;
+  padding: 0 .5em;
+  margin: .5em 0;
+}
+.summary-school-years h4 {
+  display: inline-block;
+  font-size: 1.1em;
+  margin-right: .5em;
+}
+.summary-school-years__school-year {
+  font-weight: bold;
+}
 .archibald-column__wrapper__list__item--objective .icon-chevron-right {
   display: none;
 }

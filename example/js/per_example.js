@@ -128,7 +128,7 @@ var appInit = function() {
         }
       } );
 
-      var checkSchoolYears = function( schoolYears ) {
+      var checkSchoolYears = function() {
         var selectedItems = app.getItemDatabase().where({
               active: true
             }),
@@ -142,7 +142,7 @@ var appInit = function() {
             checked: $this.hasClass('select-school-years__input--hand-selected'),
             disabled: false
           });
-        });
+        }).change();
         $( '#select-school-years-message' ).html( '' );
 
         // Now, check all active items. If one of them has the current school
@@ -338,8 +338,7 @@ var appInit = function() {
         dependencyCheck( itemModel, true );
         if (
           typeof itemModel.get( 'data' ) !== 'undefined' &&
-          typeof itemModel.get( 'data' ).perSchoolYears !== 'undefined' &&
-          itemModel.get( 'type' ) !== 'objective'
+          typeof itemModel.get( 'data' ).perSchoolYears !== 'undefined'
         ) {
           checkSchoolYears();
         }

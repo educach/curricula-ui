@@ -285,84 +285,10 @@
 .archibald-curriculum-ui-item-info__type__description__label {
   font-weight: bold;
 }
-.archibald-cycle-selection {
-  display: none;
-  margin-top: 10px;
-  padding: 10px;
-  background: #eee;
-  overflow: hidden;
-}
-.lp21 .archibald-cycle-selection/*,
-.per .archibald-cycle-selection */ {
-  display: block;
-}
-.archibald-cycle-selection__warning {
-  display: none;
-  font-style: italic;
-  font-size: .9em;
-}
-.archibald-cycle-selection--has-implicit .archibald-cycle-selection__warning {
-  display: block;
-}
-.archibald-cycle-selection__warning .is {
-  display: inline;
-}
-.archibald-cycle-selection__warning .are {
-  display: none;
-}
-.archibald-cycle-selection__warning .selected + .selected ~ .is {
-  display: none;
-}
-.archibald-cycle-selection__warning .selected + .selected ~ .are {
-  display: inline;
-}
-.archibald-cycle-selection__wrapper {
-
-}
-.archibald-cycle-selection__filter {
-  position: relative;
-  margin-left: 10px;
-  padding: 5px 10px;
-  border-style: dashed;
-  border-color: #ccc;
-  border-width: 1px;
-  cursor: pointer;
-}
-.archibald-cycle-selection__filter:hover {
-  background-color: #ddd;
-}
-.archibald-cycle-selection__filter + .archibald-cycle-selection__filter {
-  margin-left: 1em;
-}
 
 /**
- * PER specific styles.
+ * Search component.
  */
-.archibald-per-school-year-selection {
-  display: none;
-  margin-top: 10px;
-  padding: 10px;
-  background: #eee;
-  overflow: hidden;
-}
-.per .archibald-per-school-year-selection {
-  display: block;
-}
-.archibald-per-school-year-selection__filter {
-  position: relative;
-  margin-left: 10px;
-  padding: 5px 10px;
-  border-style: dashed;
-  border-color: #ccc;
-  border-width: 1px;
-  cursor: pointer;
-}
-.archibald-per-school-year-selection__filter:hover {
-  background-color: #ddd;
-}
-.archibald-per-school-year-selection__filter + .archibald-per-school-year-selection__filter {
-  margin-left: 1em;
-}
 .archibald-curriculum-ui-search__overlay {
   position: fixed;
   top: 0;
@@ -414,6 +340,56 @@
  * lp21 requires a color code, which we represent on the left side of an item
  * using borders.
  */
+
+.archibald-cycle-selection {
+  display: none;
+  margin-top: 10px;
+  padding: 10px;
+  background: #eee;
+  overflow: hidden;
+}
+.lp21 .archibald-cycle-selection/*,
+.per .archibald-cycle-selection */ {
+  display: block;
+}
+.archibald-cycle-selection__warning {
+  display: none;
+  font-style: italic;
+  font-size: .9em;
+}
+.archibald-cycle-selection--has-implicit .archibald-cycle-selection__warning {
+  display: block;
+}
+.archibald-cycle-selection__warning .is {
+  display: inline;
+}
+.archibald-cycle-selection__warning .are {
+  display: none;
+}
+.archibald-cycle-selection__warning .selected + .selected ~ .is {
+  display: none;
+}
+.archibald-cycle-selection__warning .selected + .selected ~ .are {
+  display: inline;
+}
+.archibald-cycle-selection__wrapper {
+
+}
+.archibald-cycle-selection__filter {
+  position: relative;
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-style: dashed;
+  border-color: #ccc;
+  border-width: 1px;
+  cursor: pointer;
+}
+.archibald-cycle-selection__filter:hover {
+  background-color: #ddd;
+}
+.archibald-cycle-selection__filter + .archibald-cycle-selection__filter {
+  margin-left: 1em;
+}
 .lp21 .archibald-cycle-selection__filter {
   border-width: 1px 1px 1px 0;
 }

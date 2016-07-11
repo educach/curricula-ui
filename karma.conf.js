@@ -6,7 +6,7 @@ module.exports = function( config ) {
     files: [
       // Because of dependency resolution, we need to specify all files in order
       // instead of using **/*.js.
-      'assets/components/jquery/jquery.js',
+      'assets/components/jquery/dist/jquery.js',
       'assets/components/underscore/underscore.js',
       'assets/components/backbone/backbone.js',
       'assets/components/nanoscroller/bin/javascripts/jquery.nanoscroller.js',

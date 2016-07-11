@@ -207,6 +207,7 @@ Core.prototype = {
           recursiveCheckPrompt:        false,
           recursiveCheckPromptMessage: "This will also uncheck all child items. Are you sure you want to continue?",
           useSearch:                   true,
+          useItemInfo:                 true,
 
           // Templates.
           templates: {
@@ -950,6 +951,11 @@ Core.prototype = {
   //    (optional) The item for which we want to render the information, or null
   //    to reset the information drawer.
   updateItemInfo: function( item ) {
+    // Do we use the item info? If not, skip this.
+    if ( !this.settings.useItemInfo ) {
+      return;
+    }
+
     // Do we already have an item info view? If not, create it now, and add it
     // to our application markup.
     if ( !this.itemInfoView || !this.itemInfoView.$el.length ) {

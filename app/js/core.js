@@ -166,7 +166,10 @@ Core.prototype = {
     }
 
     // Render the application markup.
-    this.$el.html( this.settings.templates.app() );
+    this.$el.html( this.settings.templates.app({
+      editorLabel:  this.settings.editorLabel  ? this.settings.editorLabel  : undefined,
+      summaryLabel: this.settings.summaryLabel ? this.settings.summaryLabel : undefined,
+    }) );
     this.triggerEvent( 'app', 'render', this );
 
     // Add the item info element to the markup.
@@ -208,6 +211,8 @@ Core.prototype = {
           recursiveCheckPromptMessage: "This will also uncheck all child items. Are you sure you want to continue?",
           useSearch:                   true,
           useItemInfo:                 true,
+          editorLabel:                 false,
+          summaryLabel:                false,
 
           // Templates.
           templates: {

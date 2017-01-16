@@ -1,6 +1,6 @@
 /**
  * @file
- * Archibald Curriculum JS application core.
+ * Curricula UI JS application core.
  *
  * This defines the core class that initializes the application. It can be
  * considered as the "controller" for the views and models. Note that this file
@@ -14,25 +14,25 @@
  */
 
 "use strict";
-( function( $, Backbone, _, Archibald ) {
+( function( $, Backbone, _, c ) {
 
 
 // Templates
 // ---------
 //
 // This defines the default templates used by the core application. They
-// can be overridden in various cases, as needed. Archibald Curriculum strictly
+// can be overridden in various cases, as needed. Curricula UI strictly
 // adheres to *BEM* notation for the markup, and overrides should follow suit.
-Archibald.templates =  _.extend({
+c.templates =  _.extend({
 
   // CSS rules.
   //
   // A template for the dynamic CSS rules we inject for the responsive logic.
-  // See `ArchibaldCurriculum.Core#activateResponsiveLogic()` and
-  // `ArchibaldCurriculum.Core#resize()`.
+  // See `CurriculaUI.Core#activateResponsiveLogic()` and
+  // `CurriculaUI.Core#resize()`.
   css: '\
-#<%= id %> .archibald-column__wrapper,\
-#<%= id %> .archibald-column {\
+#<%= id %> .curricula-ui__column__wrapper,\
+#<%= id %> .curricula-ui__column {\
   width: <%= width %>px;\
 }',
 
@@ -44,22 +44,22 @@ Archibald.templates =  _.extend({
   // - nano classes?
   // - IDs
   app: '\
-<div class="archibald-curriculum-ui">\
-  <div class="archibald-curriculum-ui__row">\
+<div class="curricula-ui">\
+  <div class="curricula-ui__row">\
     <h3><%= typeof editorLabel !== "undefined" ? editorLabel : "Editor" %></h3>\
-    <div class="archibald-curriculum-ui__item-info-wrapper"></div>\
-    <div class="archibald-curriculum-ui__editor archibald-curriculum-ui__row">\
+    <div class="curricula-ui__item-info-wrapper"></div>\
+    <div class="curricula-ui__editor curricula-ui__row">\
     </div>\
   </div>\
-  <div class="archibald-curriculum-ui__row archibald-curriculum-ui__summary-wrapper">\
-    <h3 class="archibald-curriculum-ui__summary-wrapper__label"><%= typeof summaryLabel !== "undefined" ? summaryLabel : "Summary" %></h3>\
-    <div class="archibald-curriculum-ui__summary-wrapper__content">\
+  <div class="curricula-ui__row curricula-ui__summary-wrapper">\
+    <h3 class="curricula-ui__summary-wrapper__label"><%= typeof summaryLabel !== "undefined" ? summaryLabel : "Summary" %></h3>\
+    <div class="curricula-ui__summary-wrapper__content">\
     </div>\
   </div>\
 </div>\
 '
 
-}, Archibald.templates || {});
+}, c.templates || {});
 
 // Core
 // ----
@@ -103,13 +103,13 @@ var Core = function( items, wrapper, settings ) {
   // views using models and a collection allows us to perform actions based
   // on column "location" much faster than traversing the DOM. It also allows
   // us to cleanly keep track of what columns are available.
-  this.columnDatabase = new Archibald.ColumnCollection();
+  this.columnDatabase = new c.ColumnCollection();
   this.columnDatabase.on( 'remove', function( model ) {
     model.get( 'column' ).remove();
   });
 };
 
-// Extend the `ArchibaldCurriculum.Core` prototype.
+// Extend the `CurriculaUI.Core` prototype.
 Core.prototype = {
 
   // The identifier for the instance.
@@ -130,12 +130,12 @@ Core.prototype = {
   $el: null,
 
   // Prepare a reference to the style wrapper, used when the responsive logic
-  // is enabled. See `ArchibaldCuliculm.Core#activateResponsiveLogic()`.
+  // is enabled. See `CurriculaUI.Core#activateResponsiveLogic()`.
   $style: null,
 
   // Prepare a reference to the maximum number of columns the application can
   // have. This is only used if the responsive logic is activated. See
-  // `ArchibaldCuliculm.Core#activateResponsiveLogic()`.
+  // `CurriculaUI.Core#activateResponsiveLogic()`.
   maxCols: null,
 
   // Prepare a reference to the summary view.
@@ -166,7 +166,7 @@ Core.prototype = {
     // CSS rules if the responsive logic is activated. If our wrapper has no
     // ID, generate one.
     if ( typeof this.$el[ 0 ].id === 'undefined' || this.$el[ 0 ].id === '' ) {
-      this.$el[ 0 ].id = 'archibald-curriculum-ui-core-' + this.id;
+      this.$el[ 0 ].id = 'curricula-ui-core-' + this.id;
     }
 
     // Render the application markup.
@@ -208,11 +208,11 @@ Core.prototype = {
     var that = this,
         defaults = {
           // View classes.
-          itemView:     Archibald.ItemView,
-          itemListView: Archibald.ItemListView,
-          itemInfoView: Archibald.ItemInfoView,
-          summaryView:  Archibald.SummaryTreeView,
-          searchView:   Archibald.SearchView,
+          itemView:     c.ItemView,
+          itemListView: c.ItemListView,
+          itemInfoView: c.ItemInfoView,
+          summaryView:  c.SummaryTreeView,
+          searchView:   c.SearchView,
 
           // Behavior settings.
           recursiveCheckPrompt:        false,
@@ -224,8 +224,8 @@ Core.prototype = {
 
           // Templates.
           templates: {
-            app: _.template( Archibald.templates.app ),
-            css: _.template( Archibald.templates.css )
+            app: _.template( c.templates.app ),
+            css: _.template( c.templates.css )
           },
 
           // Event callbacks.
@@ -357,7 +357,7 @@ Core.prototype = {
                 column.trigger(
                   'item:select',
                   items[ i ],
-                  new ArchibaldCurriculum.ItemCollection(),
+                  new CurriculaUI.ItemCollection(),
                   column,
                   {}
                 );
@@ -467,7 +467,7 @@ Core.prototype = {
       this.summaryView.on( 'item:select', this.settings.events[ 'summary:item:select' ] );
 
       // Append the summary to our application wrapper.
-      this.$el.find( '.archibald-curriculum-ui__summary-wrapper__content' ).html( this.summaryView.render().$el );
+      this.$el.find( '.curricula-ui__summary-wrapper__content' ).html( this.summaryView.render().$el );
 
       // Allow all events to bubble up.
       this.summaryView.on( 'all', function( event ) {
@@ -560,11 +560,11 @@ Core.prototype = {
    *    An object representing the JSON database of all curriculum items.
    */
   setItemDatabase: function( items ) {
-    this.itemDatabase = new Archibald.ItemCollection();
+    this.itemDatabase = new c.ItemCollection();
 
     for ( var group in items ) {
       for ( var i in items[ group ] ) {
-        this.itemDatabase.add( new Archibald.ItemModel( _.extend( {
+        this.itemDatabase.add( new c.ItemModel( _.extend( {
           parentId:    group,
           hasChildren: !!(
             typeof items[ items[ group ][ i ].id ] !== 'undefined' &&
@@ -578,7 +578,7 @@ Core.prototype = {
   // Get the global item database.
   //
   /**
-   * @returns {ArchibaldCurriculum.ItemCollection}
+   * @returns {CurriculaUI.ItemCollection}
    */
   getItemDatabase: function() {
     return this.itemDatabase;
@@ -587,7 +587,7 @@ Core.prototype = {
   // Get the global column database.
   //
   /**
-   * @returns {ArchibaldCurriculum.ColumnCollection}
+   * @returns {CurriculaUI.ColumnCollection}
    */
   getColumnDatabase: function() {
     return this.columnDatabase;
@@ -603,7 +603,7 @@ Core.prototype = {
    *    (optional) Whether the column items are editable or not. Defaults to
    *    false.
    *
-   * @returns {ArchibaldCurriculum.ItemListView}
+   * @returns {CurriculaUI.ItemListView}
    */
   createRootColumn: function( editable ) {
     if ( this.columnDatabase.length ) {
@@ -624,11 +624,11 @@ Core.prototype = {
    *    (optional) Whether the column should be collapsed on creation or not.
    *    Defaults to false.
    *
-   * @returns {ArchibaldCurriculum.ItemListView}
+   * @returns {CurriculaUI.ItemListView}
    */
   createColumn: function( items, editable, collapsed ) {
     var column = new this.settings.itemListView({
-      collection: new Archibald.ItemCollection( items ),
+      collection: new c.ItemCollection( items ),
       editable:   !!editable,
       childView:  this.settings.itemView
     });
@@ -671,7 +671,7 @@ Core.prototype = {
     } );
 
     // Add it to the wrapper.
-    this.$el.find( '.archibald-curriculum-ui__editor' ).append( column.render().$el );
+    this.$el.find( '.curricula-ui__editor' ).append( column.render().$el );
 
     // Activate the nanoScroller plugin.
     if ( typeof $.fn.nanoScroller !== 'undefined' ) {
@@ -684,10 +684,10 @@ Core.prototype = {
   // Get the columns to the right of the passed column.
   //
   /**
-   * @param {ArchibaldCurriculum.ItemListView} column
+   * @param {CurriculaUI.ItemListView} column
    *
    * @returns {Array}
-   *    An array of ArchibaldCurriculum.ColumnModel items.
+   *    An array of CurriculaUI.ColumnModel items.
    */
   getColumnRightSiblings: function( column ) {
     var index = this.columnDatabase.indexOf(
@@ -705,7 +705,7 @@ Core.prototype = {
   //
   /**
    * @returns {Array}
-   *    An array of ArchibaldCurriculum.ColumnModel items.
+   *    An array of CurriculaUI.ColumnModel items.
    */
   getColumnLeftSiblings: function( column ) {
     var index = this.columnDatabase.indexOf(
@@ -717,7 +717,7 @@ Core.prototype = {
   // Helper function to recursively "check" or "uncheck" items.
   //
   /**
-   * @param {ArchibaldCurriculum.ItemModel} item
+   * @param {CurriculaUI.ItemModel} item
    *    The item from which the recursive (un)checking must start.
    * @param {Boolean} prompt
    *    (optional) Whether to prompt the user in case of recursively unchecking
@@ -774,7 +774,7 @@ Core.prototype = {
       this.triggerEvent(
         'items',
         [ 'change', 'active' ],
-        new Archibald.ItemCollection( updated ),
+        new c.ItemCollection( updated ),
         this.itemDatabase
       );
     }
@@ -796,7 +796,7 @@ Core.prototype = {
       // Create an invisible iframe. See
       // http://stackoverflow.com/questions/2175992/detect-when-window-vertical-scrollbar-appears
       // and https://gist.github.com/OrganicPanda/8222636.
-      var $iframe = $( '<iframe class="__archibald-curricula-ui--hacky-scrollbar-resize-listener__" />' );
+      var $iframe = $( '<iframe class="__curricula-ui__curricula-ui--hacky-scrollbar-resize-listener__" />' );
 
       // Make the iframe invisible, but still as wide as the screen.
       $iframe
@@ -837,7 +837,7 @@ Core.prototype = {
    *    will be computed based on the application wrapper's current width.
    */
   computeMaxCols: function( width ) {
-    width = typeof width === 'number' ? width : this.$el.find( '.archibald-curriculum-ui__editor').width();
+    width = typeof width === 'number' ? width : this.$el.find( '.curricula-ui__editor').width();
 
     // Recompute the amount of columns we can show. For widths less than 600,
     // we only show 1. For widths between 600 and 900, we show 2; between 900
@@ -849,7 +849,7 @@ Core.prototype = {
   //
   // This method computes the new amount of columns that are to be shown, and
   // updates the CSS rules accordingly. See
-  // `ArchibaldCurriculum#computeMaxCols()` for more information.
+  // `CurriculaUI#computeMaxCols()` for more information.
   //
   /**
    * @param {Number} newWidth
@@ -861,7 +861,7 @@ Core.prototype = {
       throw "Resizing is only available if the responsive logic is activated. Call activateResponsiveLogic() first.";
     }
 
-    var width = typeof newWidth === 'number' ? newWidth : this.$el.find( '.archibald-curriculum-ui__editor').width(),
+    var width = typeof newWidth === 'number' ? newWidth : this.$el.find( '.curricula-ui__editor').width(),
         oldMaxCols = this.maxCols;
 
     // Recompute the amount of columns we can show.
@@ -880,7 +880,7 @@ Core.prototype = {
     // appropriate amount of columns on the left. If we have room for more, we
     // need to expand.
     // @todo Don't rely on the DOM selector we use here!
-    var numExpanded = this.$el.find( '.archibald-column:not(.archibald-column--collapsed)' ).length,
+    var numExpanded = this.$el.find( '.curricula-ui__column:not(.curricula-ui__column--collapsed)' ).length,
         diff = Math.abs( oldMaxCols - this.maxCols );
 
     if ( oldMaxCols > this.maxCols && numExpanded > this.maxCols ) {
@@ -915,7 +915,7 @@ Core.prototype = {
       this.triggerEvent(
         'items',
         [ 'change', 'highlighted' ],
-        new Archibald.ItemCollection( highlightedItems ),
+        new c.ItemCollection( highlightedItems ),
         this.itemDatabase
       );
     }
@@ -935,7 +935,7 @@ Core.prototype = {
       this.triggerEvent(
         'items',
         [ 'change', 'expanded' ],
-        new Archibald.ItemCollection( expandedItems ),
+        new c.ItemCollection( expandedItems ),
         this.itemDatabase
       );
     }
@@ -987,7 +987,7 @@ Core.prototype = {
   // If no item is passed, will render an "empty" item information drawer.
   //
   /**
-   * @param {ArchibaldCurriculum.ItemModel} item
+   * @param {CurriculaUI.ItemModel} item
    *    (optional) The item for which we want to render the information, or null
    *    to reset the information drawer.
    */
@@ -1001,7 +1001,7 @@ Core.prototype = {
     // to our application markup.
     if ( !this.itemInfoView || !this.itemInfoView.$el.length ) {
       this.itemInfoView = new this.settings.itemInfoView();
-      this.$el.find( '.archibald-curriculum-ui__item-info-wrapper' ).empty().append(
+      this.$el.find( '.curricula-ui__item-info-wrapper' ).empty().append(
         this.itemInfoView.render().$el
       );
 
@@ -1015,10 +1015,10 @@ Core.prototype = {
           that = this;
 
       this.itemInfoView.on( 'collapse', function() {
-        that.resize( that.$el.find( '.archibald-curriculum-ui__editor').width() + itemInfoWidth );
+        that.resize( that.$el.find( '.curricula-ui__editor').width() + itemInfoWidth );
       });
       this.itemInfoView.on( 'expand', function() {
-        that.resize( that.$el.find( '.archibald-curriculum-ui__editor').width() - itemInfoWidth );
+        that.resize( that.$el.find( '.curricula-ui__editor').width() - itemInfoWidth );
       });
 
       if ( typeof $.fn.nanoScroller !== 'undefined' ) {
@@ -1056,6 +1056,6 @@ Core.count = 0;
 Core.prototype = _.extend( Core.prototype, Backbone.Events );
 
 // Export.
-Archibald.Core = Core;
+c.Core = Core;
 
-})( jQuery, Backbone, _, window.ArchibaldCurriculum || ( window.ArchibaldCurriculum = new Object() ) );
+})( jQuery, Backbone, _, window.CurriculaUI || ( window.CurriculaUI = new Object() ) );

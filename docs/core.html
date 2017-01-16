@@ -60,7 +60,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
  * @file
- * Archibald Curriculum JS application core.
+ * Curricula UI JS application core.
  *
  * This defines the core class that initializes the application. It can be
  * considered as the "controller" for the views and models. Note that this file
@@ -74,7 +74,7 @@
  */</span>
 <span class="hljs-meta">
 "use strict"</span>;
-( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> $, Backbone, _, Archibald </span>) </span>{</pre></div></div>
+( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> $, Backbone, _, c </span>) </span>{</pre></div></div>
             
         </li>
         
@@ -99,12 +99,12 @@
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
               <p>This defines the default templates used by the core application. They
-can be overridden in various cases, as needed. Archibald Curriculum strictly
+can be overridden in various cases, as needed. Curricula UI strictly
 adheres to <em>BEM</em> notation for the markup, and overrides should follow suit.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.templates =  _.extend({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>c.templates =  _.extend({</pre></div></div>
             
         </li>
         
@@ -117,14 +117,14 @@ adheres to <em>BEM</em> notation for the markup, and overrides should follow sui
               </div>
               <p>CSS rules.</p>
 <p>A template for the dynamic CSS rules we inject for the responsive logic.
-See <code>ArchibaldCurriculum.Core#activateResponsiveLogic()</code> and
-<code>ArchibaldCurriculum.Core#resize()</code>.</p>
+See <code>CurriculaUI.Core#activateResponsiveLogic()</code> and
+<code>CurriculaUI.Core#resize()</code>.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  css: <span class="hljs-string">'\
-#&lt;%= id %&gt; .archibald-column__wrapper,\
-#&lt;%= id %&gt; .archibald-column {\
+#&lt;%= id %&gt; .curricula-ui__column__wrapper,\
+#&lt;%= id %&gt; .curricula-ui__column {\
   width: &lt;%= width %&gt;px;\
 }'</span>,</pre></div></div>
             
@@ -149,22 +149,22 @@ the DOM wrapper that contains the application.
             </div>
             
             <div class="content"><div class='highlight'><pre>  app: <span class="hljs-string">'\
-&lt;div class="archibald-curriculum-ui"&gt;\
-  &lt;div class="archibald-curriculum-ui__row"&gt;\
+&lt;div class="curricula-ui"&gt;\
+  &lt;div class="curricula-ui__row"&gt;\
     &lt;h3&gt;&lt;%= typeof editorLabel !== "undefined" ? editorLabel : "Editor" %&gt;&lt;/h3&gt;\
-    &lt;div class="archibald-curriculum-ui__item-info-wrapper"&gt;&lt;/div&gt;\
-    &lt;div class="archibald-curriculum-ui__editor archibald-curriculum-ui__row"&gt;\
+    &lt;div class="curricula-ui__item-info-wrapper"&gt;&lt;/div&gt;\
+    &lt;div class="curricula-ui__editor curricula-ui__row"&gt;\
     &lt;/div&gt;\
   &lt;/div&gt;\
-  &lt;div class="archibald-curriculum-ui__row archibald-curriculum-ui__summary-wrapper"&gt;\
-    &lt;h3 class="archibald-curriculum-ui__summary-wrapper__label"&gt;&lt;%= typeof summaryLabel !== "undefined" ? summaryLabel : "Summary" %&gt;&lt;/h3&gt;\
-    &lt;div class="archibald-curriculum-ui__summary-wrapper__content"&gt;\
+  &lt;div class="curricula-ui__row curricula-ui__summary-wrapper"&gt;\
+    &lt;h3 class="curricula-ui__summary-wrapper__label"&gt;&lt;%= typeof summaryLabel !== "undefined" ? summaryLabel : "Summary" %&gt;&lt;/h3&gt;\
+    &lt;div class="curricula-ui__summary-wrapper__content"&gt;\
     &lt;/div&gt;\
   &lt;/div&gt;\
 &lt;/div&gt;\
 '</span>
 
-}, Archibald.templates || {});</pre></div></div>
+}, c.templates || {});</pre></div></div>
             
         </li>
         
@@ -290,7 +290,7 @@ us to cleanly keep track of what columns are available.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">this</span>.columnDatabase = <span class="hljs-keyword">new</span> Archibald.ColumnCollection();
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">this</span>.columnDatabase = <span class="hljs-keyword">new</span> c.ColumnCollection();
   <span class="hljs-keyword">this</span>.columnDatabase.on( <span class="hljs-string">'remove'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> model </span>) </span>{
     model.get( <span class="hljs-string">'column'</span> ).remove();
   });
@@ -305,7 +305,7 @@ us to cleanly keep track of what columns are available.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Extend the <code>ArchibaldCurriculum.Core</code> prototype.</p>
+              <p>Extend the <code>CurriculaUI.Core</code> prototype.</p>
 
             </div>
             
@@ -398,7 +398,7 @@ like collapsing, hiding, showing, etc.</p>
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Prepare a reference to the style wrapper, used when the responsive logic
-is enabled. See <code>ArchibaldCuliculm.Core#activateResponsiveLogic()</code>.</p>
+is enabled. See <code>CurriculaUI.Core#activateResponsiveLogic()</code>.</p>
 
             </div>
             
@@ -415,7 +415,7 @@ is enabled. See <code>ArchibaldCuliculm.Core#activateResponsiveLogic()</code>.</
               </div>
               <p>Prepare a reference to the maximum number of columns the application can
 have. This is only used if the responsive logic is activated. See
-<code>ArchibaldCuliculm.Core#activateResponsiveLogic()</code>.</p>
+<code>CurriculaUI.Core#activateResponsiveLogic()</code>.</p>
 
             </div>
             
@@ -533,7 +533,7 @@ ID, generate one.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$el[ <span class="hljs-number">0</span> ].id === <span class="hljs-string">'undefined'</span> || <span class="hljs-keyword">this</span>.$el[ <span class="hljs-number">0</span> ].id === <span class="hljs-string">''</span> ) {
-      <span class="hljs-keyword">this</span>.$el[ <span class="hljs-number">0</span> ].id = <span class="hljs-string">'archibald-curriculum-ui-core-'</span> + <span class="hljs-keyword">this</span>.id;
+      <span class="hljs-keyword">this</span>.$el[ <span class="hljs-number">0</span> ].id = <span class="hljs-string">'curricula-ui-core-'</span> + <span class="hljs-keyword">this</span>.id;
     }</pre></div></div>
             
         </li>
@@ -550,8 +550,8 @@ ID, generate one.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.$el.html( <span class="hljs-keyword">this</span>.settings.templates.app({
-      editorLabel:  <span class="hljs-keyword">this</span>.settings.editorLabel  ? <span class="hljs-keyword">this</span>.settings.editorLabel  : <span class="hljs-literal">undefined</span>,
-      summaryLabel: <span class="hljs-keyword">this</span>.settings.summaryLabel ? <span class="hljs-keyword">this</span>.settings.summaryLabel : <span class="hljs-literal">undefined</span>,
+      <span class="hljs-attr">editorLabel</span>:  <span class="hljs-keyword">this</span>.settings.editorLabel  ? <span class="hljs-keyword">this</span>.settings.editorLabel  : <span class="hljs-literal">undefined</span>,
+      <span class="hljs-attr">summaryLabel</span>: <span class="hljs-keyword">this</span>.settings.summaryLabel ? <span class="hljs-keyword">this</span>.settings.summaryLabel : <span class="hljs-literal">undefined</span>,
     }) );
     <span class="hljs-keyword">this</span>.triggerEvent( <span class="hljs-string">'app'</span>, <span class="hljs-string">'render'</span>, <span class="hljs-keyword">this</span> );</pre></div></div>
             
@@ -670,11 +670,11 @@ ID, generate one.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          itemView:     Archibald.ItemView,
-          itemListView: Archibald.ItemListView,
-          itemInfoView: Archibald.ItemInfoView,
-          summaryView:  Archibald.SummaryTreeView,
-          searchView:   Archibald.SearchView,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>          itemView:     c.ItemView,
+          <span class="hljs-attr">itemListView</span>: c.ItemListView,
+          <span class="hljs-attr">itemInfoView</span>: c.ItemInfoView,
+          <span class="hljs-attr">summaryView</span>:  c.SummaryTreeView,
+          <span class="hljs-attr">searchView</span>:   c.SearchView,</pre></div></div>
             
         </li>
         
@@ -690,11 +690,11 @@ ID, generate one.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>          recursiveCheckPrompt:        <span class="hljs-literal">false</span>,
-          recursiveCheckPromptMessage: <span class="hljs-string">"This will also uncheck all child items. Are you sure you want to continue?"</span>,
-          useSearch:                   <span class="hljs-literal">true</span>,
-          useItemInfo:                 <span class="hljs-literal">true</span>,
-          editorLabel:                 <span class="hljs-literal">false</span>,
-          summaryLabel:                <span class="hljs-literal">false</span>,</pre></div></div>
+          <span class="hljs-attr">recursiveCheckPromptMessage</span>: <span class="hljs-string">"This will also uncheck all child items. Are you sure you want to continue?"</span>,
+          <span class="hljs-attr">useSearch</span>:                   <span class="hljs-literal">true</span>,
+          <span class="hljs-attr">useItemInfo</span>:                 <span class="hljs-literal">true</span>,
+          <span class="hljs-attr">editorLabel</span>:                 <span class="hljs-literal">false</span>,
+          <span class="hljs-attr">summaryLabel</span>:                <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -710,8 +710,8 @@ ID, generate one.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>          templates: {
-            app: _.template( Archibald.templates.app ),
-            css: _.template( Archibald.templates.css )
+            <span class="hljs-attr">app</span>: _.template( c.templates.app ),
+            <span class="hljs-attr">css</span>: _.template( c.templates.css )
           },</pre></div></div>
             
         </li>
@@ -827,7 +827,7 @@ their “expanded” property.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">var</span> siblingExpandedItems = columnCollection.where({ expanded: <span class="hljs-literal">true</span> });
+            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">var</span> siblingExpandedItems = columnCollection.where({ <span class="hljs-attr">expanded</span>: <span class="hljs-literal">true</span> });
               <span class="hljs-keyword">if</span> ( siblingExpandedItems.length ) {
                 <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> siblingExpandedItems ) {
                   siblingExpandedItems[ i ].set( <span class="hljs-string">'expanded'</span>, <span class="hljs-literal">false</span> );
@@ -864,7 +864,7 @@ true.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">var</span> newColumn = that.createColumn(
-                that.itemDatabase.where({ parentId: item.get( <span class="hljs-string">'id'</span> ) }),
+                that.itemDatabase.where({ <span class="hljs-attr">parentId</span>: item.get( <span class="hljs-string">'id'</span> ) }),
                 <span class="hljs-literal">true</span>,
                 <span class="hljs-literal">true</span>
               );</pre></div></div>
@@ -883,8 +883,8 @@ true.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">var</span> expandedItems = that.itemDatabase.where({
-                parentId: item.get( <span class="hljs-string">'id'</span> ),
-                expanded: <span class="hljs-literal">true</span>
+                <span class="hljs-attr">parentId</span>: item.get( <span class="hljs-string">'id'</span> ),
+                <span class="hljs-attr">expanded</span>: <span class="hljs-literal">true</span>
               });
               <span class="hljs-keyword">if</span> ( expandedItems.length ) {
                 <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> expandedItems ) {
@@ -1074,7 +1074,7 @@ item).</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">var</span> expandedItems = that.itemDatabase.where({ expanded: <span class="hljs-literal">true</span> });
+            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">var</span> expandedItems = that.itemDatabase.where({ <span class="hljs-attr">expanded</span>: <span class="hljs-literal">true</span> });
               <span class="hljs-keyword">if</span> ( expandedItems.length ) {
                 <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> expandedItems ) {
                   expandedItems[ i ].set( <span class="hljs-string">'expanded'</span>, <span class="hljs-literal">false</span> );
@@ -1100,7 +1100,7 @@ item).</p>
                 column.trigger(
                   <span class="hljs-string">'item:select'</span>,
                   items[ i ],
-                  <span class="hljs-keyword">new</span> ArchibaldCurriculum.ItemCollection(),
+                  <span class="hljs-keyword">new</span> CurriculaUI.ItemCollection(),
                   column,
                   {}
                 );</pre></div></div>
@@ -1155,12 +1155,12 @@ main window AND inside the column.</p>
                 <span class="hljs-keyword">var</span> $element = column.$el.find( <span class="hljs-string">'[data-model-id="'</span> + selectedItem.get( <span class="hljs-string">'id'</span> ) + <span class="hljs-string">'"]'</span> );
                 <span class="hljs-keyword">if</span> ( $element.length ) {
                   column.$el.find( <span class="hljs-string">'.nano'</span> ).nanoScroller({
-                    scrollTo: $element
+                    <span class="hljs-attr">scrollTo</span>: $element
                   });
                 }
               }
               $( <span class="hljs-string">'body, html'</span> ).stop().animate({
-                scrollTop: ( that.$el.offset().top - <span class="hljs-number">50</span> ) + <span class="hljs-string">'px'</span>
+                <span class="hljs-attr">scrollTop</span>: ( that.$el.offset().top - <span class="hljs-number">50</span> ) + <span class="hljs-string">'px'</span>
               });
             },</pre></div></div>
             
@@ -1251,7 +1251,7 @@ again.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>              last = that.columnDatabase.last();
-              <span class="hljs-keyword">var</span> expandedItems = last.get( <span class="hljs-string">'column'</span> ).collection.where({ expanded: <span class="hljs-literal">true</span> });
+              <span class="hljs-keyword">var</span> expandedItems = last.get( <span class="hljs-string">'column'</span> ).collection.where({ <span class="hljs-attr">expanded</span>: <span class="hljs-literal">true</span> });
               <span class="hljs-keyword">if</span> ( expandedItems.length ) {
                 <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> expandedItems ) {
                   expandedItems[ i ].set( <span class="hljs-string">'expanded'</span>, <span class="hljs-literal">false</span> );
@@ -1399,7 +1399,7 @@ pick out the active elements, and render them.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.summaryView = <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>.settings.summaryView({
-        collection: <span class="hljs-keyword">this</span>.itemDatabase
+        <span class="hljs-attr">collection</span>: <span class="hljs-keyword">this</span>.itemDatabase
       });
 
       <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
@@ -1418,7 +1418,7 @@ pick out the active elements, and render them.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.archibald-curriculum-ui__summary-wrapper__content'</span> ).html( <span class="hljs-keyword">this</span>.summaryView.render().$el );</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.curricula-ui__summary-wrapper__content'</span> ).html( <span class="hljs-keyword">this</span>.summaryView.render().$el );</pre></div></div>
             
         </li>
         
@@ -1503,7 +1503,7 @@ pick out the active elements, and render them.</p>
     <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.settings.useSearch &amp;&amp; ( !<span class="hljs-keyword">this</span>.searchView || !<span class="hljs-keyword">this</span>.searchView.$el.length ) ) {
       <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
       <span class="hljs-keyword">this</span>.searchView = <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>.settings.searchView({
-        collection: <span class="hljs-keyword">this</span>.itemDatabase
+        <span class="hljs-attr">collection</span>: <span class="hljs-keyword">this</span>.itemDatabase
       });</pre></div></div>
             
         </li>
@@ -1677,13 +1677,13 @@ all items with the new ones.</p>
    *    An object representing the JSON database of all curriculum items.
    */</span>
   setItemDatabase: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> items </span>) </span>{
-    <span class="hljs-keyword">this</span>.itemDatabase = <span class="hljs-keyword">new</span> Archibald.ItemCollection();
+    <span class="hljs-keyword">this</span>.itemDatabase = <span class="hljs-keyword">new</span> c.ItemCollection();
 
     <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> group <span class="hljs-keyword">in</span> items ) {
       <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> items[ group ] ) {
-        <span class="hljs-keyword">this</span>.itemDatabase.add( <span class="hljs-keyword">new</span> Archibald.ItemModel( _.extend( {
-          parentId:    group,
-          hasChildren: !!(
+        <span class="hljs-keyword">this</span>.itemDatabase.add( <span class="hljs-keyword">new</span> c.ItemModel( _.extend( {
+          <span class="hljs-attr">parentId</span>:    group,
+          <span class="hljs-attr">hasChildren</span>: !!(
             <span class="hljs-keyword">typeof</span> items[ items[ group ][ i ].id ] !== <span class="hljs-string">'undefined'</span> &amp;&amp;
             items[ items[ group ][ i ].id ].length
           )
@@ -1706,7 +1706,7 @@ all items with the new ones.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
-   * @returns {ArchibaldCurriculum.ItemCollection}
+   * @returns {CurriculaUI.ItemCollection}
    */</span>
   getItemDatabase: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.itemDatabase;
@@ -1726,7 +1726,7 @@ all items with the new ones.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
-   * @returns {ArchibaldCurriculum.ColumnCollection}
+   * @returns {CurriculaUI.ColumnCollection}
    */</span>
   getColumnDatabase: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.columnDatabase;
@@ -1752,13 +1752,13 @@ there already are columns, it will throw an error.</p>
    *    (optional) Whether the column items are editable or not. Defaults to
    *    false.
    *
-   * @returns {ArchibaldCurriculum.ItemListView}
+   * @returns {CurriculaUI.ItemListView}
    */</span>
   createRootColumn: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> editable </span>) </span>{
     <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.columnDatabase.length ) {
       <span class="hljs-keyword">throw</span> <span class="hljs-string">"Cannot create a root column: there is already a column present."</span>;
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.createColumn( <span class="hljs-keyword">this</span>.itemDatabase.where({ parentId: <span class="hljs-string">"root"</span> }), editable );
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.createColumn( <span class="hljs-keyword">this</span>.itemDatabase.where({ <span class="hljs-attr">parentId</span>: <span class="hljs-string">"root"</span> }), editable );
   },</pre></div></div>
             
         </li>
@@ -1784,13 +1784,13 @@ there already are columns, it will throw an error.</p>
    *    (optional) Whether the column should be collapsed on creation or not.
    *    Defaults to false.
    *
-   * @returns {ArchibaldCurriculum.ItemListView}
+   * @returns {CurriculaUI.ItemListView}
    */</span>
   createColumn: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> items, editable, collapsed </span>) </span>{
     <span class="hljs-keyword">var</span> column = <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>.settings.itemListView({
-      collection: <span class="hljs-keyword">new</span> Archibald.ItemCollection( items ),
-      editable:   !!editable,
-      childView:  <span class="hljs-keyword">this</span>.settings.itemView
+      <span class="hljs-attr">collection</span>: <span class="hljs-keyword">new</span> c.ItemCollection( items ),
+      <span class="hljs-attr">editable</span>:   !!editable,
+      <span class="hljs-attr">childView</span>:  <span class="hljs-keyword">this</span>.settings.itemView
     });</pre></div></div>
             
         </li>
@@ -1823,7 +1823,7 @@ there already are columns, it will throw an error.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.columnDatabase.add({ column: column });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.columnDatabase.add({ <span class="hljs-attr">column</span>: column });</pre></div></div>
             
         </li>
         
@@ -1928,7 +1928,7 @@ there already are columns, it will throw an error.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.archibald-curriculum-ui__editor'</span> ).append( column.render().$el );</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.curricula-ui__editor'</span> ).append( column.render().$el );</pre></div></div>
             
         </li>
         
@@ -1964,14 +1964,14 @@ there already are columns, it will throw an error.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
-   * @param {ArchibaldCurriculum.ItemListView} column
+   * @param {CurriculaUI.ItemListView} column
    *
    * @returns {Array}
-   *    An array of ArchibaldCurriculum.ColumnModel items.
+   *    An array of CurriculaUI.ColumnModel items.
    */</span>
   getColumnRightSiblings: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> column </span>) </span>{
     <span class="hljs-keyword">var</span> index = <span class="hljs-keyword">this</span>.columnDatabase.indexOf(
-      <span class="hljs-keyword">this</span>.columnDatabase.findWhere({ column: column })
+      <span class="hljs-keyword">this</span>.columnDatabase.findWhere({ <span class="hljs-attr">column</span>: column })
     );
     <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.columnDatabase.length &gt; index + <span class="hljs-number">1</span> ) {
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.columnDatabase.slice( index + <span class="hljs-number">1</span> );
@@ -1996,11 +1996,11 @@ there already are columns, it will throw an error.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
    * @returns {Array}
-   *    An array of ArchibaldCurriculum.ColumnModel items.
+   *    An array of CurriculaUI.ColumnModel items.
    */</span>
   getColumnLeftSiblings: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> column </span>) </span>{
     <span class="hljs-keyword">var</span> index = <span class="hljs-keyword">this</span>.columnDatabase.indexOf(
-      <span class="hljs-keyword">this</span>.columnDatabase.findWhere({ column: column })
+      <span class="hljs-keyword">this</span>.columnDatabase.findWhere({ <span class="hljs-attr">column</span>: column })
     );
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.columnDatabase.slice( <span class="hljs-number">0</span>, index );
   },</pre></div></div>
@@ -2019,7 +2019,7 @@ there already are columns, it will throw an error.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
-   * @param {ArchibaldCurriculum.ItemModel} item
+   * @param {CurriculaUI.ItemModel} item
    *    The item from which the recursive (un)checking must start.
    * @param {Boolean} prompt
    *    (optional) Whether to prompt the user in case of recursively unchecking
@@ -2092,8 +2092,8 @@ items.</p>
           updated.push( item );
           item.set( <span class="hljs-string">'active'</span>, <span class="hljs-literal">false</span> );
           <span class="hljs-keyword">var</span> childItems = that.itemDatabase.where({
-            parentId: item.get( <span class="hljs-string">'id'</span> ),
-            active:   <span class="hljs-literal">true</span>
+            <span class="hljs-attr">parentId</span>: item.get( <span class="hljs-string">'id'</span> ),
+            <span class="hljs-attr">active</span>:   <span class="hljs-literal">true</span>
           });
           <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> childItems ) {
             recursiveUnselect( childItems[ i ] );
@@ -2126,7 +2126,7 @@ re-select our item.</p>
       <span class="hljs-keyword">this</span>.triggerEvent(
         <span class="hljs-string">'items'</span>,
         [ <span class="hljs-string">'change'</span>, <span class="hljs-string">'active'</span> ],
-        <span class="hljs-keyword">new</span> Archibald.ItemCollection( updated ),
+        <span class="hljs-keyword">new</span> c.ItemCollection( updated ),
         <span class="hljs-keyword">this</span>.itemDatabase
       );
     }
@@ -2184,7 +2184,7 @@ and <a href="https://gist.github.com/OrganicPanda/8222636">https://gist.github.c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> $iframe = $( <span class="hljs-string">'&lt;iframe class="__archibald-curricula-ui--hacky-scrollbar-resize-listener__" /&gt;'</span> );</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> $iframe = $( <span class="hljs-string">'&lt;iframe class="__curricula-ui__curricula-ui--hacky-scrollbar-resize-listener__" /&gt;'</span> );</pre></div></div>
             
         </li>
         
@@ -2201,11 +2201,11 @@ and <a href="https://gist.github.com/OrganicPanda/8222636">https://gist.github.c
             
             <div class="content"><div class='highlight'><pre>      $iframe
         .css({
-          height:  <span class="hljs-number">0</span>,
-          margin:  <span class="hljs-number">0</span>,
-          padding: <span class="hljs-number">0</span>,
-          border:  <span class="hljs-number">0</span>,
-          width:  <span class="hljs-string">'100%'</span>
+          <span class="hljs-attr">height</span>:  <span class="hljs-number">0</span>,
+          <span class="hljs-attr">margin</span>:  <span class="hljs-number">0</span>,
+          <span class="hljs-attr">padding</span>: <span class="hljs-number">0</span>,
+          <span class="hljs-attr">border</span>:  <span class="hljs-number">0</span>,
+          <span class="hljs-attr">width</span>:  <span class="hljs-string">'100%'</span>
         })
         .on( <span class="hljs-string">'load'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
             
@@ -2272,7 +2272,7 @@ animations, or having to listen to animation events, which are complex.</p>
    *    will be computed based on the application wrapper's current width.
    */</span>
   computeMaxCols: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> width </span>) </span>{
-    width = <span class="hljs-keyword">typeof</span> width === <span class="hljs-string">'number'</span> ? width : <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.archibald-curriculum-ui__editor'</span>).width();</pre></div></div>
+    width = <span class="hljs-keyword">typeof</span> width === <span class="hljs-string">'number'</span> ? width : <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.curricula-ui__editor'</span>).width();</pre></div></div>
             
         </li>
         
@@ -2304,7 +2304,7 @@ and 1200, we show 3, and above that, we show 4.</p>
               <p>Resize helper.</p>
 <p>This method computes the new amount of columns that are to be shown, and
 updates the CSS rules accordingly. See
-<code>ArchibaldCurriculum#computeMaxCols()</code> for more information.</p>
+<code>CurriculaUI#computeMaxCols()</code> for more information.</p>
 
             </div>
             
@@ -2318,7 +2318,7 @@ updates the CSS rules accordingly. See
       <span class="hljs-keyword">throw</span> <span class="hljs-string">"Resizing is only available if the responsive logic is activated. Call activateResponsiveLogic() first."</span>;
     }
 
-    <span class="hljs-keyword">var</span> width = <span class="hljs-keyword">typeof</span> newWidth === <span class="hljs-string">'number'</span> ? newWidth : <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.archibald-curriculum-ui__editor'</span>).width(),
+    <span class="hljs-keyword">var</span> width = <span class="hljs-keyword">typeof</span> newWidth === <span class="hljs-string">'number'</span> ? newWidth : <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.curricula-ui__editor'</span>).width(),
         oldMaxCols = <span class="hljs-keyword">this</span>.maxCols;</pre></div></div>
             
         </li>
@@ -2365,8 +2365,8 @@ updates the CSS rules accordingly. See
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.$style.text( <span class="hljs-keyword">this</span>.settings.templates.css({
-      id:    <span class="hljs-keyword">this</span>.$el[ <span class="hljs-number">0</span> ].id,
-      width: colWidth
+      <span class="hljs-attr">id</span>:    <span class="hljs-keyword">this</span>.$el[ <span class="hljs-number">0</span> ].id,
+      <span class="hljs-attr">width</span>: colWidth
     }) );</pre></div></div>
             
         </li>
@@ -2385,7 +2385,7 @@ need to expand.
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> numExpanded = <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.archibald-column:not(.archibald-column--collapsed)'</span> ).length,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> numExpanded = <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.curricula-ui__column:not(.curricula-ui__column--collapsed)'</span> ).length,
         diff = <span class="hljs-built_in">Math</span>.abs( oldMaxCols - <span class="hljs-keyword">this</span>.maxCols );
 
     <span class="hljs-keyword">if</span> ( oldMaxCols &gt; <span class="hljs-keyword">this</span>.maxCols &amp;&amp; numExpanded &gt; <span class="hljs-keyword">this</span>.maxCols ) {
@@ -2423,7 +2423,7 @@ need to expand.
             </div>
             
             <div class="content"><div class='highlight'><pre>  unhighlightItems: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">var</span> highlightedItems = <span class="hljs-keyword">this</span>.itemDatabase.where({ highlighted: <span class="hljs-literal">true</span> });
+    <span class="hljs-keyword">var</span> highlightedItems = <span class="hljs-keyword">this</span>.itemDatabase.where({ <span class="hljs-attr">highlighted</span>: <span class="hljs-literal">true</span> });
     <span class="hljs-keyword">if</span> ( highlightedItems.length ) {
       <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> highlightedItems ) {
         highlightedItems[ i ].set( <span class="hljs-string">'highlighted'</span>, <span class="hljs-literal">false</span> );
@@ -2431,7 +2431,7 @@ need to expand.
       <span class="hljs-keyword">this</span>.triggerEvent(
         <span class="hljs-string">'items'</span>,
         [ <span class="hljs-string">'change'</span>, <span class="hljs-string">'highlighted'</span> ],
-        <span class="hljs-keyword">new</span> Archibald.ItemCollection( highlightedItems ),
+        <span class="hljs-keyword">new</span> c.ItemCollection( highlightedItems ),
         <span class="hljs-keyword">this</span>.itemDatabase
       );
     }
@@ -2454,7 +2454,7 @@ need to expand.
             </div>
             
             <div class="content"><div class='highlight'><pre>  resetExpandedItems: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">var</span> expandedItems = <span class="hljs-keyword">this</span>.itemDatabase.where({ expanded: <span class="hljs-literal">true</span> });
+    <span class="hljs-keyword">var</span> expandedItems = <span class="hljs-keyword">this</span>.itemDatabase.where({ <span class="hljs-attr">expanded</span>: <span class="hljs-literal">true</span> });
     <span class="hljs-keyword">if</span> ( expandedItems.length ) {
       <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> expandedItems ) {
         expandedItems[ i ].set( <span class="hljs-string">'expanded'</span>, <span class="hljs-literal">false</span> );
@@ -2462,7 +2462,7 @@ need to expand.
       <span class="hljs-keyword">this</span>.triggerEvent(
         <span class="hljs-string">'items'</span>,
         [ <span class="hljs-string">'change'</span>, <span class="hljs-string">'expanded'</span> ],
-        <span class="hljs-keyword">new</span> Archibald.ItemCollection( expandedItems ),
+        <span class="hljs-keyword">new</span> c.ItemCollection( expandedItems ),
         <span class="hljs-keyword">this</span>.itemDatabase
       );
     }
@@ -2583,7 +2583,7 @@ chain triggers an event in the given category.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
-   * @param {ArchibaldCurriculum.ItemModel} item
+   * @param {CurriculaUI.ItemModel} item
    *    (optional) The item for which we want to render the information, or null
    *    to reset the information drawer.
    */</span>
@@ -2622,7 +2622,7 @@ to our application markup.</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ( !<span class="hljs-keyword">this</span>.itemInfoView || !<span class="hljs-keyword">this</span>.itemInfoView.$el.length ) {
       <span class="hljs-keyword">this</span>.itemInfoView = <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>.settings.itemInfoView();
-      <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.archibald-curriculum-ui__item-info-wrapper'</span> ).empty().append(
+      <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.curricula-ui__item-info-wrapper'</span> ).empty().append(
         <span class="hljs-keyword">this</span>.itemInfoView.render().$el
       );</pre></div></div>
             
@@ -2648,10 +2648,10 @@ gives us the difference in width for the wrapper.</p>
           that = <span class="hljs-keyword">this</span>;
 
       <span class="hljs-keyword">this</span>.itemInfoView.on( <span class="hljs-string">'collapse'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-        that.resize( that.$el.find( <span class="hljs-string">'.archibald-curriculum-ui__editor'</span>).width() + itemInfoWidth );
+        that.resize( that.$el.find( <span class="hljs-string">'.curricula-ui__editor'</span>).width() + itemInfoWidth );
       });
       <span class="hljs-keyword">this</span>.itemInfoView.on( <span class="hljs-string">'expand'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-        that.resize( that.$el.find( <span class="hljs-string">'.archibald-curriculum-ui__editor'</span>).width() - itemInfoWidth );
+        that.resize( that.$el.find( <span class="hljs-string">'.curricula-ui__editor'</span>).width() - itemInfoWidth );
       });
 
       <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> $.fn.nanoScroller !== <span class="hljs-string">'undefined'</span> ) {
@@ -2787,9 +2787,9 @@ gives us the difference in width for the wrapper.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.Core = Core;
+            <div class="content"><div class='highlight'><pre>c.Core = Core;
 
-})( jQuery, Backbone, _, <span class="hljs-built_in">window</span>.ArchibaldCurriculum || ( <span class="hljs-built_in">window</span>.ArchibaldCurriculum = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>() ) );</pre></div></div>
+})( jQuery, Backbone, _, <span class="hljs-built_in">window</span>.CurriculaUI || ( <span class="hljs-built_in">window</span>.CurriculaUI = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>() ) );</pre></div></div>
             
         </li>
         

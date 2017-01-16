@@ -60,7 +60,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
  * @file
- * Archibald Curriculum JS application views.
+ * Curricula UI JS application views.
  *
  * This defines the views used throughout the application. Note that this file
  * is written using Docco syntax. If Node is installed, you can generate this
@@ -73,7 +73,7 @@
  */</span>
 <span class="hljs-meta">
 "use strict"</span>;
-( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> Backbone, _, Archibald </span>) </span>{</pre></div></div>
+( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> Backbone, _, c </span>) </span>{</pre></div></div>
             
         </li>
         
@@ -86,8 +86,8 @@
               </div>
               <p>This defines the views used throughout the application. Almost all parts are
 split into independent views, allowing for maximum flexibility and
-re-usability. It extends the global <code>ArchibaldCurriculum</code> namespace, aliased
-to <code>Archibald</code> for readability.</p>
+re-usability. It extends the global <code>CurriculaUI</code> namespace, aliased
+to <code>c</code> for readability.</p>
 
             </div>
             
@@ -141,12 +141,12 @@ official documentation on <a href="http://backbonejs.org/#View">Backbone.View</a
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>This defines the default templates used by the views in the application. They
-can be overridden in various cases, as needed. Archibald Curriculum strictly
+can be overridden in various cases, as needed. Curricula UI strictly
 adheres to <em>BEM</em> notation for the markup, and overrides should follow suit.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.templates = _.extend({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>c.templates = _.extend({</pre></div></div>
             
         </li>
         
@@ -193,13 +193,13 @@ jQuery plugin for convenience.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  itemList: <span class="hljs-string">'\
-&lt;div class="archibald-column__wrapper nano"&gt;\
-  &lt;ul class="archibald-column__wrapper__list nano-content"&gt;&lt;/ul&gt;\
+&lt;div class="curricula-ui__column__wrapper nano"&gt;\
+  &lt;ul class="curricula-ui__column__wrapper__list nano-content"&gt;&lt;/ul&gt;\
 &lt;/div&gt;\
-&lt;span class="archibald-column__button archibald-column__button--show-parent"&gt;\
+&lt;span class="curricula-ui__column__button curricula-ui__column__button--show-parent"&gt;\
   &lt;i class="icon-chevron-left" /&gt; Back\
 &lt;/span&gt;\
-&lt;span class="archibald-column__button archibald-column__button--show-root"&gt;\
+&lt;span class="curricula-ui__column__button curricula-ui__column__button--show-root"&gt;\
   &lt;i class="icon-chevron-left" /&gt;&lt;i class="icon-chevron-left" /&gt; Top\
 &lt;/span&gt;\
 '</span>,</pre></div></div>
@@ -222,13 +222,13 @@ information other than a link. Mainly used by <code>ItemInfoView</code>.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  itemInfo: <span class="hljs-string">'\
-&lt;h3 class="archibald-curriculum-ui-item-info__label"&gt;\
+&lt;h3 class="curricula-ui-item-info__label"&gt;\
   &lt;%= typeof itemInfoLabel !== "undefined" ? itemInfoLabel : "Item info" %&gt;\
 &lt;/h3&gt;\
-&lt;div class="archibald-curriculum-ui-item-info__content nano"&gt;\
+&lt;div class="curricula-ui-item-info__content nano"&gt;\
   &lt;div class="nano-content"&gt;\
     &lt;% if ( typeof name === "undefined" ) { %&gt;\
-      &lt;span class="archibald-curriculum-ui-item-info-view__empty"&gt;Select an item to see its information&lt;/span&gt;\
+      &lt;span class="curricula-ui-item-info-view__empty"&gt;Select an item to see its information&lt;/span&gt;\
     &lt;% } else { %&gt;\
       &lt;%= name %&gt;\
     &lt;% } %&gt;\
@@ -255,7 +255,7 @@ summary of the current application state. It is mainly used by
             <div class="content"><div class='highlight'><pre>  summaryList: <span class="hljs-string">'\
 &lt;li\
   data-model-id="&lt;%= id %&gt;"\
-  class="archibald-curriculum-ui-summary__list__item"\
+  class="curricula-ui-summary__list__item"\
 &gt;\
   &lt;span&gt;\
     &lt;% for ( var i in name ) { %&gt;\
@@ -283,14 +283,14 @@ to a specific item.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  search: <span class="hljs-string">'\
-&lt;div class="archibald-curriculum-ui-search__overlay"&gt;&lt;/div&gt;\
-&lt;div class="archibald-curriculum-ui-search__wrapper"&gt;\
-  &lt;input type="text" class="archibald-curriculum-ui-search__input" /&gt;\
-  &lt;i class="archibald-curriculum-ui-search__cancel icon icon-close" /&gt;\
+&lt;div class="curricula-ui-search__overlay"&gt;&lt;/div&gt;\
+&lt;div class="curricula-ui-search__wrapper"&gt;\
+  &lt;input type="text" class="curricula-ui-search__input" /&gt;\
+  &lt;i class="curricula-ui-search__cancel icon icon-close" /&gt;\
 &lt;/div&gt;\
 '</span>
 
-}, Archibald.templates || {});</pre></div></div>
+}, c.templates || {});</pre></div></div>
             
         </li>
         
@@ -315,12 +315,12 @@ to a specific item.</p>
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>This view represents a single item in a column. It requires a model
-representing the item, usually a <code>ArchibaldCurriculum.ItemModel</code>. See
+representing the item, usually a <code>CurriculaUI.ItemModel</code>. See
 <code>models.js</code> for more information.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.ItemView = Backbone.View.extend({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>c.ItemView = Backbone.View.extend({</pre></div></div>
             
         </li>
         
@@ -336,7 +336,7 @@ representing the item, usually a <code>ArchibaldCurriculum.ItemModel</code>. See
             </div>
             
             <div class="content"><div class='highlight'><pre>  tagName:   <span class="hljs-string">'li'</span>,
-  className: <span class="hljs-string">'archibald-column__wrapper__list__item'</span>,</pre></div></div>
+  <span class="hljs-attr">className</span>: <span class="hljs-string">'curricula-ui__column__wrapper__list__item'</span>,</pre></div></div>
             
         </li>
         
@@ -351,7 +351,7 @@ representing the item, usually a <code>ArchibaldCurriculum.ItemModel</code>. See
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  tpl: _.template( Archibald.templates.item ),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  tpl: _.template( c.templates.item ),</pre></div></div>
             
         </li>
         
@@ -810,13 +810,13 @@ either an <code>active</code> or an <code>unactive</code> event, based on the st
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>This view represents a list of items. It requires a collection containing
-all items in this list, usually a <code>ArchibaldCurriculum.ItemCollection</code>. See
+all items in this list, usually a <code>CurriculaUI.ItemCollection</code>. See
 <code>models.js</code> for more information.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.ItemListView = Backbone.View.extend({
-  className: <span class="hljs-string">'archibald-column'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>c.ItemListView = Backbone.View.extend({
+  <span class="hljs-attr">className</span>: <span class="hljs-string">'curricula-ui__column'</span>,</pre></div></div>
             
         </li>
         
@@ -831,7 +831,7 @@ all items in this list, usually a <code>ArchibaldCurriculum.ItemCollection</code
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  tpl: _.template( Archibald.templates.itemList ),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  tpl: _.template( c.templates.itemList ),</pre></div></div>
             
         </li>
         
@@ -879,8 +879,8 @@ button. Both trigger a specific event.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  events: {
-    <span class="hljs-string">"click .archibald-column__button--show-parent"</span>: <span class="hljs-string">"triggerGoBack"</span>,
-    <span class="hljs-string">"click .archibald-column__button--show-root"</span>:   <span class="hljs-string">"triggerGoToBeginning"</span>
+    <span class="hljs-string">"click .curricula-ui__column__button--show-parent"</span>: <span class="hljs-string">"triggerGoBack"</span>,
+    <span class="hljs-string">"click .curricula-ui__column__button--show-root"</span>:   <span class="hljs-string">"triggerGoToBeginning"</span>
   },</pre></div></div>
             
         </li>
@@ -941,11 +941,11 @@ If not, it will throw an exception.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <p>What View to use for the child view. Defaults to <code>Archibald.ItemView</code>.</p>
+              <p>What View to use for the child view. Defaults to <code>c.ItemView</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      childView: Archibald.ItemView
+            <div class="content"><div class='highlight'><pre>      childView: c.ItemView
     }, settings || {});</pre></div></div>
             
         </li>
@@ -1044,7 +1044,7 @@ allow events to bubble up the application hierarchy.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> item = <span class="hljs-keyword">new</span> that.settings.childView({ model: model, editable: that.settings.editable });
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> item = <span class="hljs-keyword">new</span> that.settings.childView({ <span class="hljs-attr">model</span>: model, <span class="hljs-attr">editable</span>: that.settings.editable });
       that.childViews.push( item );</pre></div></div>
             
         </li>
@@ -1134,7 +1134,7 @@ with it.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  collapse: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">this</span>.$el.addClass( <span class="hljs-string">'archibald-column--collapsed'</span> );</pre></div></div>
+    <span class="hljs-keyword">this</span>.$el.addClass( <span class="hljs-string">'curricula-ui__column--collapsed'</span> );</pre></div></div>
             
         </li>
         
@@ -1181,7 +1181,7 @@ with it.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  expand: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">this</span>.$el.removeClass( <span class="hljs-string">'archibald-column--collapsed'</span> );</pre></div></div>
+    <span class="hljs-keyword">this</span>.$el.removeClass( <span class="hljs-string">'curricula-ui__column--collapsed'</span> );</pre></div></div>
             
         </li>
         
@@ -1228,7 +1228,7 @@ with it.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  isCollapsed: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$el.hasClass( <span class="hljs-string">'archibald-column--collapsed'</span> );
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$el.hasClass( <span class="hljs-string">'curricula-ui__column--collapsed'</span> );
   },</pre></div></div>
             
         </li>
@@ -1329,13 +1329,13 @@ with it.</p>
                 <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>This view represents information about an item.  It requires a model
-representing the item, usually a <code>ArchibaldCurriculum.ItemModel</code>. See
+representing the item, usually a <code>CurriculaUI.ItemModel</code>. See
 <code>models.js</code> for more information.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.ItemInfoView = Backbone.View.extend({
-  className: <span class="hljs-string">'archibald-curriculum-ui-item-info'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>c.ItemInfoView = Backbone.View.extend({
+  <span class="hljs-attr">className</span>: <span class="hljs-string">'curricula-ui-item-info'</span>,</pre></div></div>
             
         </li>
         
@@ -1350,7 +1350,7 @@ representing the item, usually a <code>ArchibaldCurriculum.ItemModel</code>. See
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  tpl: _.template( Archibald.templates.itemInfo ),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  tpl: _.template( c.templates.itemInfo ),</pre></div></div>
             
         </li>
         
@@ -1366,7 +1366,7 @@ representing the item, usually a <code>ArchibaldCurriculum.ItemModel</code>. See
             </div>
             
             <div class="content"><div class='highlight'><pre>  events: {
-    <span class="hljs-string">"click .archibald-curriculum-ui-item-info__label"</span>: <span class="hljs-string">"toggleCollapse"</span>
+    <span class="hljs-string">"click .curricula-ui-item-info__label"</span>: <span class="hljs-string">"toggleCollapse"</span>
   },</pre></div></div>
             
         </li>
@@ -1486,9 +1486,9 @@ application can react to this action.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  toggleCollapse: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">this</span>.$el.toggleClass( <span class="hljs-string">'archibald-curriculum-ui-item-info--expanded'</span> );
+    <span class="hljs-keyword">this</span>.$el.toggleClass( <span class="hljs-string">'curricula-ui-item-info--expanded'</span> );
     <span class="hljs-keyword">this</span>.trigger(
-      <span class="hljs-keyword">this</span>.$el.hasClass( <span class="hljs-string">'archibald-curriculum-ui-item-info--expanded'</span> ) ? <span class="hljs-string">'expand'</span> : <span class="hljs-string">'collapse'</span>,
+      <span class="hljs-keyword">this</span>.$el.hasClass( <span class="hljs-string">'curricula-ui-item-info--expanded'</span> ) ? <span class="hljs-string">'expand'</span> : <span class="hljs-string">'collapse'</span>,
       <span class="hljs-keyword">this</span>.model,
       <span class="hljs-keyword">this</span>
     );
@@ -1524,8 +1524,8 @@ a hierarchy, we display it as a recursively rendered tree.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.SummaryTreeView = Backbone.View.extend({
-  className: <span class="hljs-string">'archibald-curriculum-ui-summary'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>c.SummaryTreeView = Backbone.View.extend({
+  <span class="hljs-attr">className</span>: <span class="hljs-string">'curricula-ui-summary'</span>,</pre></div></div>
             
         </li>
         
@@ -1540,7 +1540,7 @@ a hierarchy, we display it as a recursively rendered tree.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  tpl: _.template( Archibald.templates.summaryList ),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  tpl: _.template( c.templates.summaryList ),</pre></div></div>
             
         </li>
         
@@ -1727,7 +1727,7 @@ passed parent ID.</p>
             
             <div class="content"><div class='highlight'><pre>  recursiveRender: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> parentId </span>) </span>{
     <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>,
-        children = <span class="hljs-keyword">this</span>.collection.where({ parentId: parentId, active: <span class="hljs-literal">true</span> }),
+        children = <span class="hljs-keyword">this</span>.collection.where({ <span class="hljs-attr">parentId</span>: parentId, <span class="hljs-attr">active</span>: <span class="hljs-literal">true</span> }),
         html = <span class="hljs-string">''</span>;
 
     <span class="hljs-keyword">if</span> ( children.length ) {</pre></div></div>
@@ -1745,7 +1745,7 @@ passed parent ID.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      html = <span class="hljs-string">'&lt;ul class="archibald-curriculum-ui-summary__list"&gt;'</span>;
+            <div class="content"><div class='highlight'><pre>      html = <span class="hljs-string">'&lt;ul class="curricula-ui-summary__list"&gt;'</span>;
       children.forEach( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> model </span>) </span>{</pre></div></div>
             
         </li>
@@ -1901,8 +1901,8 @@ application collection, and shows a number of selectable results.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.SearchView = Backbone.View.extend({
-  className: <span class="hljs-string">'archibald-curriculum-ui-search'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>c.SearchView = Backbone.View.extend({
+  <span class="hljs-attr">className</span>: <span class="hljs-string">'curricula-ui-search'</span>,</pre></div></div>
             
         </li>
         
@@ -1917,7 +1917,7 @@ application collection, and shows a number of selectable results.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  tpl: _.template( Archibald.templates.search ),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  tpl: _.template( c.templates.search ),</pre></div></div>
             
         </li>
         
@@ -2079,7 +2079,7 @@ completely removed often. Instead, bind our click handler here.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.archibald-curriculum-ui-search__cancel, .archibald-curriculum-ui-search__overlay'</span> ).click(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.curricula-ui-search__cancel, .curricula-ui-search__overlay'</span> ).click(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
       that.triggerCancel();
     });</pre></div></div>
             
@@ -2097,10 +2097,10 @@ completely removed often. Instead, bind our click handler here.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'input'</span> ).autocomplete({
-      select: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> event, ui </span>) </span>{
+      <span class="hljs-attr">select</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> event, ui </span>) </span>{
         that.trigger( <span class="hljs-string">'select'</span>, that.collection.get( ui.item.value ), that.collection, that );
       },
-      source: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> request, response </span>) </span>{</pre></div></div>
+      <span class="hljs-attr">source</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> request, response </span>) </span>{</pre></div></div>
             
         </li>
         
@@ -2163,8 +2163,8 @@ See <a href="http://stackoverflow.com/questions/5002111/javascript-how-to-strip-
               name = tmp.textContent || tmp.innerText || name;
 
               data.push({
-                label: name,
-                value: item.get( <span class="hljs-string">'id'</span> )
+                <span class="hljs-attr">label</span>: name,
+                <span class="hljs-attr">value</span>: item.get( <span class="hljs-string">'id'</span> )
               });
 
               --i;
@@ -2284,7 +2284,7 @@ with it.</p>
   }
 });
 
-})( Backbone, _, <span class="hljs-built_in">window</span>.ArchibaldCurriculum || ( <span class="hljs-built_in">window</span>.ArchibaldCurriculum = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>() ) );</pre></div></div>
+})( Backbone, _, <span class="hljs-built_in">window</span>.CurriculaUI || ( <span class="hljs-built_in">window</span>.CurriculaUI = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>() ) );</pre></div></div>
             
         </li>
         

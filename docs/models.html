@@ -60,7 +60,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
  * @file
- * Archibald Curriculum JS application models.
+ * Curricula UI JS application models.
  *
  * This defines the models used throughout the application. Note that this file
  * is written using Docco syntax. If Node is installed, you can generate this
@@ -73,7 +73,7 @@
  */</span>
 <span class="hljs-meta">
 "use strict"</span>;
-( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> Backbone, _, Archibald </span>) </span>{</pre></div></div>
+( <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> Backbone, _, c </span>) </span>{</pre></div></div>
             
         </li>
         
@@ -85,8 +85,8 @@
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
               <p>This defines the models and collections used throughout the application.
-They extend the global <code>ArchibaldCurriculum</code> namespace, aliased to
-<code>Archibald</code> for readability.</p>
+They extend the global <code>CurriculaUI</code> namespace, aliased to
+<code>c</code> for readability.</p>
 
             </div>
             
@@ -147,16 +147,16 @@ attribute.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.ItemModel = Backbone.Model.extend({
-  defaults: {
-    name:        <span class="hljs-literal">undefined</span>,
-    type:        <span class="hljs-literal">undefined</span>,
-    parentId:    <span class="hljs-string">"root"</span>,
-    active:      <span class="hljs-literal">false</span>,
-    expanded:    <span class="hljs-literal">false</span>,
-    hasChildren: <span class="hljs-literal">false</span>,
-    highlighted: <span class="hljs-literal">false</span>,
-    data:        {}
+            <div class="content"><div class='highlight'><pre>c.ItemModel = Backbone.Model.extend({
+  <span class="hljs-attr">defaults</span>: {
+    <span class="hljs-attr">name</span>:        <span class="hljs-literal">undefined</span>,
+    <span class="hljs-attr">type</span>:        <span class="hljs-literal">undefined</span>,
+    <span class="hljs-attr">parentId</span>:    <span class="hljs-string">"root"</span>,
+    <span class="hljs-attr">active</span>:      <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">expanded</span>:    <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">hasChildren</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">highlighted</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">data</span>:        {}
   },</pre></div></div>
             
         </li>
@@ -207,12 +207,12 @@ as a non-null parent identifier.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>A collection of <code>ArchibaldCurriculum.ItemModel</code> models.</p>
+              <p>A collection of <code>CurriculaUI.ItemModel</code> models.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.ItemCollection = Backbone.Collection.extend({
-  model: Archibald.ItemModel,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>c.ItemCollection = Backbone.Collection.extend({
+  <span class="hljs-attr">model</span>: c.ItemModel,</pre></div></div>
             
         </li>
         
@@ -256,15 +256,15 @@ overkill, as we only keep things in memory. Instead, provide a dummy URL.</p>
               </div>
               <p>Defines the data structure for a single column. This has the particularity
 of referencing a <em>View</em>, not the other way around. We use this to keep track
-of the <code>ArchibaldCurriculum.ItemListView</code> elements used in the application,
+of the <code>CurriculaUI.ItemListView</code> elements used in the application,
 so we can easily and cleanly manipulate them, like by hiding columns “to the
 right” of a given column, or collapsing columns “to the left”.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.ColumnModel = Backbone.Model.extend({
-  defaults: {
-    column: <span class="hljs-literal">null</span>
+            <div class="content"><div class='highlight'><pre>c.ColumnModel = Backbone.Model.extend({
+  <span class="hljs-attr">defaults</span>: {
+    <span class="hljs-attr">column</span>: <span class="hljs-literal">null</span>
   }
 });</pre></div></div>
             
@@ -290,12 +290,12 @@ right” of a given column, or collapsing columns “to the left”.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>A collection of <code>ArchibaldCurriculum.ColumnModel</code> models.</p>
+              <p>A collection of <code>CurriculaUI.ColumnModel</code> models.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>Archibald.ColumnCollection = Backbone.Collection.extend({
-  model: Archibald.ColumnModel,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>c.ColumnCollection = Backbone.Collection.extend({
+  <span class="hljs-attr">model</span>: c.ColumnModel,</pre></div></div>
             
         </li>
         
@@ -315,7 +315,7 @@ overkill, as we only keep things in memory. Instead, provide a dummy URL.</p>
             <div class="content"><div class='highlight'><pre>  url:   <span class="hljs-string">'?dummyUrl'</span>
 });
 
-})( Backbone, _, <span class="hljs-built_in">window</span>.ArchibaldCurriculum || ( <span class="hljs-built_in">window</span>.ArchibaldCurriculum = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>() ) );</pre></div></div>
+})( Backbone, _, <span class="hljs-built_in">window</span>.CurriculaUI || ( <span class="hljs-built_in">window</span>.CurriculaUI = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>() ) );</pre></div></div>
             
         </li>
         

@@ -1,17 +1,17 @@
-.archibald-curriculum-ui {
+.curricula-ui {
   overflow: auto;
   background: white;
   width: 100%;
   box-sizing: border-box;
   margin: 0 auto;
 }
-.archibald-curriculum-ui hr {
+.curricula-ui hr {
   margin: 10px 0;
 }
-.archibald-row {
+.curricula-ui__row {
   overflow: hidden;
 }
-.archibald-column {
+.curricula-ui__column {
   width: 300px;
   height: 300px;
   float: left;
@@ -27,14 +27,14 @@
   -o-transition: width .5s;
   transition: width .5s;
 }
-.archibald-column + .archibald-column {
+.curricula-ui__column + .curricula-ui__column {
   border-left: 1px solid #ccc;
 }
-.archibald-column--collapsed {
+.curricula-ui__column--collapsed {
   width: 0 !important;
   border-left: 0 !important;
 }
-.archibald-column__button {
+.curricula-ui__column__button {
   width: 50%;
   float: left;
   display: block;
@@ -54,45 +54,45 @@
   -o-box-sizing: border-box;
   box-sizing: border-box;
 }
-.archibald-column--collapsed .archibald-column__button {
+.curricula-ui__column--collapsed .curricula-ui__column__button {
   opacity: 0;
 }
-.archibald-column--collapsed + .archibald-column .archibald-column__button {
+.curricula-ui__column--collapsed + .curricula-ui__column .curricula-ui__column__button {
   opacity: 1;
   cursor: pointer;
 }
-.archibald-column__button:hover {
+.curricula-ui__column__button:hover {
   background: #eee;
 }
-.archibald-column__wrapper {
-  width: 300px; /* Careful! Same value as for parent .archibald-column! */
+.curricula-ui__column__wrapper {
+  width: 300px; /* Careful! Same value as for parent .curricula-ui__column! */
 }
-.archibald-column--collapsed + .archibald-column .archibald-column__wrapper.nano.has-scrollbar {
+.curricula-ui__column--collapsed + .curricula-ui__column .curricula-ui__column__wrapper.nano.has-scrollbar {
   height: 90%; /* Override nanoScroller height so we can see the Back button. */
 }
-.archibald-column__wrapper__list {
+.curricula-ui__column__wrapper__list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-.archibald-column__wrapper__list__item {
+.curricula-ui__column__wrapper__list__item {
   position: relative;
   padding: 10px 40px 10px 30px;
 }
-.archibald-column__wrapper__list__item:hover {
+.curricula-ui__column__wrapper__list__item:hover {
   background-color: #eee;
 }
-.archibald-column__wrapper__list__item--has-children {
+.curricula-ui__column__wrapper__list__item--has-children {
   cursor: pointer;
 }
-.archibald-column__wrapper__list__item--has-children:hover {
+.curricula-ui__column__wrapper__list__item--has-children:hover {
   background-color: #aaa;
   color: white;
 }
-.archibald-column__wrapper__list__item--active {
+.curricula-ui__column__wrapper__list__item--active {
   background-color: #ccc;
 }
-@keyframes archibald-column__wrapper__list__item--highlighted {
+@keyframes curricula-ui__column__wrapper__list__item--highlighted {
   0%, 100% {
     background-color: #F0F567;
   }
@@ -100,77 +100,77 @@
     background-color: #ccc;
   }
 }
-.archibald-column__wrapper__list__item--highlighted {
-  animation-name: archibald-column__wrapper__list__item--highlighted;
+.curricula-ui__column__wrapper__list__item--highlighted {
+  animation-name: curricula-ui__column__wrapper__list__item--highlighted;
   animation-duration: 400ms;
   animation-iteration-count: 3;
   animation-timing-function: ease-in-out;
   background-color: #F0F567;
 }
-.archibald-column__wrapper__list__item--expanded {
+.curricula-ui__column__wrapper__list__item--expanded {
   background-color: #888 !important;
   color: white;
 }
-.archibald-column:nth-last-child(2) .archibald-column__wrapper__list__item--expanded {
+.curricula-ui__column:nth-last-child(2) .curricula-ui__column__wrapper__list__item--expanded {
   background-color: #777 !important;
 }
-.archibald-column__wrapper__list__item input[type="checkbox"] {
+.curricula-ui__column__wrapper__list__item input[type="checkbox"] {
   display: inline-block;
   margin-left: -18px;
 }
-.archibald-column__wrapper__list__item--has-children {
+.curricula-ui__column__wrapper__list__item--has-children {
   position: relative;
 }
-.archibald-column__wrapper__list__item--has-children .icon-chevron-right {
+.curricula-ui__column__wrapper__list__item--has-children .icon-chevron-right {
   position: absolute;
   right: 10px;
   top: 14px;
 }
-.archibald-curriculum-ui__summary-wrapper {
+.curricula-ui__summary-wrapper {
   position: relative;
   border-top: 5px solid gray;
   min-height: 30px;
   width: 100%;
 }
-.archibald-curriculum-ui-summary__cycles {
+.curricula-ui-summary__cycles {
   display: none;
   margin-bottom: 1em;
 }
-.lp21 .archibald-curriculum-ui-summary__cycles {
+.lp21 .curricula-ui-summary__cycles {
   display: table;
   width: 100%;
 }
-.archibald-curriculum-ui-summary__cycles__label {
+.curricula-ui-summary__cycles__label {
   display: none;
 }
-.archibald-curriculum-ui-summary__cycles__cycle {
+.curricula-ui-summary__cycles__cycle {
   display: none;
   height: .5em;
   text-indent: -9999px;
   overflow: hidden;
   color: white;
 }
-.has-cycle-1 .archibald-curriculum-ui-summary__cycles__cycle--cycle-1,
-.has-cycle-1 .archibald-curriculum-ui-summary__cycles__label,
-.has-cycle-2 .archibald-curriculum-ui-summary__cycles__cycle--cycle-2,
-.has-cycle-2 .archibald-curriculum-ui-summary__cycles__label,
-.has-cycle-3 .archibald-curriculum-ui-summary__cycles__cycle--cycle-3,
-.has-cycle-3 .archibald-curriculum-ui-summary__cycles__label {
+.has-cycle-1 .curricula-ui-summary__cycles__cycle--cycle-1,
+.has-cycle-1 .curricula-ui-summary__cycles__label,
+.has-cycle-2 .curricula-ui-summary__cycles__cycle--cycle-2,
+.has-cycle-2 .curricula-ui-summary__cycles__label,
+.has-cycle-3 .curricula-ui-summary__cycles__cycle--cycle-3,
+.has-cycle-3 .curricula-ui-summary__cycles__label {
   display: table-cell;
 }
-.archibald-curriculum-ui-summary__list {
+.curricula-ui-summary__list {
   padding-left: 0;
   list-style: none;
   max-width: 90%;
 }
-.archibald-curriculum-ui-summary__list .archibald-curriculum-ui-summary__list {
+.curricula-ui-summary__list .curricula-ui-summary__list {
   padding-left: 2em;
   max-width: 100%;
 }
-.archibald-curriculum-ui-summary__list__item {
+.curricula-ui-summary__list__item {
   position: relative;
 }
-.archibald-curriculum-ui-summary__list__item::before {
+.curricula-ui-summary__list__item::before {
   content: "";
   position: absolute;
   bottom: 0;
@@ -178,12 +178,12 @@
   left: -2em;
   border-left: 1px dashed #CCC;
 }
-.archibald-curriculum-ui-summary__list__item:last-child::before {
+.curricula-ui-summary__list__item:last-child::before {
   bottom: auto;
   top: 0;
   height: 1em;
 }
-.archibald-curriculum-ui-summary__list__item::after {
+.curricula-ui-summary__list__item::after {
   content: "";
   position: absolute;
   width: 2em;
@@ -191,7 +191,7 @@
   left: -2em;
   border-top: 1px dashed #CCC;
 }
-.archibald-curriculum-ui-summary__list__item span {
+.curricula-ui-summary__list__item span {
   position: relative;
   display: block;
   padding: .5em 3em .5em 2em;
@@ -204,10 +204,10 @@
   white-space: nowrap;
   max-height: 2.5em;
 }
-.archibald-curriculum-ui-summary__list__item.hover span {
+.curricula-ui-summary__list__item.hover span {
   background: #eee;
 }
-.archibald-curriculum-ui-summary__list__item.hover > span {
+.curricula-ui-summary__list__item.hover > span {
   transform-origin: 10% 50%;
   transform: scale(1.2);
   transition: transform .05s ease-in-out;
@@ -219,22 +219,22 @@
   white-space: normal;
   max-height: none;
 }
-.archibald-curriculum-ui-summary__list__item.child-hovered > span {
+.curricula-ui-summary__list__item.child-hovered > span {
   background: #ddd;
 }
-.archibald-curriculum-ui__row {
+.curricula-ui__row {
   overflow: hidden;
 }
 
-.archibald-curriculum-ui__item-info-wrapper {
+.curricula-ui__item-info-wrapper {
   float: right;
 }
 
 /**
  * Item info element.
  */
-.archibald-curriculum-ui-item-info {
-  height: 300px; /* Warning! Same as .archibald-column! */
+.curricula-ui-item-info {
+  height: 300px; /* Warning! Same as .curricula-ui__column! */
   position: relative;
   width: 30px; /* Warning! This is also referenced in JS! */
   -webkit-transition: width .5s;
@@ -243,37 +243,37 @@
   -o-transition: width .5s;
   transition: width .5s;
 }
-.archibald-curriculum-ui-item-info--expanded {
+.curricula-ui-item-info--expanded {
   width: 300px; /* Warning! This is also referenced in JS! */
 }
-.archibald-curriculum-ui-item-info h4 {
+.curricula-ui-item-info h4 {
   height: 1em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
-.archibald-curriculum-ui-item-info__label {
+.curricula-ui-item-info__label {
   transform: rotate(-90deg);
   transform-origin: left top 0px;
   position: absolute;
   bottom: -2.4em;
-  width: 300px; /* Warning! Same as .archibald-column width! */
+  width: 300px; /* Warning! Same as .curricula-ui__column width! */
   text-align: center;
   background-color: #eee;
   font-size: 1.2em;
   line-height: 1.8;
 }
-.archibald-curriculum-ui-item-info__label:hover {
+.curricula-ui-item-info__label:hover {
   cursor: pointer;
   background-color: #ddd;
 }
-.archibald-curriculum-ui-item-info__content {
+.curricula-ui-item-info__content {
   margin-left: 40px;
 }
-.archibald-curriculum-ui-item-info__content.nano.has-scrollbar {
+.curricula-ui-item-info__content.nano.has-scrollbar {
   width: auto !important;
 }
-.archibald-curriculum-ui-item-info__content__empty {
+.curricula-ui-item-info__content__empty {
   font-style: italic;
   color: #ddd;
   font-size: 1.2em;
@@ -281,15 +281,15 @@
   display: block;
   text-align: center;
 }
-.archibald-curriculum-ui-item-info__type__label,
-.archibald-curriculum-ui-item-info__type__description__label {
+.curricula-ui-item-info__type__label,
+.curricula-ui-item-info__type__description__label {
   font-weight: bold;
 }
 
 /**
  * Search component.
  */
-.archibald-curriculum-ui-search__overlay {
+.curricula-ui-search__overlay {
   position: fixed;
   top: 0;
   right: 0;
@@ -297,7 +297,7 @@
   left: 0;
   background: rgba(0, 0, 0, .5);
 }
-.archibald-curriculum-ui-search__wrapper {
+.curricula-ui-search__wrapper {
   position: fixed;
   top: 100px;
   /* Trick from http://www.sitepoint.com/css-center-position-absolute-div/ */
@@ -324,11 +324,11 @@
   -o-border-radius: 10px;
   border-radius: 10px;
 }
-.archibald-curriculum-ui-search__input {
+.curricula-ui-search__input {
   width: 90%;
   margin-right: 1em;
 }
-.archibald-curriculum-ui-search__cancel {
+.curricula-ui-search__cancel {
   cursor: pointer;
   position: absolute;
   top: 5px;
@@ -341,41 +341,41 @@
  * using borders.
  */
 
-.archibald-cycle-selection {
+.curricula-ui__cycle-selection {
   display: none;
   margin-top: 10px;
   padding: 10px;
   background: #eee;
   overflow: hidden;
 }
-.lp21 .archibald-cycle-selection/*,
-.per .archibald-cycle-selection */ {
+.lp21 .curricula-ui__cycle-selection/*,
+.per .curricula-ui__cycle-selection */ {
   display: block;
 }
-.archibald-cycle-selection__warning {
+.curricula-ui__cycle-selection__warning {
   display: none;
   font-style: italic;
   font-size: .9em;
 }
-.archibald-cycle-selection--has-implicit .archibald-cycle-selection__warning {
+.curricula-ui__cycle-selection--has-implicit .curricula-ui__cycle-selection__warning {
   display: block;
 }
-.archibald-cycle-selection__warning .is {
+.curricula-ui__cycle-selection__warning .is {
   display: inline;
 }
-.archibald-cycle-selection__warning .are {
+.curricula-ui__cycle-selection__warning .are {
   display: none;
 }
-.archibald-cycle-selection__warning .selected + .selected ~ .is {
+.curricula-ui__cycle-selection__warning .selected + .selected ~ .is {
   display: none;
 }
-.archibald-cycle-selection__warning .selected + .selected ~ .are {
+.curricula-ui__cycle-selection__warning .selected + .selected ~ .are {
   display: inline;
 }
-.archibald-cycle-selection__wrapper {
+.curricula-ui__cycle-selection__wrapper {
 
 }
-.archibald-cycle-selection__filter {
+.curricula-ui__cycle-selection__filter {
   position: relative;
   margin-left: 10px;
   padding: 5px 10px;
@@ -384,17 +384,17 @@
   border-width: 1px;
   cursor: pointer;
 }
-.archibald-cycle-selection__filter:hover {
+.curricula-ui__cycle-selection__filter:hover {
   background-color: #ddd;
 }
-.archibald-cycle-selection__filter + .archibald-cycle-selection__filter {
+.curricula-ui__cycle-selection__filter + .curricula-ui__cycle-selection__filter {
   margin-left: 1em;
 }
-.lp21 .archibald-cycle-selection__filter {
+.lp21 .curricula-ui__cycle-selection__filter {
   border-width: 1px 1px 1px 0;
 }
-.lp21 .archibald-cycle-selection__filter::before,
-.lp21 .archibald-curriculum-ui-summary__cycles__cycle::before {
+.lp21 .curricula-ui__cycle-selection__filter::before,
+.lp21 .curricula-ui-summary__cycles__cycle::before {
   content: '';
   position: absolute;
   left: -10px;
@@ -402,26 +402,26 @@
   bottom: -1px;
   border-left: 10px solid gray;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-1,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-2,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-3 {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-1,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-2,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-3 {
   border-left: 12px solid gray;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-12,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-13,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-23 {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-12,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-13,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-23 {
   border-left: 6px solid gray;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123 {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-123 {
   border-left: 4px solid gray;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-12::before,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-13::before,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-23::before,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after/*,
-.lp21 .archibald-curriculum-ui-summary__list__item span::before,
-.lp21 .archibald-curriculum-ui-summary__list__item span::after*/ {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-12::before,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-13::before,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-23::before,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after/*,
+.lp21 .curricula-ui-summary__list__item span::before,
+.lp21 .curricula-ui-summary__list__item span::after*/ {
   content: '';
   border-left: 6px solid gray;
   position: absolute;
@@ -429,91 +429,91 @@
   bottom: 0;
   left: 0;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after/*,
-.lp21 .archibald-curriculum-ui-summary__list__item span::after*/ {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after/*,
+.lp21 .curricula-ui-summary__list__item span::after*/ {
   border-left-width: 4px;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after {
   left: 4px;
 }
 /* Let's coloooor!!! */
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-13::before,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-12::before,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-1 {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::after,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-13::before,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-12::before,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-1 {
   border-left-color: #E39B2D;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-23::before,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-2 {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-123::before,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-23::before,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-2 {
   border-left-color: #2F8FCE;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-3 {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-3 {
   border-left-color: #97C941;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-12 {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-12 {
   border-left-color: #2F8FCE;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-13,
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-23 {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-13,
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-23 {
   border-left-color: #97C941;
 }
-.lp21 .archibald-column__wrapper__list__item--type-kompetenzstufe.has-cycles-123 {
+.lp21 .curricula-ui__column__wrapper__list__item--type-kompetenzstufe.has-cycles-123 {
   border-left-color:  #97C941;
 }
-.lp21 .archibald-curriculum-ui-summary__cycles__cycle--cycle-1 {
+.lp21 .curricula-ui-summary__cycles__cycle--cycle-1 {
   background-color: #E39B2D;
 }
-.lp21 .archibald-curriculum-ui-summary__cycles__cycle--cycle-2 {
+.lp21 .curricula-ui-summary__cycles__cycle--cycle-2 {
   background-color: #2F8FCE;
 }
-.lp21 .archibald-curriculum-ui-summary__cycles__cycle--cycle-3 {
+.lp21 .curricula-ui-summary__cycles__cycle--cycle-3 {
   background-color: #97C941;
 }
 /* For the left border, 3 takes precedence, so is last. */
 /*
-.lp21 .archibald-column__wrapper__list__item.has-cycle-1,
-.lp21 .archibald-curriculum-ui-summary__list__item.has-cycle-1 > span {
+.lp21 .curricula-ui__column__wrapper__list__item.has-cycle-1,
+.lp21 .curricula-ui-summary__list__item.has-cycle-1 > span {
   border-left-color: #E39B2D;
 }
-.lp21 .archibald-column__wrapper__list__item.has-cycle-2,
-.lp21 .archibald-curriculum-ui-summary__list__item.has-cycle-2 > span {
+.lp21 .curricula-ui__column__wrapper__list__item.has-cycle-2,
+.lp21 .curricula-ui-summary__list__item.has-cycle-2 > span {
   border-left-color: #2F8FCE;
 }
-.lp21 .archibald-column__wrapper__list__item.has-cycle-3,
-.lp21 .archibald-curriculum-ui-summary__list__item.has-cycle-3 > span {
+.lp21 .curricula-ui__column__wrapper__list__item.has-cycle-3,
+.lp21 .curricula-ui-summary__list__item.has-cycle-3 > span {
   border-left-color: #97C941;
 }
 */
 /* For the middle border, 2 takes precedence, so is last. */
-.lp21 .archibald-cycle-selection__filter--cycle-3::before/*,
-.lp21 .archibald-column__wrapper__list__item.has-cycle-3::before,
-.lp21 .archibald-curriculum-ui-summary__list__item.has-cycle-3 > span::before*/ {
+.lp21 .curricula-ui__cycle-selection__filter--cycle-3::before/*,
+.lp21 .curricula-ui__column__wrapper__list__item.has-cycle-3::before,
+.lp21 .curricula-ui-summary__list__item.has-cycle-3 > span::before*/ {
   border-left-color: #97C941;
 }
-.lp21 .archibald-cycle-selection__filter--cycle-1::before/*,
-.lp21 .archibald-column__wrapper__list__item.has-cycle-1::before,
-.lp21 .archibald-curriculum-ui-summary__list__item.has-cycle-1 > span::before*/ {
+.lp21 .curricula-ui__cycle-selection__filter--cycle-1::before/*,
+.lp21 .curricula-ui__column__wrapper__list__item.has-cycle-1::before,
+.lp21 .curricula-ui-summary__list__item.has-cycle-1 > span::before*/ {
   border-left-color: #E39B2D;
 }
-.lp21 .archibald-cycle-selection__filter--cycle-2::before/*,
-.lp21 .archibald-column__wrapper__list__item.has-cycle-2::before,
-.lp21 .archibald-curriculum-ui-summary__list__item.has-cycle-2 > span::before*/ {
+.lp21 .curricula-ui__cycle-selection__filter--cycle-2::before/*,
+.lp21 .curricula-ui__column__wrapper__list__item.has-cycle-2::before,
+.lp21 .curricula-ui-summary__list__item.has-cycle-2 > span::before*/ {
   border-left-color: #2F8FCE;
 }
 /* For the right border, 3 takes precedence, so is last. */
 /*
-.lp21 .archibald-column__wrapper__list__item.has-cycle-3::after,
-.lp21 .archibald-curriculum-ui-summary__list__item.has-cycle-3 > span::after {
+.lp21 .curricula-ui__column__wrapper__list__item.has-cycle-3::after,
+.lp21 .curricula-ui-summary__list__item.has-cycle-3 > span::after {
   border-left-color: #97C941;
 }
-.lp21 .archibald-column__wrapper__list__item.has-cycle-2::after,
-.lp21 .archibald-curriculum-ui-summary__list__item.has-cycle-2 > span::after {
+.lp21 .curricula-ui__column__wrapper__list__item.has-cycle-2::after,
+.lp21 .curricula-ui-summary__list__item.has-cycle-2 > span::after {
   border-left-color: #2F8FCE;
 }
-.lp21 .archibald-column__wrapper__list__item.has-cycle-1::after,
-.lp21 .archibald-curriculum-ui-summary__list__item.has-cycle-1 > span::after {
+.lp21 .curricula-ui__column__wrapper__list__item.has-cycle-1::after,
+.lp21 .curricula-ui-summary__list__item.has-cycle-1 > span::after {
   border-left-color: #E39B2D;
 }
 */

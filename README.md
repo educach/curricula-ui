@@ -12,6 +12,21 @@ Furthermore, *[LOM-CH](https://en.wikipedia.org/wiki/Learning_object_metadata#LO
 
 The selection of this data through an interface can be tedious. This component greatly simplifies the process, by allowing users to quickly find specific elements using a search, selecting full "paths" by selecting "leaf elements", easy browsing, etc.
 
+Installation
+------------
+
+You can use [Bower](https://bower.io/) to install the component:
+
+    bower install educach-curricula-ui
+
+Alternatively, you can also [download](https://github.com/educach/curricula-ui/releases) one of the releases.
+
+Include the `app/css/styles.css` CSS file, as well as all dependencies ([jQuery](https://jquery.com/), [Underscore](http://underscorejs.org/), [Backbone](http://backbonejs.org/) and [jQuery UI](https://jqueryui.com/)). Finally, include the library files, making sure `core.js` is included last:
+
+* `app/js/models.js`
+* `app/js/views.js`
+* `app/js/core.js`
+
 Test drive
 ----------
 

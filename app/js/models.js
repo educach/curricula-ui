@@ -1,6 +1,6 @@
 /**
  * @file
- * Archibald Curriculum JS application models.
+ * Curricula UI JS application models.
  *
  * This defines the models used throughout the application. Note that this file
  * is written using Docco syntax. If Node is installed, you can generate this
@@ -13,11 +13,11 @@
  */
 
 "use strict";
-( function( Backbone, _, Archibald ) {
+( function( Backbone, _, c ) {
 
 // This defines the models and collections used throughout the application.
-// They extend the global `ArchibaldCurriculum` namespace, aliased to
-// `Archibald` for readability.
+// They extend the global `CurriculaUI` namespace, aliased to
+// `c` for readability.
 
 // A note on Backbone
 // ------------------
@@ -34,7 +34,7 @@
 // Defines the data structure for a single item, like a Fachbereich or
 // Kompetenzstufe. Items have a reference to their parent item, via the parentId
 // attribute.
-Archibald.ItemModel = Backbone.Model.extend({
+c.ItemModel = Backbone.Model.extend({
   defaults: {
     name:        undefined,
     type:        undefined,
@@ -62,9 +62,9 @@ Archibald.ItemModel = Backbone.Model.extend({
 // Item collection
 // ---------------
 //
-// A collection of `ArchibaldCurriculum.ItemModel` models.
-Archibald.ItemCollection = Backbone.Collection.extend({
-  model: Archibald.ItemModel,
+// A collection of `CurriculaUI.ItemModel` models.
+c.ItemCollection = Backbone.Collection.extend({
+  model: c.ItemModel,
   // Backbone complains if no URL is defined. We could depend on the
   // localStorage plugin for Backbone to prevent this error, but that would be
   // overkill, as we only keep things in memory. Instead, provide a dummy URL.
@@ -76,10 +76,10 @@ Archibald.ItemCollection = Backbone.Collection.extend({
 //
 // Defines the data structure for a single column. This has the particularity
 // of referencing a *View*, not the other way around. We use this to keep track
-// of the `ArchibaldCurriculum.ItemListView` elements used in the application,
+// of the `CurriculaUI.ItemListView` elements used in the application,
 // so we can easily and cleanly manipulate them, like by hiding columns "to the
 // right" of a given column, or collapsing columns "to the left".
-Archibald.ColumnModel = Backbone.Model.extend({
+c.ColumnModel = Backbone.Model.extend({
   defaults: {
     column: null
   }
@@ -88,13 +88,13 @@ Archibald.ColumnModel = Backbone.Model.extend({
 // Column collection
 // -----------------
 //
-// A collection of `ArchibaldCurriculum.ColumnModel` models.
-Archibald.ColumnCollection = Backbone.Collection.extend({
-  model: Archibald.ColumnModel,
+// A collection of `CurriculaUI.ColumnModel` models.
+c.ColumnCollection = Backbone.Collection.extend({
+  model: c.ColumnModel,
   // Backbone complains if no URL is defined. We could depend on the
   // localStorage plugin for Backbone to prevent this error, but that would be
   // overkill, as we only keep things in memory. Instead, provide a dummy URL.
   url:   '?dummyUrl'
 });
 
-})( Backbone, _, window.ArchibaldCurriculum || ( window.ArchibaldCurriculum = new Object() ) );
+})( Backbone, _, window.CurriculaUI || ( window.CurriculaUI = new Object() ) );

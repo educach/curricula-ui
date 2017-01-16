@@ -1,9 +1,9 @@
-( function( $, Archibald ) {
+( function( $, c ) {
 
-Archibald.templates = Archibald.templates || {};
+c.templates = c.templates || {};
 
 // We want to alter the display of certain items.
-Archibald.templates.item = '\
+c.templates.item = '\
 <% if ( editable && ( typeof data === "undefined" || typeof data.isSelectable === "undefined" || data.isSelectable )) { %>\
   <input type="checkbox" value="model-<%= id %>"<% if ( active ) { %> checked<% } %>/>\
 <% } %>\
@@ -16,13 +16,13 @@ Archibald.templates.item = '\
 <% } %>\
 ';
 
-Archibald.templates.summaryList = '\
+c.templates.summaryList = '\
 <li\
   data-model-id="<%= id %>"\
   class="\
-  archibald-curriculum-ui-summary__list__item\
-  archibald-curriculum-ui-summary__list__item--<%= type %>\
-  <% if ( typeof data !== "undefined" && typeof data.isGroup !== "undefined" && data.isGroup ) { %>archibald-curriculum-ui-summary__list__item--isGroup<%  } %>\
+  curricula-ui-summary__list__item\
+  curricula-ui-summary__list__item--<%= type %>\
+  <% if ( typeof data !== "undefined" && typeof data.isGroup !== "undefined" && data.isGroup ) { %>curricula-ui-summary__list__item--isGroup<%  } %>\
   "\
 >\
   <span>\
@@ -35,7 +35,7 @@ Archibald.templates.summaryList = '\
 </li>\
 ';
 
-Archibald.templates.perLockedSchoolYearsMessage = _.template('\
+c.templates.perLockedSchoolYearsMessage = _.template('\
   <% for ( var i in items ) { %>\
     <%= items[ i ] %><% if ( items.length > 1 && i < items.length-1 ) {\
       if ( i == items.length-2 ) { %> et <% } else { %>, <% }\
@@ -44,7 +44,7 @@ Archibald.templates.perLockedSchoolYearsMessage = _.template('\
   <% if ( items.length > 1 ) { %>sont<% } else { %>est<% } %> verouillée<% if ( items.length > 1 ) { %>s<% } %>, car  <% if ( items.length > 1 ) { %>elles sont<% } else { %>elle est<% } %> implicitement sélectionnée<% if ( items.length > 1 ) { %>s<% } %> par rapport aux éléments actifs.\
 ');
 
-Archibald.templates.perSelectedSchoolYearsMessage = _.template('\
+c.templates.perSelectedSchoolYearsMessage = _.template('\
   <% if ( items.length ) { %>\
     <h4>Années scolaires sélectionnées:</h4>\
     <% for ( var i in items ) { %>\
@@ -62,7 +62,7 @@ var appInit = function() {
     success: function( items ) {
       // We don't pass in the wrapper, otherwise we cannot react to the
       // app:render event.
-      var app = new Archibald.Core( items );
+      var app = new c.Core( items );
 
       // Bind our event listener, so we can add some custom markup on render.
       app.on( 'app:render', function() {
@@ -80,7 +80,7 @@ var appInit = function() {
         </div>\
         ');
 
-        app.getWrapper().find( '.archibald-curriculum-ui__editor' ).after('\
+        app.getWrapper().find( '.curricula-ui__editor' ).after('\
         <div class="select-school-years" id="select-school-years">\
           <h4>Sélectionner des années scolaires:</h4>\
           <label><input class="select-school-years__input" type="checkbox" value="1-2" />1<sup>re</sup> &ndash; 2<sup>e</sup></label>\
@@ -94,7 +94,7 @@ var appInit = function() {
         </div>\
         ');
 
-        app.getWrapper().find( '.archibald-curriculum-ui__summary-wrapper__content' ).before('\
+        app.getWrapper().find( '.curricula-ui__summary-wrapper__content' ).before('\
         <div class="summary-school-years" id="summary-school-years">\
         </div>\
         ');
@@ -102,7 +102,7 @@ var appInit = function() {
         $( '#select-school-years input' ).click(function() {
           $( this ).toggleClass( 'select-school-years__input--hand-selected' );
         }).change(function() {
-          $( '#summary-school-years' ).html( Archibald.templates.perSelectedSchoolYearsMessage({
+          $( '#summary-school-years' ).html( c.templates.perSelectedSchoolYearsMessage({
             items: $( '#select-school-years input:checked' ).map(function() {
               return this.value;
             }).get()
@@ -168,7 +168,7 @@ var appInit = function() {
             }).change();
           } );
 
-          $( '#select-school-years-message' ).html( Archibald.templates.perLockedSchoolYearsMessage({
+          $( '#select-school-years-message' ).html( c.templates.perLockedSchoolYearsMessage({
             items: checkAndLock
           }));
         }
@@ -181,8 +181,8 @@ var appInit = function() {
             typeof itemModel.get( 'data' ).perTable !== 'undefined'
           ) {
             var $window = $( window ),
-                $wrapper = $( '<div class="archibald-per-modal"></div>' ),
-                $table = $( '<table class="archibald-per-table"></table>' ),
+                $wrapper = $( '<div class="curricula-ui__per-modal"></div>' ),
+                $table = $( '<table class="curricula-ui__per-table"></table>' ),
                 perTable = itemModel.get( 'data' ).perTable,
                 $row, $cell, cellContent;
 
@@ -191,11 +191,11 @@ var appInit = function() {
             for ( var rowId in perTable ) {
               $row = $( '<tr></tr>' );
               for ( var cellId in perTable[ rowId ] ) {
-                $cell = $( '<td class="archibald-per-table__cell"></td>' );
-                $cell.addClass( 'archibald-per-table__cell--' + perTable[ rowId ][ cellId ].type );
+                $cell = $( '<td class="curricula-ui__per-table__cell"></td>' );
+                $cell.addClass( 'curricula-ui__per-table__cell--' + perTable[ rowId ][ cellId ].type );
 
                 if ( typeof perTable[ rowId ][ cellId ].level !== 'undefined' ) {
-                  $cell.addClass( 'archibald-per-table__cell--level-' + perTable[ rowId ][ cellId ].level );
+                  $cell.addClass( 'curricula-ui__per-table__cell--level-' + perTable[ rowId ][ cellId ].level );
                 }
 
                 $cell.attr({
@@ -212,7 +212,7 @@ var appInit = function() {
 
                 cellContent = '';
                 _.each( perTable[ rowId ][ cellId ].content, function( item ) {
-                  cellContent += '<div class="archibald-per-table__cell__item">';
+                  cellContent += '<div class="curricula-ui__per-table__cell__item">';
 
                   if ( perTable[ rowId ][ cellId ].isSelectable ) {
                     var model = app.getItemDatabase().get( item.id ),
@@ -243,9 +243,9 @@ var appInit = function() {
                       // As long as one item is selected, highlight the whole
                       // cell.
                       if ( $cell.find( 'input:checked' ).length ) {
-                        $cell.addClass( 'archibald-per-table__cell--active' );
+                        $cell.addClass( 'curricula-ui__per-table__cell--active' );
                       } else {
-                        $cell.removeClass( 'archibald-per-table__cell--active' );
+                        $cell.removeClass( 'curricula-ui__per-table__cell--active' );
                       }
                     }).change();
                   })( $cell );
@@ -323,11 +323,11 @@ var appInit = function() {
 
         if ( itemModel.get( 'type' ) === 'objective' ) {
           itemView.$el.append( '\
-<div class="archibald-column__wrapper__list__item__per-selection">\
+<div class="curricula-ui__column__wrapper__list__item__per-selection">\
   <a>Sélectionner progressions d\'apprentissage&hellip;</a>\
 </div>\
 ' );
-          itemView.$el.find( '.archibald-column__wrapper__list__item__per-selection a' ).click(function( e ) {
+          itemView.$el.find( '.curricula-ui__column__wrapper__list__item__per-selection a' ).click(function( e ) {
             e.stopPropagation();
             openModal( itemModel, itemView, columnCollection, column, eventApp );
           });
@@ -366,12 +366,12 @@ var appInit = function() {
             var $element = app.getWrapper().find( '[data-model-id="' + selectedItem.get( 'parentId' ) + '"]' );
             if ( $element.length ) {
               // @todo Too much hardcoded stuff!!
-              $element.parents( '.archibald-column' ).find( '.nano' ).nanoScroller({
+              $element.parents( '.curricula-ui__column' ).find( '.nano' ).nanoScroller({
                 scrollTo: $element
               });
 
               setTimeout( function() {
-                $element.find( '.archibald-column__wrapper__list__item__per-selection a' ).click();
+                $element.find( '.curricula-ui__column__wrapper__list__item__per-selection a' ).click();
               }, 400 );
               timeOut = 600;
             }
@@ -425,12 +425,12 @@ var appInit = function() {
         // Careful, cookies don't like Booleans... and jQuery.cookie() has a
         // really hard time returning data that can be cast to a boolean. Use
         // integer casting and strict comparison instead.
-        $.cookie( 'archibald_confirm_opt_out', $( '#confirm-opt-out' ).is( ':checked' ) ? 0 : 1, { expires: 7, path: '/' });
-      } ).attr( 'checked', parseInt( $.cookie( 'archibald_confirm_opt_out' ) ) === 0 ).change();
+        $.cookie( 'curricula_ui_confirm_opt_out', $( '#confirm-opt-out' ).is( ':checked' ) ? 0 : 1, { expires: 7, path: '/' });
+      } ).attr( 'checked', parseInt( $.cookie( 'curricula_ui_confirm_opt_out' ) ) === 0 ).change();
 
       // Allow the summary to be collapsed.
-      app.getWrapper().find( '.archibald-curriculum-ui__summary-wrapper__label' ).click( function() {
-        app.getWrapper().find( '.archibald-curriculum-ui__summary-wrapper' ).toggleClass( 'archibald-curriculum-ui__summary-wrapper--collapsed' );
+      app.getWrapper().find( '.curricula-ui__summary-wrapper__label' ).click( function() {
+        app.getWrapper().find( '.curricula-ui__summary-wrapper' ).toggleClass( 'curricula-ui__summary-wrapper--collapsed' );
       } );
 
       // Show search.
@@ -533,4 +533,4 @@ var appInit = function() {
 
 window.appInit = appInit;
 
-})( jQuery, window.ArchibaldCurriculum || ( window.ArchibaldCurriculum = new Object() ) );
+})( jQuery, window.CurriculaUI || ( window.CurriculaUI = new Object() ) );

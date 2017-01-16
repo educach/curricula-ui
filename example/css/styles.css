@@ -35,75 +35,75 @@
 .search:hover {
   background-color: #eee;
 }
-.archibald-curriculum-ui__summary-wrapper--collapsed {
+.curricula-ui__summary-wrapper--collapsed {
   height: 3.5em;
 }
-.archibald-curriculum-ui__summary-wrapper--collapsed .archibald-curriculum-ui__summary-wrapper__label {
+.curricula-ui__summary-wrapper--collapsed .curricula-ui__summary-wrapper__label {
   margin: 0.5em;
 }
-.archibald-curriculum-ui-summary__list__item--isGroup {
+.curricula-ui-summary__list__item--isGroup {
   font-weight: bold;
   background: #eee;
 }
-.archibald-column__wrapper__list__item--isGroup {
+.curricula-ui__column__wrapper__list__item--isGroup {
   border-bottom: 2px solid #555;
   font-size: 1.1em;
   font-weight: bold;
   background: #eee;
 }
-.archibald-column__wrapper__list__item--level-2 {
+.curricula-ui__column__wrapper__list__item--level-2 {
   padding-left: 60px;
 }
-.archibald-column__wrapper__list__item--level-3 {
+.curricula-ui__column__wrapper__list__item--level-3 {
   padding-left: 90px;
 }
-.archibald-column__wrapper__list__item--level-4 {
+.curricula-ui__column__wrapper__list__item--level-4 {
   padding-left: 120px;
 }
-.archibald-column__wrapper__list__item--title {
+.curricula-ui__column__wrapper__list__item--title {
   cursor: pointer;
 }
-.archibald-column__wrapper__list__item__per-selection {
+.curricula-ui__column__wrapper__list__item__per-selection {
   margin-top: 1em;
   font-size: .9em;
   font-style: italic;
 }
-.archibald-per-table {
+.curricula-ui__per-table {
   border-collapse: collapse;
   table-layout: fixed;
 }
-.archibald-per-table__cell {
+.curricula-ui__per-table__cell {
   vertical-align: top;
   padding: 10px;
   border: 1px solid #bbb;
   background: white;
 }
-.archibald-per-table__cell--title {
+.curricula-ui__per-table__cell--title {
   font-weight: bold;
 }
-.archibald-per-table__cell--level-1 {
+.curricula-ui__per-table__cell--level-1 {
   background: #fb0;
   color: white;
   font-size: 1.3em;
 }
-.archibald-per-table__cell--level-2 {
+.curricula-ui__per-table__cell--level-2 {
   font-size: 1.1em;
   background: #fbf5d6;
 }
-.archibald-per-table__cell--active {
+.curricula-ui__per-table__cell--active {
   background: #ddd;
 }
-.archibald-per-table__cell--empty {
+.curricula-ui__per-table__cell--empty {
   background: transparent;
   border-style: dashed;
 }
-.archibald-per-table__cell--progression label {
+.curricula-ui__per-table__cell--progression label {
   margin: 0;
   font-weight: normal;
   font-size: 1em;
   cursor: pointer;
 }
-.archibald-per-table__cell--progression input {
+.curricula-ui__per-table__cell--progression input {
   float: left;
   margin-right: 1em;
 }
@@ -138,6 +138,6 @@
 .summary-school-years__school-year {
   font-weight: bold;
 }
-.archibald-column__wrapper__list__item--objective .icon-chevron-right {
+.curricula-ui__column__wrapper__list__item--objective .icon-chevron-right {
   display: none;
 }

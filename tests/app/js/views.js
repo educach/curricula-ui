@@ -7,15 +7,15 @@ QUnit.module( "ItemView" );
 QUnit.test( "initialize", function( assert ) {
   assert.throws(
     function() {
-      var view = new ArchibaldCurriculum.ItemView();
+      var view = new CurriculaUI.ItemView();
     },
     "Initializing a view without any model throws an error."
   );
 
   assert.throws(
     function() {
-      var item = new ArchibaldCurriculum.ItemModel(),
-          view = new ArchibaldCurriculum.ItemView({ model: item });
+      var item = new CurriculaUI.ItemModel(),
+          view = new CurriculaUI.ItemView({ model: item });
     },
     "Initializing a view with an invalid model throws an error."
   );
@@ -28,8 +28,8 @@ QUnit.test( "model events", function( assert ) {
   assert.expect( 4 );
 
   var doneChangeEvent = assert.async(),
-      item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
-      view1 = new ArchibaldCurriculum.ItemView({ model: item1 });
+      item1 = new CurriculaUI.ItemModel({ name: [ "Model name" ] }),
+      view1 = new CurriculaUI.ItemView({ model: item1 });
   view1.on( 'render', function() {
     assert.ok( true, "The view re-renders itself on updating its model." );
     doneChangeEvent();
@@ -37,8 +37,8 @@ QUnit.test( "model events", function( assert ) {
   item1.set( 'name', [ "Some new name" ] );
 
   var doneDestroyEvent = assert.async( 2 ),
-      item2 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ] }),
-      view2 = new ArchibaldCurriculum.ItemView({ model: item2 });
+      item2 = new CurriculaUI.ItemModel({ name: [ "Model name" ] }),
+      view2 = new CurriculaUI.ItemView({ model: item2 });
   view2.render().$el.appendTo( '#qunit-fixture' );
   assert.ok( view2.$el.parent()[0], "The view was correctly rendered and added to the DOM." );
   view2.on( 'model:destroy', function() {
@@ -55,14 +55,14 @@ QUnit.test( "model events", function( assert ) {
  * arguments.
  */
 QUnit.test( "rendering", function( assert ) {
-  var item1 = new ArchibaldCurriculum.ItemModel({
+  var item1 = new CurriculaUI.ItemModel({
         name: [ "Model name" ],
         id:   1,
         data: { boolKey: true, otherBoolKey: false, 'complex|key-[éèà!?]': true }
       }),
-      view1 = new ArchibaldCurriculum.ItemView({ model: item1, editable: true }),
-      view2 = new ArchibaldCurriculum.ItemView({ model: item1, editable: false }),
-      view3 = new ArchibaldCurriculum.ItemView({ model: item1 });
+      view1 = new CurriculaUI.ItemView({ model: item1, editable: true }),
+      view2 = new CurriculaUI.ItemView({ model: item1, editable: false }),
+      view3 = new CurriculaUI.ItemView({ model: item1 });
 
   view1.render();
   view2.render();
@@ -85,8 +85,8 @@ QUnit.test( "view events", function( assert ) {
 
   var doneCheckboxEvent = assert.async( 2 ),
       checked = false,
-      item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], id: 1, active: checked }),
-      view1 = new ArchibaldCurriculum.ItemView({ model: item1, editable: true });
+      item1 = new CurriculaUI.ItemModel({ name: [ "Model name" ], id: 1, active: checked }),
+      view1 = new CurriculaUI.ItemView({ model: item1, editable: true });
   view1.on( 'model:change', function( itemModel, itemView, e ) {
     // The active (checked) state should have changed.
     checked != checked;
@@ -100,8 +100,8 @@ QUnit.test( "view events", function( assert ) {
   view1.$el.find('input').change();
 
   var doneClickEvent = assert.async(),
-      item2 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], id: 2 }),
-      view2 = new ArchibaldCurriculum.ItemView({ model: item2, editable: true });
+      item2 = new CurriculaUI.ItemModel({ name: [ "Model name" ], id: 2 }),
+      view2 = new CurriculaUI.ItemView({ model: item2, editable: true });
   view2.on( 'select', function() {
     assert.ok( true, "The view triggers a select event on being clicked." );
     doneClickEvent();
@@ -111,8 +111,8 @@ QUnit.test( "view events", function( assert ) {
   view2.$el.click();
 
   var doneDblClickEvent = assert.async( 2 ),
-      item3 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], id: 3, active: false }),
-      view3 = new ArchibaldCurriculum.ItemView({ model: item3, editable: true });
+      item3 = new CurriculaUI.ItemModel({ name: [ "Model name" ], id: 3, active: false }),
+      view3 = new CurriculaUI.ItemView({ model: item3, editable: true });
   view3.on( 'active', function( state, itemModel, itemView ) {
     assert.ok( true, "The view triggers a active event on being double-clicked." );
     assert.equal( state, true, "The passed state is correct." );
@@ -146,7 +146,7 @@ QUnit.module( "ItemListView" );
 QUnit.test( "initialize", function( assert ) {
   assert.throws(
     function() {
-      var view = new ArchibaldCurriculum.ItemListView();
+      var view = new CurriculaUI.ItemListView();
     },
     "Initializing a view without any collection throws an error."
   );
@@ -161,9 +161,9 @@ QUnit.test( "collection events", function( assert ) {
 
   var doneAddRemoveEvent = assert.async( 2 ),
       doneRenderEvent = assert.async( 2 ),
-      collection1 = new ArchibaldCurriculum.ItemCollection([ { name: [ "First item " ] }]),
-      view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1 }),
-      addedItem = new ArchibaldCurriculum.ItemModel({ name: [ "Some name" ] });
+      collection1 = new CurriculaUI.ItemCollection([ { name: [ "First item " ] }]),
+      view1 = new CurriculaUI.ItemListView({ collection: collection1 }),
+      addedItem = new CurriculaUI.ItemModel({ name: [ "Some name" ] });
   // Render it a first time BEFORE attaching event listeners. This will allow us
   // to cover the childViews[] array.
   view1.render();
@@ -194,9 +194,9 @@ QUnit.test( "child view events", function( assert ) {
 
   var doneSelectEvent = assert.async(),
       doneChangeEvent = assert.async(),
-      item1 = new ArchibaldCurriculum.ItemModel({ name: [ "Model name" ], id: 1 }),
-      collection1 = new ArchibaldCurriculum.ItemCollection([ item1 ]),
-      view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1, editable: true });
+      item1 = new CurriculaUI.ItemModel({ name: [ "Model name" ], id: 1 }),
+      collection1 = new CurriculaUI.ItemCollection([ item1 ]),
+      view1 = new CurriculaUI.ItemListView({ collection: collection1, editable: true });
   view1.on( 'item:select', function() {
     assert.ok( true, "The view triggers a item:select event on clicking on a child view." );
     doneSelectEvent();
@@ -222,8 +222,8 @@ QUnit.test( "view events", function( assert ) {
   assert.expect( 6 );
 
   var doneCollapseExpandEvent = assert.async( 2 ),
-      collection1 = new ArchibaldCurriculum.ItemCollection(),
-      view1 = new ArchibaldCurriculum.ItemListView({ collection: collection1 });
+      collection1 = new CurriculaUI.ItemCollection(),
+      view1 = new CurriculaUI.ItemListView({ collection: collection1 });
   view1.on( 'column:collapse', function() {
     assert.ok( true, "The view triggers a column:collapse event on being collapsed." );
     assert.ok( view1.isCollapsed(), "The view gives correct information about being collapsed." );
@@ -238,8 +238,8 @@ QUnit.test( "view events", function( assert ) {
 
   var doneGoBackEvent = assert.async(),
       doneGoToRootEvent = assert.async(),
-      collection2 = new ArchibaldCurriculum.ItemCollection(),
-      view2 = new ArchibaldCurriculum.ItemListView({ collection: collection2 });
+      collection2 = new CurriculaUI.ItemCollection(),
+      view2 = new CurriculaUI.ItemListView({ collection: collection2 });
   view2.on( 'column:go-back', function() {
     assert.ok( true, "The view triggers a column:go-back event on clicking on the Go Back button." );
     doneGoBackEvent();
@@ -249,8 +249,8 @@ QUnit.test( "view events", function( assert ) {
     doneGoToRootEvent();
   });
   view2.render();
-  view2.$el.find('.archibald-column__button--show-parent').click();
-  view2.$el.find('.archibald-column__button--show-root').click();
+  view2.$el.find('.curricula-ui__column__button--show-parent').click();
+  view2.$el.find('.curricula-ui__column__button--show-root').click();
 });
 
 
@@ -265,8 +265,8 @@ QUnit.module( "ItemInfoView" );
 QUnit.test( "initialize", function( assert ) {
   assert.throws(
     function() {
-      var item = new ArchibaldCurriculum.ItemModel(),
-          view = new ArchibaldCurriculum.ItemInfoView({ model: item });
+      var item = new CurriculaUI.ItemModel(),
+          view = new CurriculaUI.ItemInfoView({ model: item });
     },
     "Initializing a view with an invalid model throws an error."
   );
@@ -280,8 +280,8 @@ QUnit.test( "view events", function( assert ) {
 
   var doneRenderEvent = assert.async(),
       doneCollapseExpandEvent = assert.async( 2 ),
-      model1 = new ArchibaldCurriculum.ItemModel({ name: [ "Some name" ] }),
-      view1 = new ArchibaldCurriculum.ItemInfoView({ model: model1 });
+      model1 = new CurriculaUI.ItemModel({ name: [ "Some name" ] }),
+      view1 = new CurriculaUI.ItemInfoView({ model: model1 });
 
   view1.on( 'render', function() {
     assert.ok( true, "The view triggers a render event when rendered." );
@@ -297,7 +297,7 @@ QUnit.test( "view events", function( assert ) {
     assert.ok( true, "The view triggers a expand event when expanded." );
     doneCollapseExpandEvent();
   });
-  view1.$el.find( '.archibald-curriculum-ui-item-info__label' ).click().click();
+  view1.$el.find( '.curricula-ui-item-info__label' ).click().click();
 });
 
 
@@ -312,7 +312,7 @@ QUnit.module( "SummaryTreeView" );
 QUnit.test( "initialize", function( assert ) {
   assert.throws(
     function() {
-      var view = new ArchibaldCurriculum.SummaryTreeView();
+      var view = new CurriculaUI.SummaryTreeView();
     },
     "Initializing a view without any model throws an error."
   );
@@ -326,10 +326,10 @@ QUnit.test( "collection events", function( assert ) {
   assert.expect( 3 );
 
   var doneRenderEvent = assert.async( 3 ),
-      collection = new ArchibaldCurriculum.ItemCollection(),
-      view = new ArchibaldCurriculum.SummaryTreeView({ collection: collection }),
-      addedItem1 = new ArchibaldCurriculum.ItemModel({ name: [ "Some name" ] }),
-      addedItem2 = new ArchibaldCurriculum.ItemModel({ name: [ "Some name" ] });
+      collection = new CurriculaUI.ItemCollection(),
+      view = new CurriculaUI.SummaryTreeView({ collection: collection }),
+      addedItem1 = new CurriculaUI.ItemModel({ name: [ "Some name" ] }),
+      addedItem2 = new CurriculaUI.ItemModel({ name: [ "Some name" ] });
   view.on( 'render', function() {
     assert.ok( true, "The view is re-rendered whenever an item is changed, removed or added to the collection." );
     doneRenderEvent();

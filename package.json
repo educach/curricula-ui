@@ -1,6 +1,6 @@
 {
-  "name": "archibald-curriculum-js",
-  "description": "Archibald Curriculum JS application.",
+  "name": "curricula-ui",
+  "description": "JS application for managing and editing curricula data for LOM-CH descriptions.",
   "version": "0.0.1",
   "engines": {
     "node": ">=0.8.0"

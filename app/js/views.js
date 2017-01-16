@@ -1,6 +1,6 @@
 /**
  * @file
- * Archibald Curriculum JS application views.
+ * Curricula UI JS application views.
  *
  * This defines the views used throughout the application. Note that this file
  * is written using Docco syntax. If Node is installed, you can generate this
@@ -13,12 +13,12 @@
  */
 
 "use strict";
-( function( Backbone, _, Archibald ) {
+( function( Backbone, _, c ) {
 
 // This defines the views used throughout the application. Almost all parts are
 // split into independent views, allowing for maximum flexibility and
-// re-usability. It extends the global `ArchibaldCurriculum` namespace, aliased
-// to `Archibald` for readability.
+// re-usability. It extends the global `CurriculaUI` namespace, aliased
+// to `c` for readability.
 
 // A note on Backbone
 // ------------------
@@ -30,9 +30,9 @@
 // ---------
 //
 // This defines the default templates used by the views in the application. They
-// can be overridden in various cases, as needed. Archibald Curriculum strictly
+// can be overridden in various cases, as needed. Curricula UI strictly
 // adheres to *BEM* notation for the markup, and overrides should follow suit.
-Archibald.templates = _.extend({
+c.templates = _.extend({
 
   // A single item.
   //
@@ -57,13 +57,13 @@ Archibald.templates = _.extend({
   // items, usually ItemViews. Note that it uses classes for the *nanoScroller*
   // jQuery plugin for convenience.
   itemList: '\
-<div class="archibald-column__wrapper nano">\
-  <ul class="archibald-column__wrapper__list nano-content"></ul>\
+<div class="curricula-ui__column__wrapper nano">\
+  <ul class="curricula-ui__column__wrapper__list nano-content"></ul>\
 </div>\
-<span class="archibald-column__button archibald-column__button--show-parent">\
+<span class="curricula-ui__column__button curricula-ui__column__button--show-parent">\
   <i class="icon-chevron-left" /> Back\
 </span>\
-<span class="archibald-column__button archibald-column__button--show-root">\
+<span class="curricula-ui__column__button curricula-ui__column__button--show-root">\
   <i class="icon-chevron-left" /><i class="icon-chevron-left" /> Top\
 </span>\
 ',
@@ -75,13 +75,13 @@ Archibald.templates = _.extend({
   // context. It provides a sensible default template, with very little
   // information other than a link. Mainly used by `ItemInfoView`.
   itemInfo: '\
-<h3 class="archibald-curriculum-ui-item-info__label">\
+<h3 class="curricula-ui-item-info__label">\
   <%= typeof itemInfoLabel !== "undefined" ? itemInfoLabel : "Item info" %>\
 </h3>\
-<div class="archibald-curriculum-ui-item-info__content nano">\
+<div class="curricula-ui-item-info__content nano">\
   <div class="nano-content">\
     <% if ( typeof name === "undefined" ) { %>\
-      <span class="archibald-curriculum-ui-item-info-view__empty">Select an item to see its information</span>\
+      <span class="curricula-ui-item-info-view__empty">Select an item to see its information</span>\
     <% } else { %>\
       <%= name %>\
     <% } %>\
@@ -97,7 +97,7 @@ Archibald.templates = _.extend({
   summaryList: '\
 <li\
   data-model-id="<%= id %>"\
-  class="archibald-curriculum-ui-summary__list__item"\
+  class="curricula-ui-summary__list__item"\
 >\
   <span>\
     <% for ( var i in name ) { %>\
@@ -114,29 +114,29 @@ Archibald.templates = _.extend({
   // Used for the quick search component, which allows users to quickly jump
   // to a specific item.
   search: '\
-<div class="archibald-curriculum-ui-search__overlay"></div>\
-<div class="archibald-curriculum-ui-search__wrapper">\
-  <input type="text" class="archibald-curriculum-ui-search__input" />\
-  <i class="archibald-curriculum-ui-search__cancel icon icon-close" />\
+<div class="curricula-ui-search__overlay"></div>\
+<div class="curricula-ui-search__wrapper">\
+  <input type="text" class="curricula-ui-search__input" />\
+  <i class="curricula-ui-search__cancel icon icon-close" />\
 </div>\
 '
 
-}, Archibald.templates || {});
+}, c.templates || {});
 
 
 // Item view
 // ---------
 //
 // This view represents a single item in a column. It requires a model
-// representing the item, usually a `ArchibaldCurriculum.ItemModel`. See
+// representing the item, usually a `CurriculaUI.ItemModel`. See
 // `models.js` for more information.
-Archibald.ItemView = Backbone.View.extend({
+c.ItemView = Backbone.View.extend({
   // The item is rendered as a list item.
   tagName:   'li',
-  className: 'archibald-column__wrapper__list__item',
+  className: 'curricula-ui__column__wrapper__list__item',
 
   // It uses the `item` template from our templates list.
-  tpl: _.template( Archibald.templates.item ),
+  tpl: _.template( c.templates.item ),
 
   // This hash keeps track of the view settings.
   settings: null,
@@ -296,13 +296,13 @@ Archibald.ItemView = Backbone.View.extend({
 // --------------
 //
 // This view represents a list of items. It requires a collection containing
-// all items in this list, usually a `ArchibaldCurriculum.ItemCollection`. See
+// all items in this list, usually a `CurriculaUI.ItemCollection`. See
 // `models.js` for more information.
-Archibald.ItemListView = Backbone.View.extend({
-  className: 'archibald-column',
+c.ItemListView = Backbone.View.extend({
+  className: 'curricula-ui__column',
 
   // It uses the `itemList` template from our templates list.
-  tpl: _.template( Archibald.templates.itemList ),
+  tpl: _.template( c.templates.itemList ),
 
   // This array keeps track of all child views.
   childViews: [],
@@ -314,8 +314,8 @@ Archibald.ItemListView = Backbone.View.extend({
   // application. Each list contains 2 buttons, a *Back* button, and a *Top*
   // button. Both trigger a specific event.
   events: {
-    "click .archibald-column__button--show-parent": "triggerGoBack",
-    "click .archibald-column__button--show-root":   "triggerGoToBeginning"
+    "click .curricula-ui__column__button--show-parent": "triggerGoBack",
+    "click .curricula-ui__column__button--show-root":   "triggerGoToBeginning"
   },
 
   // Upon initialization, the view checks if a usable collection is provided.
@@ -329,8 +329,8 @@ Archibald.ItemListView = Backbone.View.extend({
     this.settings = _.extend({
       // Whether the child items are editable or not. Defaults to `false`.
       editable:  false,
-      // What View to use for the child view. Defaults to `Archibald.ItemView`.
-      childView: Archibald.ItemView
+      // What View to use for the child view. Defaults to `c.ItemView`.
+      childView: c.ItemView
     }, settings || {});
 
     // The view will react on collection state changes, re-rendering itself
@@ -397,7 +397,7 @@ Archibald.ItemListView = Backbone.View.extend({
 
   // Helper function to collapse the list.
   collapse: function() {
-    this.$el.addClass( 'archibald-column--collapsed' );
+    this.$el.addClass( 'curricula-ui__column--collapsed' );
 
     // Trigger a `column:collapse` event.
     this.trigger( 'column:collapse', this.collection, this );
@@ -408,7 +408,7 @@ Archibald.ItemListView = Backbone.View.extend({
 
   // Helper function to expand the list.
   expand: function() {
-    this.$el.removeClass( 'archibald-column--collapsed' );
+    this.$el.removeClass( 'curricula-ui__column--collapsed' );
 
     // Trigger a `column:expand` event.
     this.trigger( 'column:expand', this.collection, this );
@@ -419,7 +419,7 @@ Archibald.ItemListView = Backbone.View.extend({
 
   // Helper function to check whether the list is collapsed.
   isCollapsed: function() {
-    return this.$el.hasClass( 'archibald-column--collapsed' );
+    return this.$el.hasClass( 'curricula-ui__column--collapsed' );
   },
 
   // Helper function to check whether the list is expanded.
@@ -454,17 +454,17 @@ Archibald.ItemListView = Backbone.View.extend({
 // --------------
 //
 // This view represents information about an item.  It requires a model
-// representing the item, usually a `ArchibaldCurriculum.ItemModel`. See
+// representing the item, usually a `CurriculaUI.ItemModel`. See
 // `models.js` for more information.
-Archibald.ItemInfoView = Backbone.View.extend({
-  className: 'archibald-curriculum-ui-item-info',
+c.ItemInfoView = Backbone.View.extend({
+  className: 'curricula-ui-item-info',
 
   // It uses the `itemList` template from our templates list.
-  tpl: _.template( Archibald.templates.itemInfo ),
+  tpl: _.template( c.templates.itemInfo ),
 
   // The item info view can be collapsed by clicking on its label.
   events: {
-    "click .archibald-curriculum-ui-item-info__label": "toggleCollapse"
+    "click .curricula-ui-item-info__label": "toggleCollapse"
   },
 
   // Upon initialization, the view checks if a usable model is provided. If not,
@@ -499,9 +499,9 @@ Archibald.ItemInfoView = Backbone.View.extend({
   // state. This will trigger a expand or collapse event, so other parts of the
   // application can react to this action.
   toggleCollapse: function() {
-    this.$el.toggleClass( 'archibald-curriculum-ui-item-info--expanded' );
+    this.$el.toggleClass( 'curricula-ui-item-info--expanded' );
     this.trigger(
-      this.$el.hasClass( 'archibald-curriculum-ui-item-info--expanded' ) ? 'expand' : 'collapse',
+      this.$el.hasClass( 'curricula-ui-item-info--expanded' ) ? 'expand' : 'collapse',
       this.model,
       this
     );
@@ -516,11 +516,11 @@ Archibald.ItemInfoView = Backbone.View.extend({
 // items are selected, their `active` attribute is set to `true`. Based on this
 // information, we can construct a summary of all active items. As the data is
 // a hierarchy, we display it as a recursively rendered tree.
-Archibald.SummaryTreeView = Backbone.View.extend({
-  className: 'archibald-curriculum-ui-summary',
+c.SummaryTreeView = Backbone.View.extend({
+  className: 'curricula-ui-summary',
 
   // It uses the `summaryList` template from our templates list.
-  tpl: _.template( Archibald.templates.summaryList ),
+  tpl: _.template( c.templates.summaryList ),
 
   // The summary view can react to multiple events, most importantly the `click`
   // event. This will trigger a `item:select` event, which will allow
@@ -592,7 +592,7 @@ Archibald.SummaryTreeView = Backbone.View.extend({
 
     if ( children.length ) {
       // Render a list of child items.
-      html = '<ul class="archibald-curriculum-ui-summary__list">';
+      html = '<ul class="curricula-ui-summary__list">';
       children.forEach( function( model ) {
         // Render a single item. Recursively get the child markup by calling
         // `SummaryTreeView#recursiveRender()` again.
@@ -653,11 +653,11 @@ Archibald.SummaryTreeView = Backbone.View.extend({
 //
 // This view allows users to search for items in the database. It filters the
 // application collection, and shows a number of selectable results.
-Archibald.SearchView = Backbone.View.extend({
-  className: 'archibald-curriculum-ui-search',
+c.SearchView = Backbone.View.extend({
+  className: 'curricula-ui-search',
 
   // It uses the `search` template from our templates list.
-  tpl: _.template( Archibald.templates.search ),
+  tpl: _.template( c.templates.search ),
 
   // Upon initialization, the view checks if a usable collection is provided.
   // If not, it will throw an exception.
@@ -707,7 +707,7 @@ Archibald.SearchView = Backbone.View.extend({
 
     // We cannot use the `events` hash of our view, because it tends to get
     // completely removed often. Instead, bind our click handler here.
-    this.$el.find( '.archibald-curriculum-ui-search__cancel, .archibald-curriculum-ui-search__overlay' ).click(function() {
+    this.$el.find( '.curricula-ui-search__cancel, .curricula-ui-search__overlay' ).click(function() {
       that.triggerCancel();
     });
 
@@ -776,4 +776,4 @@ Archibald.SearchView = Backbone.View.extend({
   }
 });
 
-})( Backbone, _, window.ArchibaldCurriculum || ( window.ArchibaldCurriculum = new Object() ) );
+})( Backbone, _, window.CurriculaUI || ( window.CurriculaUI = new Object() ) );

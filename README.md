@@ -218,7 +218,7 @@ Test drive
 
 You can test a basic implementation [here](https://educach.github.io/curricula-ui/example/).
 
-You can test an implementation for the *Plan d'études Romand* ([*PER*](https://www.plandetudes.ch/)) [here](https://educach.github.io/curricula-ui/example/per_example.html).
+You can test an implementation for the [*Plan d'études Romand*](https://www.plandetudes.ch/) (aka *PER*) [here](https://educach.github.io/curricula-ui/example/per_example.html).
 
 Documentation
 -------------

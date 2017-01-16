@@ -213,8 +213,20 @@ You can listen to the following events on the `Core` element:
 
 Furthermore so you can listen to all standard Backbone Model and View events. Read the [Backbone documentation](http://backbonejs.org/) for more information.
 
-Test drive
+Unit tests
 ----------
+
+To run unit tests using Node, call:
+
+```
+npm test
+```
+
+You can also run the tests in your browser using QUnit [here](https://educach.github.io/curricula-ui/tests/).
+
+
+Demonstration
+-------------
 
 You can test a basic implementation [here](https://educach.github.io/curricula-ui/example/).
 

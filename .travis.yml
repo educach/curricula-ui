@@ -1,10 +1,13 @@
 language: node_js
 node_js:
-  - "6"
-  - "5"
-  - "4"
-  - "iojs"
+  - '6'
+  - '5'
+  - '4'
+  - iojs
 before_script:
   - npm install -g bower
   - npm install
   - bower install
+env:
+  matrix:
+    secure: X6lSpevQ+qAx93Tv5k2byfLfCn20RaeS6G9pxEKBOwV6C/8WGSTKm+CgsuBbwKoRb2Ag65A0TjdKNT9bLLtySnDbI8I6r3Yik9Ho/QWF6Zttc4hBPU7tmsEVuO0H4/WwwRynpJmiav7wB2FLB9XNea5hzQBJNmoFv2iTPwtg4UxLBAXPRZmOKFS9QMflVNSjiA8+uw80ew84aFokX6oku0yH65/fEhhDQvF3MMzb4v09lqrDvlk/qSZmLLmerB1yG7O7mtKfgKLlKwM7FSgfCyKC51VJp5PTd+xbab7G6yyWoLVu12EiMhjEJtF5vnRG/BiXACeGZsvZQVUv8IBFvrUHE6TouBGAEeSHnT4EnTbKgRJMGWgGfOPx4e9FCj6iufEdiLPI7mIcpTSnHK8jqYOsx8wPl1EMoa/Fy23/vTvW+i/3im+HjA9f0Ix+GZBrGWrvowgQAA+74kPtKLH/BM82GTF3QxxT01xuV7zGHl6OZNlgl3sJyQEFY1hAS+QSCOenusVEI7i1AhOlOh1tRXXhvyHSLhWeb4l80gBQsNRDRqFxgclHl23LPp/+tphASkodMtO/d7b41lSXKs+Xfw0gi1Y4EDfq9tmScWkJmdmtanNkeOnAPUck50uWYGV4d6YuQYr6HkROdpsmKoYP+/Bcy1CjmY5tcBpIJsByrJY=

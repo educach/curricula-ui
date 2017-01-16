@@ -19,8 +19,12 @@ module.exports = function( config ) {
     phantomjsLauncher: {
       exitOnResourceError: true
     },
-    reporters: [ 'progress', 'coverage' ],
+    reporters: [ 'progress', 'coverage', 'coveralls' ],
     preprocessors: { 'app/**/*.js': [ 'coverage' ] },
-    singleRun: true
+    singleRun: true,
+    coverageReporter: {
+      type: 'lcov',
+      dir: 'coverage/'
+    }
   });
 };

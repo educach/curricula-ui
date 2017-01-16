@@ -15,7 +15,10 @@ module.exports = function( config ) {
       'app/js/core.js',
       'tests/**/*.js'
     ],
-    browsers: [ 'Firefox' ],
+    browsers: [ 'PhantomJS' ],
+    phantomjsLauncher: {
+      exitOnResourceError: true
+    },
     reporters: [ 'progress', 'coverage' ],
     preprocessors: { 'app/**/*.js': [ 'coverage' ] },
     singleRun: true

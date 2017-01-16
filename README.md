@@ -17,12 +17,11 @@ The selection of this data through an interface can be tedious. This component g
 Installation
 ------------
 
-Bower
-~~~~~
+### Bower
 
 Call:
 
-```
+```bash
 bower install educach-curricula-ui
 ```
 
@@ -32,12 +31,11 @@ Include the `app/css/styles.css` CSS file, as well as all dependencies ([jQuery]
 * `app/js/views.js`
 * `app/js/core.js`
 
-Download and build using Node
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Download and build using Node
 
 [Download](https://github.com/educach/curricula-ui/releases) one of the releases. Change directory into the downloaded and extracted code, and call:
 
-```
+```bash
 npm install
 npm run build
 ```

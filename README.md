@@ -1,14 +1,14 @@
 LOM curriculum data selecor
 ===========================
 
-This is a JS component which can be used to simplify the selection of *curriculum information*, mainly in context of describing educational resources using the *[LOM](https://en.wikipedia.org/wiki/Learning_object_metadata)* standard. 
+This is a JS component which can be used to simplify the selection of *curriculum information*, mainly in context of describing educational resources using the *[LOM](https://en.wikipedia.org/wiki/Learning_object_metadata)* standard.
 
 A little introduction
 ---------------------
 
-*LOM* (*Learning Object Metadata*) is a standard used to describe educational resources. This standard defines several *property groups*, or *fields*, each describing a specific aspect of the resource. Field 9 is called *Classification*, and can be used to classify the resource using specific *curricula*. 
+*LOM* (*Learning Object Metadata*) is a standard used to describe educational resources. This standard defines several *property groups*, or *fields*, each describing a specific aspect of the resource. Field 9 is called *Classification*, and can be used to classify the resource using specific *curricula*.
 
-Furthermore, *[LOM-CH](https://en.wikipedia.org/wiki/Learning_object_metadata#LOM-CH)*, a superset of *LOM* that is used in Switzerland, has a custom field, 10 *Curriculum*, which provides more flexibility for describing a resource in contect of a specific curriculum.
+Furthermore, *[LOM-CH](https://en.wikipedia.org/wiki/Learning_object_metadata#LOM-CH)*, a superset of *LOM* that is used in Switzerland, has a custom field, 10 *Curriculum*, which provides more flexibility for describing a resource in context of a specific curriculum.
 
 The selection of this data through an interface can be tedious. This component greatly simplifies the process, by allowing users to quickly find specific elements using a search, selecting full "paths" by selecting "leaf elements", easy browsing, etc.
 
@@ -27,6 +27,169 @@ Include the `app/css/styles.css` CSS file, as well as all dependencies ([jQuery]
 * `app/js/views.js`
 * `app/js/core.js`
 
+Usage
+-----
+
+Prepare the dataset. This is a hash of all elements, keyed by their parent element. Think of a "flat tree" structure.
+
+The root elements must reside under a key called "root".
+
+Example:
+
+    {
+        "root": [
+            {
+                "id": "571de66f7a3e07.69885629",
+                "type": "subject_area",
+                "name": [
+                    "Ideo"
+                ],
+                "data": {},
+                "hasChildren": true
+            },
+            {
+                "id": "571de66f7a47d9.29989618",
+                "type": "subject_area",
+                "name": [
+                    "Si"
+                ],
+                "data": {},
+                "hasChildren": true
+            }
+        ],
+        "571de66f7a3e07.69885629": [
+            {
+                "id": "571de66f7a6d84.13224691",
+                "type": "subject",
+                "name": [
+                    "Autem Facilisis Quadrum"
+                ],
+                "data": {},
+                "hasChildren": true
+            },
+            {
+                "id": "571de66f7a7218.57923983",
+                "type": "subject",
+                "name": [
+                    "Cogo Sudo"
+                ],
+                "data": {},
+                "hasChildren": true
+            }
+        ],
+        "571de66f7a6d84.13224691": [
+            {
+                "id": "571de66f7ab3d9.28736212",
+                "type": "area_of_competence",
+                "name": [
+                    "Laoreet Nutus Pala"
+                ],
+                "data": {},
+                "hasChildren": true
+            },
+            {
+                "id": "571de66f7ab8b4.74482236",
+                "type": "area_of_competence",
+                "name": [
+                    "Defui Ideo"
+                ],
+                "data": {},
+                "hasChildren": true
+            }
+        ],
+        "571de66f7ab3d9.28736212": [
+            {
+                "id": "571de66f7ad4e8.65427750",
+                "type": "theme",
+                "name": [
+                    "Euismod Iaceo Ratis"
+                ],
+                "data": {},
+                "hasChildren": true
+            }
+        ],
+        "571de66f7ad4e8.65427750": [
+            {
+                "id": "571de66f7aea38.64601689",
+                "type": "competence",
+                "name": [
+                    "Modo"
+                ],
+                "data": {},
+                "hasChildren": true
+            }
+        ],
+        ...
+
+Each element *must* have the following properties:
+
+* `id`: the unique identifier of the element. Can be a string (recommended)
+* `type`: an arbitrary *type*. This can vary greatly depending on the curriculum being described. Usually, each curriculum has its own set of standard types, which can then be used here.
+* `name`: a list of strings. If an element has a long name, it is recommended to split it up into chunks (think "paragraphs"). The first element must be the most important, and will always be shown.
+* `hasChildren`: A boolean indicating if this element has any child items.
+
+Furthermore, the following *optional* property can be used:
+
+* `data`: This object can contain any data relevant for the current implementation. For example, *Plan d'études Romand* implementations use this `data` key to store information like *PER codes*.
+
+Any other properties will simply be ignored.
+
+Full element example:
+
+    {
+        "id": "571de66f7ab3d9.28736212",
+        "type": "area_of_competence",
+        "name": [
+            "Laoreet Nutus Pala",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eros nunc, dignissim vel mattis nec, varius non turpis.",
+        ],
+        "data": {
+            "my_data_1": "Some information",
+            "my_data_2": {
+              ...
+            }
+        },
+        "hasChildren": true
+    }
+
+When initializing a new `Core`, pass this dataset  (as a JS object, *not* as a JSON string), as well as a DOM element you want to attach to:
+
+    var app = new CurriculaUI.Core( items, $( '#my-app' ) );
+
+And that's it. You can pass custom settings as a third parameter:
+
+    var app = new CurriculaUI.Core( items, $( '#my-app' ) {
+      useSearch: false
+    } );
+
+See (Core::setSettings)[https://educach.github.io/curricula-ui/docs/core.html#section-34] for more information on what settings you can set, and their default values.
+
+You can listen to many events during the application execution. For example, when the app is rendered:
+
+    app.on( 'app:render', function() {
+      // Do something...
+    } );
+
+You can listen to the following events on the `Core` element:
+
+* `app:render`: The application was rendered.
+* `item:select`: The user clicked on one of the items in the editor view.
+* `item:change`: An item was updated.
+* `item:change:active`: And item's `active` state was updated.
+* `column:go-back`: The user clicked on the *Back* button.
+* `column:go-to-root`: The user clicked on the *Top* button.
+* `search:results`: The search found some results.
+* `search:render`: The search results are being rendered.
+* `search:select`: The user clicked on one of the search results.
+* `search:cancel`: The user canceled or closed the search modal.
+* `summary:render`: The summary part is being (re)rendered.
+* `summary:item:select`: The user clicked on one of the items in the summary view.
+* `item-info:render`: The item information drawer is being (re)rendered.
+* `item-info:expand`: The item information drawer is being expanded.
+* `item-info:collapse`: The item information drawer is being collapsed.
+
+Furthermore so you can listen to all standard Backbone Model and View events. Read the [Backbone documentation](http://backbonejs.org/) for more information.
+
 Test drive
 ----------
 
@@ -41,3 +204,4 @@ Documentation
 * [Models](https://educach.github.io/curricula-ui/docs/models.html)
 * [Views](https://educach.github.io/curricula-ui/docs/views.html)
 
+Check the use-cases provided in [`examples/`](https://github.com/educach/curricula-ui/tree/master/example) for some real-world examples.

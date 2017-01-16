@@ -193,17 +193,19 @@ models and views together, and is responsible for managing the UI in an
 intuitive manner. It provides many settings to change aspects of its
 behavior, and triggers many events, giving other libraries and modules much
 flexibility in order to alter and enhance the application workflow.</p>
-<p>@param {Object} items
-   (optional) An object representing the JSON database of all curriculum
-   items.
-@param {Object} wrapper
-   (optional) The jQuery object that serves as a wrapper for the application.
-@param {Object} settings
-   (optional) The settings object.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> Core = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> items, wrapper, settings </span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/**
+ * @param {Object} items
+ *    (optional) An object representing the JSON database of all curriculum
+ *    items.
+ * @param {Object} wrapper
+ *    (optional) The jQuery object that serves as a wrapper for the application.
+ * @param {Object} settings
+ *    (optional) The settings object.
+ */</span>
+<span class="hljs-keyword">var</span> Core = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> items, wrapper, settings </span>) </span>{</pre></div></div>
             
         </li>
         
@@ -474,12 +476,14 @@ have. This is only used if the responsive logic is activated. See
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Set or refresh the application DOM wrapper.</p>
-<p>@param {Object} wrapper
-   The jQuery object that serves as a wrapper for the application.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  setWrapper: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> wrapper </span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {Object} wrapper
+   *    The jQuery object that serves as a wrapper for the application.
+   */</span>
+  setWrapper: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> wrapper </span>) </span>{</pre></div></div>
             
         </li>
         
@@ -622,11 +626,13 @@ ID, generate one.</p>
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Get the application DOM wrapper.</p>
-<p>@returns {Object}</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  getWrapper: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @returns {Object}
+   */</span>
+  getWrapper: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$el;
   },</pre></div></div>
             
@@ -640,12 +646,14 @@ ID, generate one.</p>
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Set or refresh the application settings.</p>
-<p>@param {Object} settings
-   The settings hash. Will extend with the application defaults.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  setSettings: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> settings </span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {Object} settings
+   *    The settings hash. Will extend with the application defaults.
+   */</span>
+  setSettings: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> settings </span>) </span>{
     <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>,
         defaults = {</pre></div></div>
             
@@ -1350,11 +1358,13 @@ actually collapse them, we completely remove them instead.</p>
                 <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>Get the application settings.</p>
-<p>@returns {Object}</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  getSettings: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @returns {Object}
+   */</span>
+  getSettings: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.settings;
   },</pre></div></div>
             
@@ -1633,12 +1643,14 @@ almost identical. We also close the element.</p>
               <p>Show the search component.</p>
 <p>Show the search component element on screen. If the <code>focus</code> parameter is
 set to <code>true</code>, the search input will immediately get focus.</p>
-<p>@param {Boolean} focus
-   Give focus to the search input. Defaults to false.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  showSearch: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> focus </span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {Boolean} focus
+   *    Give focus to the search input. Defaults to false.
+   */</span>
+  showSearch: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> focus </span>) </span>{
     <span class="hljs-keyword">this</span>.$el.append( <span class="hljs-keyword">this</span>.searchView.render().$el );
     <span class="hljs-keyword">if</span> ( focus ) {
       <span class="hljs-keyword">this</span>.searchView.$el.find( <span class="hljs-string">'input'</span> ).focus();
@@ -1657,12 +1669,14 @@ set to <code>true</code>, the search input will immediately get focus.</p>
               <p>Set or refresh the global item database.</p>
 <p>Calling this function will purge the existing item database, and replace
 all items with the new ones.</p>
-<p>@param {Object} items
-   An object representing the JSON database of all curriculum items.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  setItemDatabase: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> items </span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {Object} items
+   *    An object representing the JSON database of all curriculum items.
+   */</span>
+  setItemDatabase: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> items </span>) </span>{
     <span class="hljs-keyword">this</span>.itemDatabase = <span class="hljs-keyword">new</span> Archibald.ItemCollection();
 
     <span class="hljs-keyword">for</span> ( <span class="hljs-keyword">var</span> group <span class="hljs-keyword">in</span> items ) {
@@ -1688,11 +1702,13 @@ all items with the new ones.</p>
                 <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
               <p>Get the global item database.</p>
-<p>@returns {ArchibaldCurriculum.ItemCollection}</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  getItemDatabase: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @returns {ArchibaldCurriculum.ItemCollection}
+   */</span>
+  getItemDatabase: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.itemDatabase;
   },</pre></div></div>
             
@@ -1706,11 +1722,13 @@ all items with the new ones.</p>
                 <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
               <p>Get the global column database.</p>
-<p>@returns {ArchibaldCurriculum.ColumnCollection}</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  getColumnDatabase: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @returns {ArchibaldCurriculum.ColumnCollection}
+   */</span>
+  getColumnDatabase: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.columnDatabase;
   },</pre></div></div>
             
@@ -1726,14 +1744,17 @@ all items with the new ones.</p>
               <p>Prepare the application root column.</p>
 <p>This requires the item database to be set. If this method is called when
 there already are columns, it will throw an error.</p>
-<p>@param {Boolean} editable
-   (optional) Whether the column items are editable or not. Defaults to
-   false.</p>
-<p>@returns {ArchibaldCurriculum.ItemListView}</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  createRootColumn: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> editable </span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {Boolean} editable
+   *    (optional) Whether the column items are editable or not. Defaults to
+   *    false.
+   *
+   * @returns {ArchibaldCurriculum.ItemListView}
+   */</span>
+  createRootColumn: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> editable </span>) </span>{
     <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>.columnDatabase.length ) {
       <span class="hljs-keyword">throw</span> <span class="hljs-string">"Cannot create a root column: there is already a column present."</span>;
     }
@@ -1750,19 +1771,22 @@ there already are columns, it will throw an error.</p>
                 <a class="pilcrow" href="#section-93">&#182;</a>
               </div>
               <p>Prepare a new column.</p>
-<p>@param {Array} items
-   The items to put in the column.
-@param {Boolean} editable
-   (optional) Whether the column items are editable or not. Defaults to
-   false.
-@param {Boolean} collapsed
-   (optional) Whether the column should be collapsed on creation or not.
-   Defaults to false.</p>
-<p>@returns {ArchibaldCurriculum.ItemListView}</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  createColumn: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> items, editable, collapsed </span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {Array} items
+   *    The items to put in the column.
+   * @param {Boolean} editable
+   *    (optional) Whether the column items are editable or not. Defaults to
+   *    false.
+   * @param {Boolean} collapsed
+   *    (optional) Whether the column should be collapsed on creation or not.
+   *    Defaults to false.
+   *
+   * @returns {ArchibaldCurriculum.ItemListView}
+   */</span>
+  createColumn: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> items, editable, collapsed </span>) </span>{
     <span class="hljs-keyword">var</span> column = <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>.settings.itemListView({
       collection: <span class="hljs-keyword">new</span> Archibald.ItemCollection( items ),
       editable:   !!editable,
@@ -1936,13 +1960,16 @@ there already are columns, it will throw an error.</p>
                 <a class="pilcrow" href="#section-103">&#182;</a>
               </div>
               <p>Get the columns to the right of the passed column.</p>
-<p>@param {ArchibaldCurriculum.ItemListView} column</p>
-<p>@returns {Array}
-   An array of ArchibaldCurriculum.ColumnModel items.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  getColumnRightSiblings: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> column </span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {ArchibaldCurriculum.ItemListView} column
+   *
+   * @returns {Array}
+   *    An array of ArchibaldCurriculum.ColumnModel items.
+   */</span>
+  getColumnRightSiblings: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> column </span>) </span>{
     <span class="hljs-keyword">var</span> index = <span class="hljs-keyword">this</span>.columnDatabase.indexOf(
       <span class="hljs-keyword">this</span>.columnDatabase.findWhere({ column: column })
     );
@@ -1964,12 +1991,14 @@ there already are columns, it will throw an error.</p>
                 <a class="pilcrow" href="#section-104">&#182;</a>
               </div>
               <p>Get the columns to the left of the passed column.</p>
-<p>@returns {Array}
-   An array of ArchibaldCurriculum.ColumnModel items.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  getColumnLeftSiblings: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> column </span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @returns {Array}
+   *    An array of ArchibaldCurriculum.ColumnModel items.
+   */</span>
+  getColumnLeftSiblings: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> column </span>) </span>{
     <span class="hljs-keyword">var</span> index = <span class="hljs-keyword">this</span>.columnDatabase.indexOf(
       <span class="hljs-keyword">this</span>.columnDatabase.findWhere({ column: column })
     );
@@ -1986,15 +2015,17 @@ there already are columns, it will throw an error.</p>
                 <a class="pilcrow" href="#section-105">&#182;</a>
               </div>
               <p>Helper function to recursively “check” or “uncheck” items.</p>
-<p>@param {ArchibaldCurriculum.ItemModel} item
-   The item from which the recursive (un)checking must start.
-@param {Boolean} prompt
-   (optional) Whether to prompt the user in case of recursively unchecking
-   items. Defaults to false.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  recursiveCheck: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> item, prompt </span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {ArchibaldCurriculum.ItemModel} item
+   *    The item from which the recursive (un)checking must start.
+   * @param {Boolean} prompt
+   *    (optional) Whether to prompt the user in case of recursively unchecking
+   *    items. Defaults to false.
+   */</span>
+  recursiveCheck: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> item, prompt </span>) </span>{
     prompt = !!prompt;
     <span class="hljs-keyword">var</span> updated = [];</pre></div></div>
             
@@ -2232,13 +2263,15 @@ very useful when using CSS animations: the JS may trigger
 immediately, but the CSS is still animating. By passing the expected width,
 the JS can compute the correct sizes without interfering with the CSS
 animations, or having to listen to animation events, which are complex.</p>
-<p>@param {Number} width
-   (optional) The width of the application wrapper. If not given the width
-   will be computed based on the application wrapper’s current width.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  computeMaxCols: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> width </span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {Number} width
+   *    (optional) The width of the application wrapper. If not given the width
+   *    will be computed based on the application wrapper's current width.
+   */</span>
+  computeMaxCols: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> width </span>) </span>{
     width = <span class="hljs-keyword">typeof</span> width === <span class="hljs-string">'number'</span> ? width : <span class="hljs-keyword">this</span>.$el.find( <span class="hljs-string">'.archibald-curriculum-ui__editor'</span>).width();</pre></div></div>
             
         </li>
@@ -2272,13 +2305,15 @@ and 1200, we show 3, and above that, we show 4.</p>
 <p>This method computes the new amount of columns that are to be shown, and
 updates the CSS rules accordingly. See
 <code>ArchibaldCurriculum#computeMaxCols()</code> for more information.</p>
-<p>@param {Number} newWidth
-   (optional) The width of the application wrapper. If not given the width
-   will be computed based on the application wrapper’s current width.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  resize: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> newWidth </span>) </span>{
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {Number} newWidth
+   *    (optional) The width of the application wrapper. If not given the width
+   *    will be computed based on the application wrapper's current width.
+   */</span>
+  resize: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> newWidth </span>) </span>{
     <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span>.$style === <span class="hljs-string">'undefined'</span> ) {
       <span class="hljs-keyword">throw</span> <span class="hljs-string">"Resizing is only available if the responsive logic is activated. Call activateResponsiveLogic() first."</span>;
     }
@@ -2443,26 +2478,26 @@ need to expand.
                 <a class="pilcrow" href="#section-125">&#182;</a>
               </div>
               <p>Helper function to trigger an event.</p>
-<p>@param {String} category
-   The category for which the event is triggered. Examples:</p>
-<ul>
-<li><code>&quot;items&quot;</code> for the item database.</li>
-<li><code>&quot;summary&quot;</code> for the summary view.</li>
-<li><code>&quot;columns&quot;</code> for the column database.
-@param {Array} chain
-A chain of events, which will trigger multiple even variants. For
-example, passing <code>[ &quot;change&quot;, &quot;active&quot; ]</code> for the <code>&quot;items&quot;</code> category
-will trigger the following events:</li>
-<li><code>items:change</code></li>
-<li><code>items:change:active</code>
-@param …
-(optional) Any other parameters will simply be passed to the event
-listeners, in order.</li>
-</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  triggerEvent: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> category, chain </span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {String} category
+   *    The category for which the event is triggered. Examples:
+   *    - `"items"` for the item database.
+   *    - `"summary"` for the summary view.
+   *    - `"columns"` for the column database.
+   * @param {Array} chain
+   *    A chain of events, which will trigger multiple even variants. For
+   *    example, passing `[ "change", "active" ]` for the `"items"` category
+   *    will trigger the following events:
+   *    - `items:change`
+   *    - `items:change:active`
+   * @param ...
+   *    (optional) Any other parameters will simply be passed to the event
+   *    listeners, in order.
+   */</span>
+  triggerEvent: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> category, chain </span>) </span>{</pre></div></div>
             
         </li>
         
@@ -2544,13 +2579,15 @@ chain triggers an event in the given category.</p>
               </div>
               <p>Update the item information.</p>
 <p>If no item is passed, will render an “empty” item information drawer.</p>
-<p>@param {ArchibaldCurriculum.ItemModel} item
-   (optional) The item for which we want to render the information, or null
-   to reset the information drawer.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  updateItemInfo: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> item </span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-comment">/**
+   * @param {ArchibaldCurriculum.ItemModel} item
+   *    (optional) The item for which we want to render the information, or null
+   *    to reset the information drawer.
+   */</span>
+  updateItemInfo: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> item </span>) </span>{</pre></div></div>
             
         </li>
         

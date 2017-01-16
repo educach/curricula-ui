@@ -22,7 +22,7 @@ Bower
 
 Call:
 
-```shell
+```
 bower install educach-curricula-ui
 ```
 
@@ -37,7 +37,7 @@ Download and build using Node
 
 [Download](https://github.com/educach/curricula-ui/releases) one of the releases. Change directory into the downloaded and extracted code, and call:
 
-```shell
+```
 npm install
 npm run build
 ```

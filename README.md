@@ -1,6 +1,8 @@
 LOM curriculum data selecor
 ===========================
 
+[![Build Status](https://travis-ci.org/educach/curricula-ui.svg?branch=master)](https://travis-ci.org/educach/curricula-ui)
+
 This is a JS component which can be used to simplify the selection of *curriculum information*, mainly in context of describing educational resources using the *[LOM](https://en.wikipedia.org/wiki/Learning_object_metadata)* standard.
 
 A little introduction
@@ -15,17 +17,32 @@ The selection of this data through an interface can be tedious. This component g
 Installation
 ------------
 
-You can use [Bower](https://bower.io/) to install the component:
+Bower
+~~~~~
 
-    bower install educach-curricula-ui
+Call:
 
-Alternatively, you can also [download](https://github.com/educach/curricula-ui/releases) one of the releases.
+```bash
+bower install educach-curricula-ui
+```
 
 Include the `app/css/styles.css` CSS file, as well as all dependencies ([jQuery](https://jquery.com/), [Underscore](http://underscorejs.org/), [Backbone](http://backbonejs.org/) and [jQuery UI](https://jqueryui.com/)). Finally, include the library files, making sure `core.js` is included last:
 
 * `app/js/models.js`
 * `app/js/views.js`
 * `app/js/core.js`
+
+Download and build using Node
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[Download](https://github.com/educach/curricula-ui/releases) one of the releases. Change directory into the downloaded and extracted code, and call:
+
+```bash
+npm install
+npm run build
+```
+
+This will build the source code inside `build/`. You can then include `build/all.min.css` and `build/all.min.js`.
 
 Usage
 -----
@@ -36,90 +53,94 @@ The root elements must reside under a key called "root".
 
 Example:
 
-    {
-        "root": [
-            {
-                "id": "571de66f7a3e07.69885629",
-                "type": "subject_area",
-                "name": [
-                    "Ideo"
-                ],
-                "data": {},
-                "hasChildren": true
-            },
-            {
-                "id": "571de66f7a47d9.29989618",
-                "type": "subject_area",
-                "name": [
-                    "Si"
-                ],
-                "data": {},
-                "hasChildren": true
-            }
-        ],
-        "571de66f7a3e07.69885629": [
-            {
-                "id": "571de66f7a6d84.13224691",
-                "type": "subject",
-                "name": [
-                    "Autem Facilisis Quadrum"
-                ],
-                "data": {},
-                "hasChildren": true
-            },
-            {
-                "id": "571de66f7a7218.57923983",
-                "type": "subject",
-                "name": [
-                    "Cogo Sudo"
-                ],
-                "data": {},
-                "hasChildren": true
-            }
-        ],
-        "571de66f7a6d84.13224691": [
-            {
-                "id": "571de66f7ab3d9.28736212",
-                "type": "area_of_competence",
-                "name": [
-                    "Laoreet Nutus Pala"
-                ],
-                "data": {},
-                "hasChildren": true
-            },
-            {
-                "id": "571de66f7ab8b4.74482236",
-                "type": "area_of_competence",
-                "name": [
-                    "Defui Ideo"
-                ],
-                "data": {},
-                "hasChildren": true
-            }
-        ],
-        "571de66f7ab3d9.28736212": [
-            {
-                "id": "571de66f7ad4e8.65427750",
-                "type": "theme",
-                "name": [
-                    "Euismod Iaceo Ratis"
-                ],
-                "data": {},
-                "hasChildren": true
-            }
-        ],
-        "571de66f7ad4e8.65427750": [
-            {
-                "id": "571de66f7aea38.64601689",
-                "type": "competence",
-                "name": [
-                    "Modo"
-                ],
-                "data": {},
-                "hasChildren": true
-            }
-        ],
-        ...
+```json
+{
+    "root": [
+        {
+            "id": "571de66f7a3e07.69885629",
+            "type": "subject_area",
+            "name": [
+                "Ideo"
+            ],
+            "data": {},
+            "hasChildren": true
+        },
+        {
+            "id": "571de66f7a47d9.29989618",
+            "type": "subject_area",
+            "name": [
+                "Si"
+            ],
+            "data": {},
+            "hasChildren": true
+        }
+    ],
+    "571de66f7a3e07.69885629": [
+        {
+            "id": "571de66f7a6d84.13224691",
+            "type": "subject",
+            "name": [
+                "Autem Facilisis Quadrum"
+            ],
+            "data": {},
+            "hasChildren": true
+        },
+        {
+            "id": "571de66f7a7218.57923983",
+            "type": "subject",
+            "name": [
+                "Cogo Sudo"
+            ],
+            "data": {},
+            "hasChildren": true
+        }
+    ],
+    "571de66f7a6d84.13224691": [
+        {
+            "id": "571de66f7ab3d9.28736212",
+            "type": "area_of_competence",
+            "name": [
+                "Laoreet Nutus Pala"
+            ],
+            "data": {},
+            "hasChildren": true
+        },
+        {
+            "id": "571de66f7ab8b4.74482236",
+            "type": "area_of_competence",
+            "name": [
+                "Defui Ideo"
+            ],
+            "data": {},
+            "hasChildren": true
+        }
+    ],
+    "571de66f7ab3d9.28736212": [
+        {
+            "id": "571de66f7ad4e8.65427750",
+            "type": "theme",
+            "name": [
+                "Euismod Iaceo Ratis"
+            ],
+            "data": {},
+            "hasChildren": true
+        }
+    ],
+    "571de66f7ad4e8.65427750": [
+        {
+            "id": "571de66f7aea38.64601689",
+            "type": "competence",
+            "name": [
+                "Modo"
+            ],
+            "data": {},
+            "hasChildren": true
+        }
+    ],
+    ...etc
+```
+
+See [`example/json/`](https://github.com/educach/curricula-ui/tree/master/example/json) for some working examples.
 
 Each element *must* have the following properties:
 
@@ -136,39 +157,43 @@ Any other properties will simply be ignored.
 
 Full element example:
 
-    {
-        "id": "571de66f7ab3d9.28736212",
-        "type": "area_of_competence",
-        "name": [
-            "Laoreet Nutus Pala",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eros nunc, dignissim vel mattis nec, varius non turpis.",
-        ],
-        "data": {
-            "my_data_1": "Some information",
-            "my_data_2": {
-              ...
-            }
-        },
-        "hasChildren": true
-    }
+```json
+{
+    "id": "cycles-2-domaines-6",
+    "type": "domaine",
+    "name": [
+        "Formation g\u00e9n\u00e9rale"
+    ],
+    "data": {
+        "cycle": "2"
+    },
+    "hasChildren": true
+}
+```
 
 When initializing a new `Core`, pass this dataset  (as a JS object, *not* as a JSON string), as well as a DOM element you want to attach to:
 
-    var app = new CurriculaUI.Core( items, $( '#my-app' ) );
+```javascript
+var app = new CurriculaUI.Core( items, $( '#my-app' ) );
+```
 
 And that's it. You can pass custom settings as a third parameter:
 
-    var app = new CurriculaUI.Core( items, $( '#my-app' ) {
-      useSearch: false
-    } );
+```javascript
+var app = new CurriculaUI.Core( items, $( '#my-app' ) {
+  useSearch: false
+} );
+```
 
-See (Core::setSettings)[https://educach.github.io/curricula-ui/docs/core.html#section-34] for more information on what settings you can set, and their default values.
+See [Core::setSettings()](https://educach.github.io/curricula-ui/docs/core.html#section-34) for more information on what settings you can set, and their default values.
 
 You can listen to many events during the application execution. For example, when the app is rendered:
 
-    app.on( 'app:render', function() {
-      // Do something...
-    } );
+```javascript
+app.on( 'app:render', function() {
+  // Do something...
+} );
+```
 
 You can listen to the following events on the `Core` element:
 

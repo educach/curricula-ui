@@ -14,10 +14,8 @@
     "tests"
   ],
   "main": [
-    "app/css/styles.css",
-    "app/js/models.js",
-    "app/js/views.js",
-    "app/js/core.js"
+    "build/app.min.css",
+    "build/app.min.js"
   ],
   "dependencies": {
     "jquery": ">= 1.8",

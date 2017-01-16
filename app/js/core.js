@@ -70,13 +70,15 @@ Archibald.templates =  _.extend({
 // behavior, and triggers many events, giving other libraries and modules much
 // flexibility in order to alter and enhance the application workflow.
 //
-// @param {Object} items
-//    (optional) An object representing the JSON database of all curriculum
-//    items.
-// @param {Object} wrapper
-//    (optional) The jQuery object that serves as a wrapper for the application.
-// @param {Object} settings
-//    (optional) The settings object.
+/**
+ * @param {Object} items
+ *    (optional) An object representing the JSON database of all curriculum
+ *    items.
+ * @param {Object} wrapper
+ *    (optional) The jQuery object that serves as a wrapper for the application.
+ * @param {Object} settings
+ *    (optional) The settings object.
+ */
 var Core = function( items, wrapper, settings ) {
   // We keep track of which instance we are. This is need to generate unique
   // IDs in certain conditions.
@@ -147,8 +149,10 @@ Core.prototype = {
 
   // Set or refresh the application DOM wrapper.
   //
-  // @param {Object} wrapper
-  //    The jQuery object that serves as a wrapper for the application.
+  /**
+   * @param {Object} wrapper
+   *    The jQuery object that serves as a wrapper for the application.
+   */
   setWrapper: function( wrapper ) {
     // If we already had a wrapper, empty it.
     if ( typeof this.$el !== 'undefined' && this.$el ) {
@@ -187,15 +191,19 @@ Core.prototype = {
 
   // Get the application DOM wrapper.
   //
-  // @returns {Object}
+  /**
+   * @returns {Object}
+   */
   getWrapper: function() {
     return this.$el;
   },
 
   // Set or refresh the application settings.
   //
-  // @param {Object} settings
-  //    The settings hash. Will extend with the application defaults.
+  /**
+   * @param {Object} settings
+   *    The settings hash. Will extend with the application defaults.
+   */
   setSettings: function( settings ) {
     var that = this,
         defaults = {
@@ -439,7 +447,9 @@ Core.prototype = {
 
   // Get the application settings.
   //
-  // @returns {Object}
+  /**
+   * @returns {Object}
+   */
   getSettings: function() {
     return this.settings;
   },
@@ -529,8 +539,10 @@ Core.prototype = {
   // Show the search component element on screen. If the `focus` parameter is
   // set to `true`, the search input will immediately get focus.
   //
-  // @param {Boolean} focus
-  //    Give focus to the search input. Defaults to false.
+  /**
+   * @param {Boolean} focus
+   *    Give focus to the search input. Defaults to false.
+   */
   showSearch: function( focus ) {
     this.$el.append( this.searchView.render().$el );
     if ( focus ) {
@@ -543,8 +555,10 @@ Core.prototype = {
   // Calling this function will purge the existing item database, and replace
   // all items with the new ones.
   //
-  // @param {Object} items
-  //    An object representing the JSON database of all curriculum items.
+  /**
+   * @param {Object} items
+   *    An object representing the JSON database of all curriculum items.
+   */
   setItemDatabase: function( items ) {
     this.itemDatabase = new Archibald.ItemCollection();
 
@@ -563,14 +577,18 @@ Core.prototype = {
 
   // Get the global item database.
   //
-  // @returns {ArchibaldCurriculum.ItemCollection}
+  /**
+   * @returns {ArchibaldCurriculum.ItemCollection}
+   */
   getItemDatabase: function() {
     return this.itemDatabase;
   },
 
   // Get the global column database.
   //
-  // @returns {ArchibaldCurriculum.ColumnCollection}
+  /**
+   * @returns {ArchibaldCurriculum.ColumnCollection}
+   */
   getColumnDatabase: function() {
     return this.columnDatabase;
   },
@@ -580,11 +598,13 @@ Core.prototype = {
   // This requires the item database to be set. If this method is called when
   // there already are columns, it will throw an error.
   //
-  // @param {Boolean} editable
-  //    (optional) Whether the column items are editable or not. Defaults to
-  //    false.
-  //
-  // @returns {ArchibaldCurriculum.ItemListView}
+  /**
+   * @param {Boolean} editable
+   *    (optional) Whether the column items are editable or not. Defaults to
+   *    false.
+   *
+   * @returns {ArchibaldCurriculum.ItemListView}
+   */
   createRootColumn: function( editable ) {
     if ( this.columnDatabase.length ) {
       throw "Cannot create a root column: there is already a column present.";
@@ -594,16 +614,18 @@ Core.prototype = {
 
   // Prepare a new column.
   //
-  // @param {Array} items
-  //    The items to put in the column.
-  // @param {Boolean} editable
-  //    (optional) Whether the column items are editable or not. Defaults to
-  //    false.
-  // @param {Boolean} collapsed
-  //    (optional) Whether the column should be collapsed on creation or not.
-  //    Defaults to false.
-  //
-  // @returns {ArchibaldCurriculum.ItemListView}
+  /**
+   * @param {Array} items
+   *    The items to put in the column.
+   * @param {Boolean} editable
+   *    (optional) Whether the column items are editable or not. Defaults to
+   *    false.
+   * @param {Boolean} collapsed
+   *    (optional) Whether the column should be collapsed on creation or not.
+   *    Defaults to false.
+   *
+   * @returns {ArchibaldCurriculum.ItemListView}
+   */
   createColumn: function( items, editable, collapsed ) {
     var column = new this.settings.itemListView({
       collection: new Archibald.ItemCollection( items ),
@@ -661,10 +683,12 @@ Core.prototype = {
 
   // Get the columns to the right of the passed column.
   //
-  // @param {ArchibaldCurriculum.ItemListView} column
-  //
-  // @returns {Array}
-  //    An array of ArchibaldCurriculum.ColumnModel items.
+  /**
+   * @param {ArchibaldCurriculum.ItemListView} column
+   *
+   * @returns {Array}
+   *    An array of ArchibaldCurriculum.ColumnModel items.
+   */
   getColumnRightSiblings: function( column ) {
     var index = this.columnDatabase.indexOf(
       this.columnDatabase.findWhere({ column: column })
@@ -679,8 +703,10 @@ Core.prototype = {
 
   // Get the columns to the left of the passed column.
   //
-  // @returns {Array}
-  //    An array of ArchibaldCurriculum.ColumnModel items.
+  /**
+   * @returns {Array}
+   *    An array of ArchibaldCurriculum.ColumnModel items.
+   */
   getColumnLeftSiblings: function( column ) {
     var index = this.columnDatabase.indexOf(
       this.columnDatabase.findWhere({ column: column })
@@ -690,11 +716,13 @@ Core.prototype = {
 
   // Helper function to recursively "check" or "uncheck" items.
   //
-  // @param {ArchibaldCurriculum.ItemModel} item
-  //    The item from which the recursive (un)checking must start.
-  // @param {Boolean} prompt
-  //    (optional) Whether to prompt the user in case of recursively unchecking
-  //    items. Defaults to false.
+  /**
+   * @param {ArchibaldCurriculum.ItemModel} item
+   *    The item from which the recursive (un)checking must start.
+   * @param {Boolean} prompt
+   *    (optional) Whether to prompt the user in case of recursively unchecking
+   *    items. Defaults to false.
+   */
   recursiveCheck: function( item, prompt ) {
     prompt = !!prompt;
     var updated = [];
@@ -803,9 +831,11 @@ Core.prototype = {
   // the JS can compute the correct sizes without interfering with the CSS
   // animations, or having to listen to animation events, which are complex.
   //
-  // @param {Number} width
-  //    (optional) The width of the application wrapper. If not given the width
-  //    will be computed based on the application wrapper's current width.
+  /**
+   * @param {Number} width
+   *    (optional) The width of the application wrapper. If not given the width
+   *    will be computed based on the application wrapper's current width.
+   */
   computeMaxCols: function( width ) {
     width = typeof width === 'number' ? width : this.$el.find( '.archibald-curriculum-ui__editor').width();
 
@@ -821,9 +851,11 @@ Core.prototype = {
   // updates the CSS rules accordingly. See
   // `ArchibaldCurriculum#computeMaxCols()` for more information.
   //
-  // @param {Number} newWidth
-  //    (optional) The width of the application wrapper. If not given the width
-  //    will be computed based on the application wrapper's current width.
+  /**
+   * @param {Number} newWidth
+   *    (optional) The width of the application wrapper. If not given the width
+   *    will be computed based on the application wrapper's current width.
+   */
   resize: function( newWidth ) {
     if ( typeof this.$style === 'undefined' ) {
       throw "Resizing is only available if the responsive logic is activated. Call activateResponsiveLogic() first.";
@@ -911,20 +943,22 @@ Core.prototype = {
 
   // Helper function to trigger an event.
   //
-  // @param {String} category
-  //    The category for which the event is triggered. Examples:
-  //    - `"items"` for the item database.
-  //    - `"summary"` for the summary view.
-  //    - `"columns"` for the column database.
-  // @param {Array} chain
-  //    A chain of events, which will trigger multiple even variants. For
-  //    example, passing `[ "change", "active" ]` for the `"items"` category
-  //    will trigger the following events:
-  //    - `items:change`
-  //    - `items:change:active`
-  // @param ...
-  //    (optional) Any other parameters will simply be passed to the event
-  //    listeners, in order.
+  /**
+   * @param {String} category
+   *    The category for which the event is triggered. Examples:
+   *    - `"items"` for the item database.
+   *    - `"summary"` for the summary view.
+   *    - `"columns"` for the column database.
+   * @param {Array} chain
+   *    A chain of events, which will trigger multiple even variants. For
+   *    example, passing `[ "change", "active" ]` for the `"items"` category
+   *    will trigger the following events:
+   *    - `items:change`
+   *    - `items:change:active`
+   * @param ...
+   *    (optional) Any other parameters will simply be passed to the event
+   *    listeners, in order.
+   */
   triggerEvent: function( category, chain ) {
     // Get the remaining arguments, if any.
     var args = Array.prototype.slice.call( arguments, 2 );
@@ -952,9 +986,11 @@ Core.prototype = {
   //
   // If no item is passed, will render an "empty" item information drawer.
   //
-  // @param {ArchibaldCurriculum.ItemModel} item
-  //    (optional) The item for which we want to render the information, or null
-  //    to reset the information drawer.
+  /**
+   * @param {ArchibaldCurriculum.ItemModel} item
+   *    (optional) The item for which we want to render the information, or null
+   *    to reset the information drawer.
+   */
   updateItemInfo: function( item ) {
     // Do we use the item info? If not, skip this.
     if ( !this.settings.useItemInfo ) {

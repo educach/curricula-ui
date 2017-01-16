@@ -1,7 +1,7 @@
 LOM curriculum data selecor
 ===========================
 
-[![Build Status](https://travis-ci.org/educach/curricula-ui.svg?branch=master)](https://travis-ci.org/educach/curricula-ui)
+[![Build Status](https://travis-ci.org/educach/curricula-ui.svg?branch=master)](https://travis-ci.org/educach/curricula-ui) [![Coverage Status](https://coveralls.io/repos/github/educach/curricula-ui/badge.svg?branch=master)](https://coveralls.io/github/educach/curricula-ui?branch=master)
 
 This is a JS component which can be used to simplify the selection of *curriculum information*, mainly in context of describing educational resources using the *[LOM](https://en.wikipedia.org/wiki/Learning_object_metadata)* standard.
 

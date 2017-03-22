@@ -407,6 +407,106 @@ QUnit.test( "reset expanded items", function( assert ) {
 });
 
 /**
+ * Test collapsing items when another item is selected.
+ */
+QUnit.test( "collapse items upon selecting another item", function( assert ) {
+  var $wrapper = $( '<div></div>' ).appendTo( '#qunit-fixture' ),
+      app = new CurriculaUI.Core( _testGetJSONItems(), $wrapper ),
+      column = app.createRootColumn()
+      done = assert.async();
+
+  // Expand id-1 by clicking on it.
+  $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-1"]' ).click();
+
+  // Wait for the children to be rendered.
+  setTimeout( function() {
+    // Expand id-5 by clicking on it.
+    $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-5"]' ).click();
+
+    // Check the current state.
+    assert.equal( false, app.getItemDatabase().get( 'id-3' ).get( 'expanded' ), "Item id-3 is not yet expanded." );
+    assert.equal( true, app.getItemDatabase().get( 'id-1' ).get( 'expanded' ), "Item id-1 was correctly expanded." );
+    assert.equal( true, app.getItemDatabase().get( 'id-5' ).get( 'expanded' ), "Item id-5 was correctly expanded." );
+    assert.equal(
+      3,
+      app.getColumnDatabase().length,
+      "There are 3 expanded columns"
+    );
+
+    // Select item "id-3", which is a sibling of "id-1". This should collapse both
+    // levels expanded above.
+    $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-3"]' ).click();
+
+    // Check the current state. We do not check id-5 now, because it will remain
+    // "expanded", although not visible. This is good; we use a "lazy-collapse"
+    // approach, where we only collapse what is actually visible.
+    assert.equal( true, app.getItemDatabase().get( 'id-3' ).get( 'expanded' ), "Item id-2 was correctly expanded." );
+    assert.equal( false, app.getItemDatabase().get( 'id-1' ).get( 'expanded' ), "Item id-1 was correctly collapsed." );
+    assert.equal(
+      2,
+      app.getColumnDatabase().length,
+      "There are 2 expanded columns"
+    );
+
+    // Wait for the children to be rendered.
+    setTimeout( function() {
+      // Now, click on id-1 again. This should collapse id-3 AND id-5, which was
+      // still "expanded" from our previous click.
+      $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-1"]' ).click();
+
+      // Check the current state.
+      assert.equal( false, app.getItemDatabase().get( 'id-3' ).get( 'expanded' ), "Item id-3 was correctly collapsed." );
+      assert.equal( true, app.getItemDatabase().get( 'id-1' ).get( 'expanded' ), "Item id-1 was correctly expanded." );
+      assert.equal( false, app.getItemDatabase().get( 'id-5' ).get( 'expanded' ), "Item id-5 was correctly collapsed." );
+      assert.equal(
+        2,
+        app.getColumnDatabase().length,
+        "There are 2 expanded columns"
+      );
+      done();
+    }, 100 );
+  }, 100 );
+});
+
+/**
+ * Test collapsing columns when expanding beyond the "max visible columns" limit.
+ */
+QUnit.test( "collapse columns upon expanding beyond maxCols", function( assert ) {
+  var $wrapper = $( '<div></div>' ).appendTo( '#qunit-fixture' ),
+      app = new CurriculaUI.Core( _testGetJSONItems(), $wrapper ),
+      column = app.createRootColumn()
+      done = assert.async();
+
+  // Only show 2 columns.
+  app.maxCols = 2;
+
+  // Expand id-1 by clicking on it.
+  $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-1"]' ).click();
+
+  // Wait for the children to be rendered.
+  setTimeout( function() {
+    // Expand id-5 by clicking on it.
+    $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-5"]' ).click();
+
+    // Check the current state.
+    assert.equal( true, app.getItemDatabase().get( 'id-1' ).get( 'expanded' ), "Item id-1 was correctly expanded." );
+    assert.equal( true, app.getItemDatabase().get( 'id-5' ).get( 'expanded' ), "Item id-5 was correctly expanded." );
+    assert.equal(
+      1,
+      $wrapper.find( '.curricula-ui__column--collapsed' ).length,
+      "There is 1 collapsed column (the 1st one)"
+    );
+    assert.equal(
+      3,
+      $wrapper.find( '.curricula-ui__column' ).length,
+      'There are 3 "active" columns'
+    );
+
+    done();
+  }, 100 );
+});
+
+/**
  * Test triggering events.
  */
 QUnit.test( "triggering events", function( assert ) {

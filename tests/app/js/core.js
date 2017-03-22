@@ -11,6 +11,19 @@ QUnit.test( "constructor", function( assert ) {
   assert.ok( !!app.getItemDatabase(), "The item database is correctly set." );
   assert.ok( app.getWrapper().length, "The wrapper is correctly set." );
   assert.notEqual( '', $wrapper[ 0 ].id, "The wrapper received an ID." );
+
+  // Re-assigning the wrapper will empty it, and re-initialize it entirely.
+  $wrapper.append( '<span id="_delete-me_"></span>' );
+  assert.equal( 1, $wrapper.find( '#_delete-me_' ).length );
+  app.setWrapper( $wrapper );
+  assert.equal( 0, $wrapper.find( '#_delete-me_' ).length, "The wrapper was emptied and re-initialized." );
+
+  // Calling setWrapper() again, without passing a DOM element, will simply
+  // re-assign the existing wrapper, but still empty and re-initialize it.
+  $wrapper.append( '<span id="_delete-me_"></span>' );
+  assert.equal( 1, $wrapper.find( '#_delete-me_' ).length );
+  app.setWrapper();
+  assert.equal( 0, $wrapper.find( '#_delete-me_' ).length, "The wrapper was re-used, emptied and re-initialized." );
 });
 
 /**

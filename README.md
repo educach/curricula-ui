@@ -239,4 +239,9 @@ Documentation
 * [Models](https://educach.github.io/curricula-ui/docs/models.html)
 * [Views](https://educach.github.io/curricula-ui/docs/views.html)
 
-Check the use-cases provided in [`examples/`](https://github.com/educach/curricula-ui/tree/master/example) for some real-world examples.
+Check the use-cases provided in [`examples/`](https://github.com/educach/curricula-ui/tree/master/example) for some working examples.
+
+Real-world usage
+----------------
+
+The Drupal [Archibald Curricula](https://www.drupal.org/project/archibald) module (a sub-module of Archibald) uses this component to provide a much better user experience to editors wanting to classify data using LOM-CH.

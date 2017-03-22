@@ -183,7 +183,7 @@ var app = new CurriculaUI.Core( items, $( '#my-app' ) {
 } );
 ```
 
-See [Core::setSettings()](https://github.com/educach/curricula-ui/blob/master/app/js/core.js#L204) for more information on what settings you can set, and their default values.
+See [Core::setSettings()](https://educach.github.io/curricula-ui/docs/core.html#section-34) for more information on what settings you can set, and their default values.
 
 You can listen to many events during the application execution. For example, when the app is rendered:
 
@@ -235,10 +235,13 @@ You can test an implementation for the [*Plan d'études Romand*](https://www.pla
 Documentation
 -------------
 
-The above instructions should be enough to get you going. For more information, check the source code. It is well commented, and should allow you to get a good understanding of how everything works.
+* [Core](https://educach.github.io/curricula-ui/docs/core.html)
+* [Models](https://educach.github.io/curricula-ui/docs/models.html)
+* [Views](https://educach.github.io/curricula-ui/docs/views.html)
 
-* [Core](https://github.com/educach/curricula-ui/blob/master/app/js/core.js)
-* [Models](https://github.com/educach/curricula-ui/blob/master/app/js/models.js)
-* [Views](https://github.com/educach/curricula-ui/blob/master/app/js/views.js)
+Check the use-cases provided in [`examples/`](https://github.com/educach/curricula-ui/tree/master/example) for some working examples.
 
-Check the use-cases provided in [`examples/`](https://github.com/educach/curricula-ui/tree/master/example) for some real-world examples.
+Real-world usage
+----------------
+
+The Drupal [Archibald Curricula](https://www.drupal.org/project/archibald) module (a sub-module of Archibald) uses this component to provide a much better user experience to editors wanting to classify data using LOM-CH.

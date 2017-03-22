@@ -237,6 +237,7 @@ Core.prototype = {
 
               // If this item has no children, or it is "expanded", we don't add
               // a new column.
+              /* istanbul ignore if */
               if ( !item.get( 'hasChildren' ) || item.get( 'expanded' ) ) {
                 return;
               }
@@ -305,7 +306,7 @@ Core.prototype = {
             // This callback will handle the recursive checking or unchecking of
             // parents and children items, respectively, upon changing the state
             // of one item.
-            "item:change": function( item, columnCollection, column ) {
+            "item:change": /* istanbul ignore next */ function( item, columnCollection, column ) {
               that.recursiveCheck( item, that.settings.recursiveCheckPrompt );
             },
             // This callback will handle the selection of an item and the
@@ -371,6 +372,7 @@ Core.prototype = {
               selectedItem.set( 'highlighted', true );
 
               // @todo Make this a method of the View itself!
+              /* istanbul ignore if */
               if ( typeof $.fn.nanoScroller !== 'undefined' ) {
                 var $element = column.$el.find( '[data-model-id="' + selectedItem.get( 'id' ) + '"]' );
                 if ( $element.length ) {
@@ -500,6 +502,7 @@ Core.prototype = {
 
       // Add a keyboard shortcut for the search component. When a user uses
       // Ctrl+Shift+F, show the search field.
+      /* istanbul ignore next */
       $( this.$el[0].ownerDocument ).keyup( function( e ) {
         if ( e.key.toLowerCase() === 'f' && e.shiftKey && e.ctrlKey ) {
           that.showSearch( true );
@@ -678,6 +681,7 @@ Core.prototype = {
     this.$el.find( '.curricula-ui__editor' ).append( column.render().$el );
 
     // Activate the nanoScroller plugin.
+    /* istanbul ignore if */
     if ( typeof $.fn.nanoScroller !== 'undefined' ) {
       column.$el.find( '.nano' ).nanoScroller();
     }
@@ -816,7 +820,7 @@ Core.prototype = {
         .on( 'load', function() {
           // Register our event when the iframe loads. This way, we can
           // safely react on resize events.
-          this.contentWindow.addEventListener( 'resize', function() {
+          this.contentWindow.addEventListener( 'resize', /* istanbul ignore next */ function() {
             that.resize();
           } );
         })
@@ -863,6 +867,7 @@ Core.prototype = {
    *    will be computed based on the application wrapper's current width.
    */
   resize: function( newWidth ) {
+    /* istanbul ignore if */
     if ( typeof this.$style === 'undefined' ) {
       throw "Resizing is only available if the responsive logic is activated. Call activateResponsiveLogic() first.";
     }
@@ -1003,6 +1008,7 @@ Core.prototype = {
    */
   updateItemInfo: function( item ) {
     // Do we use the item info? If not, skip this.
+    /* istanbul ignore if */
     if ( !this.settings.useItemInfo ) {
       return;
     }
@@ -1031,6 +1037,7 @@ Core.prototype = {
         that.resize( that.$el.find( '.curricula-ui__editor').width() - itemInfoWidth );
       });
 
+      /* istanbul ignore if */
       if ( typeof $.fn.nanoScroller !== 'undefined' ) {
         this.itemInfoView.on( 'render', function() {
           this.$el.find( '.nano' ).nanoScroller();

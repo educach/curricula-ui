@@ -632,7 +632,7 @@ c.SummaryTreeView = Backbone.View.extend({
 
   // Event handler for mouseover events. Stop the bubbling up of the event,
   // so we can distinguish which exact (sub)tree got hovered.
-  mouseOver: function( e ) {
+  mouseOver: /* istanbul ignore next */ function( e ) {
     e.stopPropagation();
     this.$( e.target )
       .parent().addClass( 'hover' )
@@ -641,7 +641,7 @@ c.SummaryTreeView = Backbone.View.extend({
 
   // Event handler for mouseout events. Undo the modifications done by the
   // mouseover event.
-  mouseOut: function( e ) {
+  mouseOut: /* istanbul ignore next */ function( e ) {
     this.$( e.target )
       .parent().removeClass( 'hover' )
         .parents( 'li' ).removeClass( 'child-hovered' );

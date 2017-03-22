@@ -415,6 +415,109 @@ QUnit.test( "reset expanded items", function( assert ) {
 });
 
 /**
+ * Test using the "Back" button.
+ */
+QUnit.test( "collapse columns when clicking the Back button", function( assert ) {
+  var $wrapper = $( '<div></div>' ).appendTo( '#qunit-fixture' ),
+      app = new CurriculaUI.Core( _testGetJSONItems(), $wrapper ),
+      column = app.createRootColumn(),
+      done = assert.async();
+
+  // The Back button will only appear if there are more than maxCols columns
+  // visible. The visibility is handled by opacity (because the DOM element
+  // needs to be "present" for the layout to be displayed correctly).
+  app.maxCols = 2;
+
+  // Expand id-1 by clicking on it.
+  $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-1"]' ).click();
+
+  // Wait for the children to be rendered.
+  setTimeout( function() {
+    // Expand id-5 by clicking on it.
+    $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-5"]' ).click();
+
+    // Wait for the children to be rendered.
+    setTimeout( function() {
+      assert.equal(
+        1,
+        $wrapper.find( '.curricula-ui__column--collapsed' ).length,
+        "There is 1 collapsed column (the 1st one)"
+      );
+
+      // A back button should now be visible. Clicking on it should collapse
+      // the children of id-5.
+      $wrapper
+        .find( '.curricula-ui__column:eq(1)' )
+        .find( '.curricula-ui__column__button--show-parent' )
+        .click();
+
+      // There should be no more collapsed columns.
+      assert.equal(
+        0,
+        $wrapper.find( '.curricula-ui__column--collapsed' ).length,
+        "There are no more collapsed columns"
+      );
+
+      done();
+    }, 100 );
+  }, 100 );
+});
+
+/**
+ * Test using the "Top" button.
+ */
+QUnit.test( "collapse columns when clicking the Top button", function( assert ) {
+  var $wrapper = $( '<div></div>' ).appendTo( '#qunit-fixture' ),
+      app = new CurriculaUI.Core( _testGetJSONItems(), $wrapper ),
+      column = app.createRootColumn(),
+      done = assert.async();
+
+  // The Top button will only appear if there are more than maxCols columns
+  // visible.
+  app.maxCols = 2;
+
+  // Expand id-1 by clicking on it.
+  $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-1"]' ).click();
+
+  // Wait for the children to be rendered.
+  setTimeout( function() {
+    // Expand id-5 by clicking on it.
+    $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-5"]' ).click();
+
+    // Wait for the children to be rendered.
+    setTimeout( function() {
+      // Expand id-6 by clicking on it.
+      $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-6"]' ).click();
+
+      // Wait for the children to be rendered.
+      setTimeout( function() {
+        assert.equal(
+          2,
+          $wrapper.find( '.curricula-ui__column--collapsed' ).length,
+          "There are 2 collapsed columns (the 1st ones)"
+        );
+
+        // A Top button should now be visible. Clicking on it should collapse
+        // everything.
+        $wrapper
+          .find( '.curricula-ui__column:eq(2)' )
+          .find( '.curricula-ui__column__button--show-root' )
+          .click();
+
+        // There should be no more collapsed columns.
+        assert.equal(
+          0,
+          $wrapper.find( '.curricula-ui__column--collapsed' ).length,
+          "There are no more collapsed columns"
+        );
+
+        done();
+      }, 100 );
+    }, 100 );
+  }, 100 );
+});
+
+/**
  * Test collapsing items when another item is selected.
  */
 QUnit.test( "collapse items upon selecting another item", function( assert ) {
@@ -646,7 +749,7 @@ function _testGetJSONItems() {
       {
         type: "type-d",
         name: [ "Root item A; child item B; child item A" ],
-        hasChildren: false,
+        hasChildren: true,
         id: "id-6"
       },
       {
@@ -668,6 +771,14 @@ function _testGetJSONItems() {
         name: [ "Root item C; child item B" ],
         hasChildren: false,
         id: "id-9"
+      }
+    ],
+    "id-6": [
+      {
+        type: "type-e",
+        name: [ "Root item A; child item B; child item A; child item A" ],
+        hasChildren: false,
+        id: "id-10"
       }
     ]
   }

@@ -7,7 +7,7 @@ var appInit = function() {
     success: function( items ) {
       // We don't pass in the wrapper, otherwise we cannot react to the
       // app:render event.
-      var app = new ArchibaldCurriculum.Core(items);
+      var app = new CurriculaUI.Core(items);
 
       // Bind our event listener, so we can add some custom markup on render.
       app.on( 'app:render', function() {
@@ -48,12 +48,12 @@ var appInit = function() {
         // Careful, cookies don't like Booleans... and jQuery.cookie() has a
         // really hard time returning data that can be cast to a boolean. Use
         // integer casting and strict comparison instead.
-        $.cookie('archibald_confirm_opt_out', $('#confirm-opt-out').is(':checked') ? 0 : 1, { expires: 7, path: '/' });
-      }).attr('checked', parseInt($.cookie('archibald_confirm_opt_out')) === 0).change();
+        $.cookie('curricula_ui_confirm_opt_out', $('#confirm-opt-out').is(':checked') ? 0 : 1, { expires: 7, path: '/' });
+      }).attr('checked', parseInt($.cookie('curricula_ui_confirm_opt_out')) === 0).change();
 
       // Allow the summary to be collapsed.
-      app.getWrapper().find('.archibald-curriculum-ui__summary-wrapper__label').click(function() {
-        app.getWrapper().find('.archibald-curriculum-ui__summary-wrapper').toggleClass('archibald-curriculum-ui__summary-wrapper--collapsed');
+      app.getWrapper().find('.curricula-ui__summary-wrapper__label').click(function() {
+        app.getWrapper().find('.curricula-ui__summary-wrapper').toggleClass('curricula-ui__summary-wrapper--collapsed');
       });
 
       // Show search.

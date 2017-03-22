@@ -235,8 +235,10 @@ You can test an implementation for the [*Plan d'études Romand*](https://www.pla
 Documentation
 -------------
 
-* [Core](https://educach.github.io/curricula-ui/docs/core.html)
-* [Models](https://educach.github.io/curricula-ui/docs/models.html)
-* [Views](https://educach.github.io/curricula-ui/docs/views.html)
+The above instructions should be enough to get you going. For more information, check the source code. It is well commented, and should allow you to get a good understanding of how everything works.
+
+* [Core](https://github.com/educach/curricula-ui/blob/master/app/js/core.js)
+* [Models](https://github.com/educach/curricula-ui/blob/master/app/js/models.js)
+* [Views](https://github.com/educach/curricula-ui/blob/master/app/js/views.js)
 
 Check the use-cases provided in [`examples/`](https://github.com/educach/curricula-ui/tree/master/example) for some real-world examples.

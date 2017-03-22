@@ -6,7 +6,6 @@
     "node": ">=0.8.0"
   },
   "devDependencies": {
-    "docco": "^0.7.0",
     "eslint": "^1.10.3",
     "karma": "~1.3.0",
     "karma-coverage": "~1.1.1",
@@ -19,7 +18,6 @@
   },
   "scripts": {
     "test": "node_modules/.bin/karma start karma.conf.js",
-    "doc": "node_modules/.bin/docco app/js/*.js",
     "lint": "node_modules/.bin/eslint app/js/*.js tests/**/*.js",
     "build": "npm run build:css && npm run build:js && cp app/img/* build/img/",
     "build:css": "node_modules/.bin/minify --output build/app.min.css app/css/*.css",

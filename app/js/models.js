@@ -2,38 +2,33 @@
  * @file
  * Curricula UI JS application models.
  *
- * This defines the models used throughout the application. Note that this file
- * is written using Docco syntax. If Node is installed, you can generate this
- * documentation by running:
- *
- *   npm install
- *   npm run doc
- *
- * This will generate the documentation in the docs/ folder, in HTML format.
+ * This defines the models used throughout the application.
  */
 
 "use strict";
 ( function( Backbone, _, c ) {
 
-// This defines the models and collections used throughout the application.
-// They extend the global `CurriculaUI` namespace, aliased to
-// `c` for readability.
+/**
+ * This defines the models and collections used throughout the application.
+ * They extend the global `CurriculaUI` namespace, aliased to
+ * `c` for readability.
+ *
+ * A note on Backbone:
+ * As all the models and collections are extending *Backbone*, it is useful to
+ * see the official documentation on Backbone.Model and Backbone.Collection.
+ *
+ * @see http://backbonejs.org/#Model
+ * @see http://backbonejs.org/#Collection
+ */
 
-// A note on Backbone
-// ------------------
-//
-// As all the models and collections are extending *Backbone*, it is useful to
-// see the official documentation on
-// [Backbone.Model](http://backbonejs.org/#Model) and
-// [Backbone.Collection](http://backbonejs.org/#Collection).
 
-
-// Item model
-// ---------
-//
-// Defines the data structure for a single item, like a Fachbereich or
-// Kompetenzstufe. Items have a reference to their parent item, via the parentId
-// attribute.
+/**
+ * Item model
+ *
+ * Defines the data structure for a single item, like a Fachbereich or
+ * Kompetenzstufe. Items have a reference to their parent item, via the parentId
+ * attribute.
+ */
 c.ItemModel = Backbone.Model.extend({
   defaults: {
     name:        undefined,
@@ -59,10 +54,11 @@ c.ItemModel = Backbone.Model.extend({
   }
 });
 
-// Item collection
-// ---------------
-//
-// A collection of `CurriculaUI.ItemModel` models.
+/**
+ * Item collection
+ *
+ * A collection of `CurriculaUI.ItemModel` models.
+ */
 c.ItemCollection = Backbone.Collection.extend({
   model: c.ItemModel,
   // Backbone complains if no URL is defined. We could depend on the
@@ -71,24 +67,26 @@ c.ItemCollection = Backbone.Collection.extend({
   url:   '?dummyUrl'
 });
 
-// Column model
-// ------------
-//
-// Defines the data structure for a single column. This has the particularity
-// of referencing a *View*, not the other way around. We use this to keep track
-// of the `CurriculaUI.ItemListView` elements used in the application,
-// so we can easily and cleanly manipulate them, like by hiding columns "to the
-// right" of a given column, or collapsing columns "to the left".
+/**
+ * Column model
+ *
+ * Defines the data structure for a single column. This has the particularity
+ * of referencing a *View*, not the other way around. We use this to keep track
+ * of the `CurriculaUI.ItemListView` elements used in the application,
+ * so we can easily and cleanly manipulate them, like by hiding columns "to the
+ * right" of a given column, or collapsing columns "to the left".
+ */
 c.ColumnModel = Backbone.Model.extend({
   defaults: {
     column: null
   }
 });
 
-// Column collection
-// -----------------
-//
-// A collection of `CurriculaUI.ColumnModel` models.
+/**
+ * Column collection
+ *
+ * A collection of `CurriculaUI.ColumnModel` models.
+ */
 c.ColumnCollection = Backbone.Collection.extend({
   model: c.ColumnModel,
   // Backbone complains if no URL is defined. We could depend on the

@@ -3,7 +3,6 @@
 /json/
 /coverage/
 /node_modules/
-/docs/
 /build/
 
 /example/json/lp21_full.json

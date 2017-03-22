@@ -3,46 +3,44 @@
  * Curricula UI JS application core.
  *
  * This defines the core class that initializes the application. It can be
- * considered as the "controller" for the views and models. Note that this file
- * is written using Docco syntax. If Node is installed, you can generate this
- * documentation by running:
- *
- *   npm install
- *   npm run doc
- *
- * This will generate the documentation in the docs/ folder, in HTML format.
+ * considered as the "controller" for the views and models.
  */
 
 "use strict";
 ( function( $, Backbone, _, c ) {
 
 
-// Templates
-// ---------
-//
-// This defines the default templates used by the core application. They
-// can be overridden in various cases, as needed. Curricula UI strictly
-// adheres to *BEM* notation for the markup, and overrides should follow suit.
+/**
+ * Templates
+ *
+ * This defines the default templates used by the core application. They
+ * can be overridden in various cases, as needed. Curricula UI strictly
+ * adheres to *BEM* notation for the markup, and overrides should follow suit.
+ */
 c.templates =  _.extend({
 
-  // CSS rules.
-  //
-  // A template for the dynamic CSS rules we inject for the responsive logic.
-  // See `CurriculaUI.Core#activateResponsiveLogic()` and
-  // `CurriculaUI.Core#resize()`.
+  /**
+   * CSS rules
+   *
+   * A template for the dynamic CSS rules we inject for the responsive logic.
+   * See CurriculaUI.Core#activateResponsiveLogic() and
+   * CurriculaUI.Core#resize().
+   */
   css: '\
 #<%= id %> .curricula-ui__column__wrapper,\
 #<%= id %> .curricula-ui__column {\
   width: <%= width %>px;\
 }',
 
-  // Main application markup.
-  //
-  // This defines the main application body markup, which will be injected into
-  // the DOM wrapper that contains the application.
-  // @todo
-  // - nano classes?
-  // - IDs
+  /**
+   * Main application markup
+   *
+   * This defines the main application body markup, which will be injected into
+   * the DOM wrapper that contains the application.
+   * @todo
+   * - nano classes?
+   * - IDs
+   */
   app: '\
 <div class="curricula-ui">\
   <div class="curricula-ui__row">\
@@ -61,16 +59,15 @@ c.templates =  _.extend({
 
 }, c.templates || {});
 
-// Core
-// ----
-//
-// The Core class is the is the central part of the application. It ties the
-// models and views together, and is responsible for managing the UI in an
-// intuitive manner. It provides many settings to change aspects of its
-// behavior, and triggers many events, giving other libraries and modules much
-// flexibility in order to alter and enhance the application workflow.
-//
 /**
+ * Core
+ *
+ * The Core class is the is the central part of the application. It ties the
+ * models and views together, and is responsible for managing the UI in an
+ * intuitive manner. It provides many settings to change aspects of its
+ * behavior, and triggers many events, giving other libraries and modules much
+ * flexibility in order to alter and enhance the application workflow.
+ *
  * @param {Object} items
  *    (optional) An object representing the JSON database of all curriculum
  *    items.
@@ -109,7 +106,7 @@ var Core = function( items, wrapper, settings ) {
   });
 };
 
-// Extend the `CurriculaUI.Core` prototype.
+// Extend the CurriculaUI.Core prototype.
 Core.prototype = {
 
   // The identifier for the instance.
@@ -130,12 +127,12 @@ Core.prototype = {
   $el: null,
 
   // Prepare a reference to the style wrapper, used when the responsive logic
-  // is enabled. See `CurriculaUI.Core#activateResponsiveLogic()`.
+  // is enabled. See CurriculaUI.Core#activateResponsiveLogic().
   $style: null,
 
   // Prepare a reference to the maximum number of columns the application can
   // have. This is only used if the responsive logic is activated. See
-  // `CurriculaUI.Core#activateResponsiveLogic()`.
+  // CurriculaUI.Core#activateResponsiveLogic().
   maxCols: null,
 
   // Prepare a reference to the summary view.
@@ -147,9 +144,9 @@ Core.prototype = {
   // Prepare a reference to the item info view.
   itemInfoView: null,
 
-  // Set or refresh the application DOM wrapper.
-  //
   /**
+   * Set or refresh the application DOM wrapper.
+   *
    * @param {Object} wrapper
    *    The jQuery object that serves as a wrapper for the application.
    */
@@ -189,18 +186,18 @@ Core.prototype = {
     this.computeMaxCols();
   },
 
-  // Get the application DOM wrapper.
-  //
   /**
+   * Get the application DOM wrapper.
+   *
    * @returns {Object}
    */
   getWrapper: function() {
     return this.$el;
   },
 
-  // Set or refresh the application settings.
-  //
   /**
+   * Set or refresh the application settings.
+   *
    * @param {Object} settings
    *    The settings hash. Will extend with the application defaults.
    */
@@ -230,15 +227,16 @@ Core.prototype = {
 
           // Event callbacks.
           events: {
-            // On selecting an item, check if a new column must be spawned. This
-            // only applies to an item that actually has children. If a new column
-            // is to be created, collapse all sibling columns to the "right".
+            // On selecting an item, check if a new column must be spawned.
+            // This only applies to an item that actually has children. If a new
+            // column is to be created, collapse all sibling columns to the
+            // "right".
             "item:select": function( item, columnCollection, column ) {
               // Update the item information.
               that.updateItemInfo( item );
 
-              // If this item has no children, or it is "expanded", we don't add a
-              // new column.
+              // If this item has no children, or it is "expanded", we don't add
+              // a new column.
               if ( !item.get( 'hasChildren' ) || item.get( 'expanded' ) ) {
                 return;
               }
@@ -252,9 +250,9 @@ Core.prototype = {
               // It is possible some items were highlighted. Unhighlight them.
               that.unhighlightItems();
 
-              // Get all expanded sibling *items* in the column (should only be one,
-              // but we use a failsafe logic and treat it as an array) and update
-              // their "expanded" property.
+              // Get all expanded sibling *items* in the column (should only be
+              // one, but we use a failsafe logic and treat it as an array) and
+              // update their "expanded" property.
               var siblingExpandedItems = columnCollection.where({ expanded: true });
               if ( siblingExpandedItems.length ) {
                 for ( var i in siblingExpandedItems ) {
@@ -262,8 +260,8 @@ Core.prototype = {
                 }
               }
 
-              // Get the item that was clicked and set its "expanded" property to
-              // true.
+              // Get the item that was clicked and set its "expanded" property
+              // to true.
               item.set( 'expanded', true );
 
               // Create the new column, collapsed and editable by default.
@@ -316,8 +314,8 @@ Core.prototype = {
             // event, it can also be used in other situations, like the
             // search:item:select event.
             "summary:item:select": function( selectedItem, collection ) {
-              // First, fully collapse all the columns, except the "root" one. Get
-              // the first column element from the database.
+              // First, fully collapse all the columns, except the "root" one.
+              // Get the first column element from the database.
               var column = that.columnDatabase.first().get( 'column' );
 
               // Expand it.
@@ -337,8 +335,8 @@ Core.prototype = {
               }
               items.push( item );
 
-              // Reverse it, and remove the last item (we don't expand the selected
-              // item).
+              // Reverse it, and remove the last item (we don't expand the
+              // selected item).
               items.reverse().pop();
 
               // Make sure none of the items in the database are "expanded" or
@@ -351,8 +349,9 @@ Core.prototype = {
               }
               that.unhighlightItems();
 
-              // Now, loop through the selected item's hierarchy, and trigger the
-              // "item:select" event, updating the column reference every time.
+              // Now, loop through the selected item's hierarchy, and trigger
+              // the "item:select" event, updating the column reference every
+              // time.
               for ( var i in items ) {
                 column.trigger(
                   'item:select',
@@ -362,13 +361,13 @@ Core.prototype = {
                   {}
                 );
 
-                // Update the column reference, so we trigger it on the correct one
-                // on the next pass.
+                // Update the column reference, so we trigger it on the correct
+                // one on the next pass.
                 column = that.columnDatabase.last().get( 'column' );
               }
 
-              // Finally, highlight the selected item, and scroll to it, both in the
-              // main window AND inside the column.
+              // Finally, highlight the selected item, and scroll to it, both in
+              // the main window AND inside the column.
               selectedItem.set( 'highlighted', true );
 
               // @todo Make this a method of the View itself!
@@ -396,7 +395,8 @@ Core.prototype = {
               // Remove the item info.
               that.updateItemInfo();
 
-              // If there's a previous column, show it, and collapse the last one.
+              // If there's a previous column, show it, and collapse the last
+              // one.
               var prev = _.last( that.getColumnLeftSiblings( column ) ),
                   last = _.last( that.getColumnRightSiblings( column ) );
 
@@ -445,16 +445,18 @@ Core.prototype = {
     this.settings = _.extend( defaults, settings || {} );
   },
 
-  // Get the application settings.
-  //
   /**
+   * Get the application settings.
+   *
    * @returns {Object}
    */
   getSettings: function() {
     return this.settings;
   },
 
-  // Activate the application summary logic.
+  /**
+   * Activate the application summary logic.
+   */
   activateSummary: function() {
     if ( !this.summaryView || !this.summaryView.$el.length ) {
       // Pass our item database to the summary view, which will automatically
@@ -486,7 +488,9 @@ Core.prototype = {
     }
   },
 
-  // Activate the application search logic.
+  /**
+   * Activate the application search logic.
+   */
   activateSearch: function() {
     if ( this.settings.useSearch && ( !this.searchView || !this.searchView.$el.length ) ) {
       var that = this;
@@ -534,12 +538,12 @@ Core.prototype = {
     }
   },
 
-  // Show the search component.
-  //
-  // Show the search component element on screen. If the `focus` parameter is
-  // set to `true`, the search input will immediately get focus.
-  //
   /**
+   * Show the search component.
+   *
+   * Show the search component element on screen. If the focus parameter is
+   * set to true, the search input will immediately get focus.
+   *
    * @param {Boolean} focus
    *    Give focus to the search input. Defaults to false.
    */
@@ -550,12 +554,12 @@ Core.prototype = {
     }
   },
 
-  // Set or refresh the global item database.
-  //
-  // Calling this function will purge the existing item database, and replace
-  // all items with the new ones.
-  //
   /**
+   * Set or refresh the global item database.
+   *
+   * Calling this function will purge the existing item database, and replace
+   * all items with the new ones.
+   *
    * @param {Object} items
    *    An object representing the JSON database of all curriculum items.
    */
@@ -575,30 +579,30 @@ Core.prototype = {
     }
   },
 
-  // Get the global item database.
-  //
   /**
+   * Get the global item database.
+   *
    * @returns {CurriculaUI.ItemCollection}
    */
   getItemDatabase: function() {
     return this.itemDatabase;
   },
 
-  // Get the global column database.
-  //
   /**
+   * Get the global column database.
+   *
    * @returns {CurriculaUI.ColumnCollection}
    */
   getColumnDatabase: function() {
     return this.columnDatabase;
   },
 
-  // Prepare the application root column.
-  //
-  // This requires the item database to be set. If this method is called when
-  // there already are columns, it will throw an error.
-  //
   /**
+   * Prepare the application root column.
+   *
+   * This requires the item database to be set. If this method is called when
+   * there already are columns, it will throw an error.
+   *
    * @param {Boolean} editable
    *    (optional) Whether the column items are editable or not. Defaults to
    *    false.
@@ -612,9 +616,9 @@ Core.prototype = {
     return this.createColumn( this.itemDatabase.where({ parentId: "root" }), editable );
   },
 
-  // Prepare a new column.
-  //
   /**
+   * Prepare a new column.
+   *
    * @param {Array} items
    *    The items to put in the column.
    * @param {Boolean} editable
@@ -681,9 +685,9 @@ Core.prototype = {
     return column;
   },
 
-  // Get the columns to the right of the passed column.
-  //
   /**
+   * Get the columns to the right of the passed column.
+   *
    * @param {CurriculaUI.ItemListView} column
    *
    * @returns {Array}
@@ -701,9 +705,9 @@ Core.prototype = {
     }
   },
 
-  // Get the columns to the left of the passed column.
-  //
   /**
+   * Get the columns to the left of the passed column.
+   *
    * @returns {Array}
    *    An array of CurriculaUI.ColumnModel items.
    */
@@ -714,9 +718,9 @@ Core.prototype = {
     return this.columnDatabase.slice( 0, index );
   },
 
-  // Helper function to recursively "check" or "uncheck" items.
-  //
   /**
+   * Helper function to recursively "check" or "uncheck" items.
+   *
    * @param {CurriculaUI.ItemModel} item
    *    The item from which the recursive (un)checking must start.
    * @param {Boolean} prompt
@@ -780,11 +784,13 @@ Core.prototype = {
     }
   },
 
-  // Activate responsive logic.
-  //
-  // The application is a bit too complex to be fully responsive using only CSS.
-  // This method activates the responsive JS logic for the application, which is
-  // responsible for calculating how many columns can be shown on screen.
+  /**
+   * Activate responsive logic.
+   *
+   * The application is a bit too complex to be fully responsive using only CSS.
+   * This method activates the responsive JS logic for the application, which is
+   * responsible for calculating how many columns can be shown on screen.
+   */
   activateResponsiveLogic: function() {
     this.$style = $( '<style type="text/css" />' ).appendTo( 'head' );
     this.maxCols = 0;
@@ -821,17 +827,17 @@ Core.prototype = {
     }, 100 );
   },
 
-  // Method to compute how many columns can be visible.
-  //
-  // This method computes the new amount of columns that are to be shown. It is
-  // possible to pass the expected new width to the function, which will then
-  // skip the computing of the current application wrapper's width. This is
-  // very useful when using CSS animations: the JS may trigger
-  // immediately, but the CSS is still animating. By passing the expected width,
-  // the JS can compute the correct sizes without interfering with the CSS
-  // animations, or having to listen to animation events, which are complex.
-  //
   /**
+   * Method to compute how many columns can be visible.
+   *
+   * This method computes the new amount of columns that are to be shown. It is
+   * possible to pass the expected new width to the function, which will then
+   * skip the computing of the current application wrapper's width. This is
+   * very useful when using CSS animations: the JS may trigger
+   * immediately, but the CSS is still animating. By passing the expected width,
+   * the JS can compute the correct sizes without interfering with the CSS
+   * animations, or having to listen to animation events, which are complex.
+   *
    * @param {Number} width
    *    (optional) The width of the application wrapper. If not given the width
    *    will be computed based on the application wrapper's current width.
@@ -845,13 +851,13 @@ Core.prototype = {
     this.maxCols = width < 600 ? 1 : ( width < 900 ? 2 : ( width < 1200 ? 3 : 4 ) );
   },
 
-  // Resize helper.
-  //
-  // This method computes the new amount of columns that are to be shown, and
-  // updates the CSS rules accordingly. See
-  // `CurriculaUI#computeMaxCols()` for more information.
-  //
   /**
+   * Resize helper.
+   *
+   * This method computes the new amount of columns that are to be shown, and
+   * updates the CSS rules accordingly. See
+   * CurriculaUI#computeMaxCols() for more information.
+   *
    * @param {Number} newWidth
    *    (optional) The width of the application wrapper. If not given the width
    *    will be computed based on the application wrapper's current width.
@@ -901,11 +907,13 @@ Core.prototype = {
     }
   },
 
-  // Unhighlight all items.
-  //
-  // Update all models in the item database, and set their respective
-  // "highlighted" properties to false.
-  // @todo Should this really be a model property?
+  /**
+   * Unhighlight all items.
+   *
+   * Update all models in the item database, and set their respective
+   * "highlighted" properties to false.
+   * @todo Should this really be a model property?
+   */
   unhighlightItems: function() {
     var highlightedItems = this.itemDatabase.where({ highlighted: true });
     if ( highlightedItems.length ) {
@@ -921,11 +929,13 @@ Core.prototype = {
     }
   },
 
-  // Reset all expanded items.
-  //
-  // Update all models in the item database, and set their respective
-  // "expanded" properties to false.
-  // @todo Should this really be a model property?
+  /**
+   * Reset all expanded items.
+   *
+   * Update all models in the item database, and set their respective
+   * "expanded" properties to false.
+   * @todo Should this really be a model property?
+   */
   resetExpandedItems: function() {
     var expandedItems = this.itemDatabase.where({ expanded: true });
     if ( expandedItems.length ) {
@@ -941,20 +951,20 @@ Core.prototype = {
     }
   },
 
-  // Helper function to trigger an event.
-  //
   /**
+   * Helper function to trigger an event.
+   *
    * @param {String} category
    *    The category for which the event is triggered. Examples:
-   *    - `"items"` for the item database.
-   *    - `"summary"` for the summary view.
-   *    - `"columns"` for the column database.
+   *    - "items" for the item database.
+   *    - "summary" for the summary view.
+   *    - "columns" for the column database.
    * @param {Array} chain
    *    A chain of events, which will trigger multiple even variants. For
-   *    example, passing `[ "change", "active" ]` for the `"items"` category
+   *    example, passing [ "change", "active" ] for the "items" category
    *    will trigger the following events:
-   *    - `items:change`
-   *    - `items:change:active`
+   *    - items:change
+   *    - items:change:active
    * @param ...
    *    (optional) Any other parameters will simply be passed to the event
    *    listeners, in order.
@@ -982,11 +992,11 @@ Core.prototype = {
   },
 
 
-  // Update the item information.
-  //
-  // If no item is passed, will render an "empty" item information drawer.
-  //
   /**
+   * Update the item information.
+   *
+   * If no item is passed, will render an "empty" item information drawer.
+   *
    * @param {CurriculaUI.ItemModel} item
    *    (optional) The item for which we want to render the information, or null
    *    to reset the information drawer.

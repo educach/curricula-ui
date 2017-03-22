@@ -306,7 +306,7 @@ Core.prototype = {
             // This callback will handle the recursive checking or unchecking of
             // parents and children items, respectively, upon changing the state
             // of one item.
-            "item:change": /* istanbul ignore next */ function( item, columnCollection, column ) {
+            "item:change": function( item, columnCollection, column ) {
               that.recursiveCheck( item, that.settings.recursiveCheckPrompt );
             },
             // This callback will handle the selection of an item and the

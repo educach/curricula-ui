@@ -168,11 +168,13 @@ QUnit.test( "recursive (un)checking logic", function( assert ) {
   // Store the original confirm function. We will replace it with a new one.
   var realConfirm = window.confirm;
 
-  var doneConfirmEvent = assert.async( 2 ),
+  var $wrapper = $( '<div></div>' ).appendTo( '#qunit-fixture' ),
+      doneConfirmEvent = assert.async( 2 ),
       doneChangeActiveEvent = assert.async( 3 ),
       done = assert.async(),
-      app = new CurriculaUI.Core( _testGetJSONItems() ),
+      app = new CurriculaUI.Core( _testGetJSONItems(), $wrapper ),
       chain = [ 'id-6', 'id-5', 'id-1' ],
+      column = app.createRootColumn( true ),
       database = app.getItemDatabase();
 
   // Check the event is correctly triggered.
@@ -197,61 +199,67 @@ QUnit.test( "recursive (un)checking logic", function( assert ) {
     );
   }
 
-  // Unchecking item id-1 will also uncheck items id-5 and id-6.
-  var item1 = database.get( 'id-1' );
-  item1.set( 'active', false );
-  app.recursiveCheck( item1 );
-  for ( var j = 0; j < chain.length; j++ ) {
-    assert.notOk(
-      database.get( chain[ j ] ).get( 'active' ),
-      "Correctly unchecked item " + chain[ j ]
-    );
-  }
+  // Allow the rendering to take place.
+  setTimeout( function() {
+    // Unchecking item id-1 will also uncheck items id-5 and id-6. Try this with
+    // an actual click event.
+    var $item1 = $wrapper.find( '.curricula-ui__column__wrapper__list__item[data-model-id="id-1"]' );
+    assert.ok( $item1.find( 'input' ).is( ':checked' ), "Item id-1 was correctly rendered with a checked checkbox." );
+    $item1.find( 'input' ).click();
+    assert.notOk( $item1.find( 'input' ).is( ':checked' ), "Item id-1's checkbox was correctly unchecked." );
+    for ( var j = 0; j < chain.length; j++ ) {
+      assert.notOk(
+        database.get( chain[ j ] ).get( 'active' ),
+        "Correctly unchecked item " + chain[ j ]
+      );
+    }
 
-  // Try recursively unchecking, and prompting the user for confirmation. First
-  // test if the user confirms (return true).
-  window.confirm = function( message ) {
-    doneConfirmEvent();
-    return true;
-  }
-  // Check all items in the chain.
-  for ( var i = 0; i < chain.length; i++ ) {
-    database.get( chain[ i ] ).set( 'active', true );
-  }
-  // Uncheck item 1, and recursively uncheck its children. Confirm when
-  // prompted.
-  item1.set( 'active', false );
-  app.recursiveCheck( item1, true );
-  for ( var j = 0; j < chain.length; j++ ) {
-    assert.notOk(
-      database.get( chain[ j ] ).get( 'active' ),
-      "Correctly unchecked item " + chain[ j ]  + " when asked for confirmation."
-    );
-  }
+    // Try recursively unchecking, and prompting the user for confirmation. First
+    // test if the user confirms (return true).
+    window.confirm = function( message ) {
+      doneConfirmEvent();
+      return true;
+    }
+    // Check all items in the chain.
+    for ( var i = 0; i < chain.length; i++ ) {
+      database.get( chain[ i ] ).set( 'active', true );
+    }
+    // Uncheck item 1, and recursively uncheck its children. Confirm when
+    // prompted.
+    var item1 = database.get( 'id-1' );
+    item1.set( 'active', false );
+    app.recursiveCheck( item1, true );
+    for ( var j = 0; j < chain.length; j++ ) {
+      assert.notOk(
+        database.get( chain[ j ] ).get( 'active' ),
+        "Correctly unchecked item " + chain[ j ]  + " when asked for confirmation."
+      );
+    }
 
-  // Check all items in the chain again.
-  for ( var i = 0; i < chain.length; i++ ) {
-    database.get( chain[ i ] ).set( 'active', true );
-  }
-  // This time cancel when prompted.
-  window.confirm = function( message ) {
-    doneConfirmEvent();
-    return false;
-  }
-  // Uncheck item 1, and recursively uncheck its children. Cancel when
-  // prompted.
-  item1.set( 'active', false );
-  app.recursiveCheck( item1, true );
-  for ( var j = 0; j < chain.length; j++ ) {
-    assert.ok(
-      database.get( chain[ j ] ).get( 'active' ),
-      "Correctly left item " + chain[ j ]  + " checked when asked for confirmation."
-    );
-  }
+    // Check all items in the chain again.
+    for ( var i = 0; i < chain.length; i++ ) {
+      database.get( chain[ i ] ).set( 'active', true );
+    }
+    // This time cancel when prompted.
+    window.confirm = function( message ) {
+      doneConfirmEvent();
+      return false;
+    }
+    // Uncheck item 1, and recursively uncheck its children. Cancel when
+    // prompted.
+    item1.set( 'active', false );
+    app.recursiveCheck( item1, true );
+    for ( var j = 0; j < chain.length; j++ ) {
+      assert.ok(
+        database.get( chain[ j ] ).get( 'active' ),
+        "Correctly left item " + chain[ j ]  + " checked when asked for confirmation."
+      );
+    }
 
-  // Restore the confirm function.
-  window.confirm = realConfirm;
-  done();
+    // Restore the confirm function.
+    window.confirm = realConfirm;
+    done();
+  }, 100 );
 });
 
 /**
@@ -412,7 +420,7 @@ QUnit.test( "reset expanded items", function( assert ) {
 QUnit.test( "collapse items upon selecting another item", function( assert ) {
   var $wrapper = $( '<div></div>' ).appendTo( '#qunit-fixture' ),
       app = new CurriculaUI.Core( _testGetJSONItems(), $wrapper ),
-      column = app.createRootColumn()
+      column = app.createRootColumn(),
       done = assert.async();
 
   // Expand id-1 by clicking on it.

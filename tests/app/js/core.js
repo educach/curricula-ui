@@ -706,6 +706,68 @@ QUnit.test( "summary item selection", function( assert ) {
 });
 
 /**
+ * Test the search element interaction.
+ */
+QUnit.test( "search element interactions", function( assert ) {
+  var $wrapper = $( '<div></div>' ).appendTo( '#qunit-fixture' ),
+      app = new CurriculaUI.Core( _testGetJSONItems(), $wrapper ),
+      doneSelectEvent = assert.async(),
+      column = app.createRootColumn(),
+      $search, searchSelectCallback;
+
+  // Mock jQuery UI's autocomplete plugin. Hijack the settings passed to it.
+  $.fn.autocomplete = function( settings ) {
+    searchSelectCallback = settings.select;
+  };
+
+  // Prepare an event listener.
+  app.on( 'search:select', function() {
+    // There should be 3 visible columns.
+    assert.equal(
+      3,
+      app.getColumnDatabase().length,
+      "There are 3 expanded columns"
+    );
+    // Items 1 and 5 should be expanded.
+    assert.ok(
+      app.getItemDatabase().get( 'id-1' ).get( 'expanded' ),
+      "Item id-1 is correctly expanded."
+    );
+    assert.ok(
+      app.getItemDatabase().get( 'id-5' ).get( 'expanded' ),
+      "Item id-5 is correctly expanded."
+    );
+    // Item 6 should be highlighted.
+    assert.ok(
+      app.getItemDatabase().get( 'id-6' ).get( 'highlighted' ),
+      "Item id-6 is correctly highlighted."
+    );
+    // The search was hidden.
+    assert.notOk( $wrapper.find( '.curricula-ui-search' ).length, "The search was closed." );
+    doneSelectEvent();
+  });
+
+  // The search is not active by default.
+  app.activateSearch();
+
+  // Show it.
+  app.showSearch();
+  $search = $wrapper.find( '.curricula-ui-search' );
+  assert.ok( $search.length, "The search is visible." );
+
+  // Hide it.
+  $wrapper.find( '.curricula-ui-search__cancel' ).click();
+  assert.notOk( $wrapper.find( '.curricula-ui-search' ).length, "The search was closed." );
+
+  // Show it again, and simulate a "select" on item id-6. This should hide the
+  // search, as well as expand the columns and highlight id-6. See the event
+  // listener above.
+  app.showSearch();
+  searchSelectCallback( null, { item: { value: 'id-6' } } );
+});
+
+
+/**
  * Define a test item database, mimicking the structure a JSON file would
  * contain.
  */

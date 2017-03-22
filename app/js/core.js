@@ -552,6 +552,7 @@ Core.prototype = {
    */
   showSearch: function( focus ) {
     this.$el.append( this.searchView.render().$el );
+    /* istanbul ignore if */
     if ( focus ) {
       this.searchView.$el.find( 'input' ).focus();
     }

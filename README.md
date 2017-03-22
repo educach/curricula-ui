@@ -183,7 +183,7 @@ var app = new CurriculaUI.Core( items, $( '#my-app' ) {
 } );
 ```
 
-See [Core::setSettings()](https://educach.github.io/curricula-ui/docs/core.html#section-34) for more information on what settings you can set, and their default values.
+See [Core::setSettings()](https://github.com/educach/curricula-ui/blob/master/app/js/core.js#L204) for more information on what settings you can set, and their default values.
 
 You can listen to many events during the application execution. For example, when the app is rendered:
 

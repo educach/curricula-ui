@@ -348,3 +348,56 @@ QUnit.test( "collection events", function( assert ) {
     }, 100);
   }, 100);
 });
+
+
+
+
+QUnit.module( "SearchView" );
+
+/**
+ * Test initialization logic. It should not be possible to initialize an
+ * SearchView without a collection.
+ */
+QUnit.test( "initialize", function( assert ) {
+  assert.throws(
+    function() {
+      var view = new CurriculaUI.SearchView();
+    },
+    "Initializing a view without any collection throws an error."
+  );
+});
+
+/**
+ * Test autocomplete searching.
+ */
+QUnit.test( "autocomplete search", function( assert ) {
+  var $wrapper = $( '<div></div>' ).appendTo( '#qunit-fixture' ),
+      app = new CurriculaUI.Core( _testGetJSONItems(), $wrapper ),
+      doneSourceEvent = assert.async( 2 ),
+      expected = [
+        { label: 'Root item C', value: 'id-3' },
+        { label: 'Root item C; child item A', value: 'id-8' },
+        { label: 'Root item C; child item B', value: 'id-9' },
+      ],
+      searchSourceCallback;
+
+  // Mock jQuery UI's autocomplete plugin. Hijack the settings passed to it.
+  $.fn.autocomplete = function( settings ) {
+    searchSourceCallback = settings.source;
+  };
+
+  // Prepare an event listener.
+  app.on( 'search:results', function( data ) {
+    assert.deepEqual( expected, data );
+    doneSourceEvent();
+  });
+
+  // Activate the search view.
+  app.activateSearch();
+  app.showSearch();
+
+  searchSourceCallback( { term: 'Root item C' }, function( data ) {
+    assert.deepEqual( expected, data );
+    doneSourceEvent();
+  });
+});

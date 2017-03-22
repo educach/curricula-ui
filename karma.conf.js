@@ -15,9 +15,16 @@ module.exports = function( config ) {
       'app/js/core.js',
       'tests/**/*.js'
     ],
-    browsers: [ 'Firefox' ],
-    reporters: [ 'progress', 'coverage' ],
+    browsers: [ 'PhantomJS' ],
+    phantomjsLauncher: {
+      exitOnResourceError: true
+    },
+    reporters: [ 'progress', 'coverage', 'coveralls' ],
     preprocessors: { 'app/**/*.js': [ 'coverage' ] },
-    singleRun: true
+    singleRun: true,
+    coverageReporter: {
+      type: 'lcov',
+      dir: 'coverage/'
+    }
   });
 };

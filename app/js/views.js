@@ -2,42 +2,40 @@
  * @file
  * Curricula UI JS application views.
  *
- * This defines the views used throughout the application. Note that this file
- * is written using Docco syntax. If Node is installed, you can generate this
- * documentation by running:
- *
- *   npm install
- *   npm run doc
- *
- * This will generate the documentation in the docs/ folder, in HTML format.
+ * This defines the views used throughout the application.
  */
 
 "use strict";
 ( function( Backbone, _, c ) {
 
-// This defines the views used throughout the application. Almost all parts are
-// split into independent views, allowing for maximum flexibility and
-// re-usability. It extends the global `CurriculaUI` namespace, aliased
-// to `c` for readability.
+/**
+ * This defines the views used throughout the application. Almost all parts are
+ * split into independent views, allowing for maximum flexibility and
+ * re-usability. It extends the global CurriculaUI namespace, aliased
+ * to c for readability.
+ *
+ * A note on Backbone:
+ * As all the views are extending *Backbone*, it is useful to see the
+ * official documentation on Backbone.View
+ *
+ * @see http://backbonejs.org/#View
+ */
 
-// A note on Backbone
-// ------------------
-//
-// As all the views are extending *Backbone*, it is useful to see the
-// official documentation on [Backbone.View](http://backbonejs.org/#View).
-
-// Templates
-// ---------
-//
-// This defines the default templates used by the views in the application. They
-// can be overridden in various cases, as needed. Curricula UI strictly
-// adheres to *BEM* notation for the markup, and overrides should follow suit.
+/**
+ * Templates
+ *
+ * This defines the default templates used by the views in the application. They
+ * can be overridden in various cases, as needed. Curricula UI strictly
+ * adheres to *BEM* notation for the markup, and overrides should follow suit.
+ */
 c.templates = _.extend({
 
-  // A single item.
-  //
-  // This template is mainly used by `ItemView`, and represents a single item
-  // in a list.
+  /**
+   * A single item
+   *
+   * This template is mainly used by ItemView, and represents a single item
+   * in a list.
+   */
   item: '\
 <% if ( editable ) { %>\
   <input type="checkbox" value="model-<%= id %>"<% if ( active ) { %> checked<% } %>/>\
@@ -51,11 +49,15 @@ c.templates = _.extend({
 <% } %>\
 ',
 
-  // A list of items.
-  //
-  // This template is mainly used by `ItemListView`, and represents a list of
-  // items, usually ItemViews. Note that it uses classes for the *nanoScroller*
-  // jQuery plugin for convenience.
+  /**
+   * A list of items
+   *
+   * This template is mainly used by ItemListView, and represents a list of
+   * items, usually ItemViews. Note that it uses classes for the nanoScroller
+   * jQuery plugin for convenience.
+   *
+   * @see https://jamesflorentino.github.io/nanoScrollerJS/
+   */
   itemList: '\
 <div class="curricula-ui__column__wrapper nano">\
   <ul class="curricula-ui__column__wrapper__list nano-content"></ul>\
@@ -68,12 +70,14 @@ c.templates = _.extend({
 </span>\
 ',
 
-  // Information about a specific item.
-  //
-  // Used to display more detailed information about an item. This is most
-  // certainly the best candidate for an override, as it greatly depends on
-  // context. It provides a sensible default template, with very little
-  // information other than a link. Mainly used by `ItemInfoView`.
+  /**
+   * Information about a specific item
+   *
+   * Used to display more detailed information about an item. This is most
+   * certainly the best candidate for an override, as it greatly depends on
+   * context. It provides a sensible default template, with very little
+   * information other than a link. Mainly used by ItemInfoView.
+   */
   itemInfo: '\
 <h3 class="curricula-ui-item-info__label">\
   <%= typeof itemInfoLabel !== "undefined" ? itemInfoLabel : "Item info" %>\
@@ -89,11 +93,13 @@ c.templates = _.extend({
 </div>\
 ',
 
-  // Summary tree.
-  //
-  // This template is meant to be used recursively. It is used to construct a
-  // summary of the current application state. It is mainly used by
-  // `SummaryTreeView`.
+  /**
+   * Summary tree
+   *
+   * This template is meant to be used recursively. It is used to construct a
+   * summary of the current application state. It is mainly used by
+   * SummaryTreeView.
+   */
   summaryList: '\
 <li\
   data-model-id="<%= id %>"\
@@ -109,10 +115,12 @@ c.templates = _.extend({
 </li>\
 ',
 
-  // Search.
-  //
-  // Used for the quick search component, which allows users to quickly jump
-  // to a specific item.
+  /**
+   * Search
+   *
+   * Used for the quick search component, which allows users to quickly jump
+   * to a specific item.
+   */
   search: '\
 <div class="curricula-ui-search__overlay"></div>\
 <div class="curricula-ui-search__wrapper">\
@@ -124,18 +132,19 @@ c.templates = _.extend({
 }, c.templates || {});
 
 
-// Item view
-// ---------
-//
-// This view represents a single item in a column. It requires a model
-// representing the item, usually a `CurriculaUI.ItemModel`. See
-// `models.js` for more information.
+/**
+ * Item view
+ *
+ * This view represents a single item in a column. It requires a model
+ * representing the item, usually a CurriculaUI.ItemModel. See
+ * models.js for more information.
+ */
 c.ItemView = Backbone.View.extend({
   // The item is rendered as a list item.
   tagName:   'li',
   className: 'curricula-ui__column__wrapper__list__item',
 
-  // It uses the `item` template from our templates list.
+  // It uses the item template from our templates list.
   tpl: _.template( c.templates.item ),
 
   // This hash keeps track of the view settings.
@@ -168,14 +177,14 @@ c.ItemView = Backbone.View.extend({
 
     // Store the passed settings, providing defaults.
     this.settings = _.extend({
-      // Whether the item is editable or not. Defaults to `false`.
+      // Whether the item is editable or not. Defaults to false.
       editable: false
     }, settings || {});
 
     // The view will react on model state changes, either re-rendering itself
     // or removing itself completely from the DOM. When such events are
     // triggered by the model, the view itself will trigger a corresponding
-    // `model:*` event, which will allow events to bubble up the application
+    // model:* event, which will allow events to bubble up the application
     // hierarchy.
     var that = this;
     this.model
@@ -239,7 +248,7 @@ c.ItemView = Backbone.View.extend({
     // Render the template.
     this.$el.html( this.tpl( variables ) );
 
-    // Trigger a `render` event, so other parts of the application can interact
+    // Trigger a render event, so other parts of the application can interact
     // with it.
     this.trigger( 'render', this.model, this );
 
@@ -248,26 +257,26 @@ c.ItemView = Backbone.View.extend({
   },
 
   // Event handler for when the checkbox is clicked. Based on the new checkbox
-  // state, the model's `active` attribute will be set to `true` (checked) or
-  // `false` (unchecked). The view will also trigger 2 more events:
-  // * a `model:change` event, which applies to the model.
-  // * either a `active` or `unactive` event, which applies to the view itself.
+  // state, the model's active attribute will be set to true (checked) or
+  // false (unchecked). The view will also trigger 2 more events:
+  // * a model:change event, which applies to the model.
+  // * either a active or unactive event, which applies to the view itself.
   updateModel: function() {
     this.model.set( 'active', this.$el.find( 'input' ).is( ':checked' ) );
     this.trigger( 'model:change', this.model, this );
     this.triggerActiveChange();
   },
 
-  // Event handler for when the view is clicked. This triggers a `select` event.
+  // Event handler for when the view is clicked. This triggers a select event.
   triggerSelect: function() {
     this.trigger( 'select', this.model, this );
   },
 
   // Event handler for when the view is double-clicked. This is a shortcut for
   // toggling the state of the checkbox, and will trigger the same 2 events as
-  // `ItemView#updateModel()`:
-  // * a `model:change` event, which applies to the model.
-  // * either a `active` or `unactive` event, which applies to the view itself.
+  // ItemView#updateModel():
+  // * a model:change event, which applies to the model.
+  // * either a active or unactive event, which applies to the view itself.
   doubleClick: function( e ) {
     // We stop the propagation immediately, in order to prevent triggering our
     // handler more than once.
@@ -279,7 +288,7 @@ c.ItemView = Backbone.View.extend({
   },
 
   // Helper function to trigger an *active* state chance event. Will trigger
-  // either an `active` or an `unactive` event, based on the state of the model.
+  // either an active or an unactive event, based on the state of the model.
   triggerActiveChange: function() {
     var state = this.model.get( 'active' );
     this.trigger( state ? 'active' : 'unactive', state, this.model, this );
@@ -292,16 +301,17 @@ c.ItemView = Backbone.View.extend({
 });
 
 
-// Item list view
-// --------------
-//
-// This view represents a list of items. It requires a collection containing
-// all items in this list, usually a `CurriculaUI.ItemCollection`. See
-// `models.js` for more information.
+/**
+ * Item list view
+ *
+ * This view represents a list of items. It requires a collection containing
+ * all items in this list, usually a CurriculaUI.ItemCollection. See
+ * models.js for more information.
+ */
 c.ItemListView = Backbone.View.extend({
   className: 'curricula-ui__column',
 
-  // It uses the `itemList` template from our templates list.
+  // It uses the itemList template from our templates list.
   tpl: _.template( c.templates.itemList ),
 
   // This array keeps track of all child views.
@@ -327,15 +337,15 @@ c.ItemListView = Backbone.View.extend({
 
     // Store the passed settings, providing defaults.
     this.settings = _.extend({
-      // Whether the child items are editable or not. Defaults to `false`.
+      // Whether the child items are editable or not. Defaults to false.
       editable:  false,
-      // What View to use for the child view. Defaults to `c.ItemView`.
+      // What View to use for the child view. Defaults to c.ItemView.
       childView: c.ItemView
     }, settings || {});
 
     // The view will react on collection state changes, re-rendering itself
     // every time. When such events are triggered by the collection, the view
-    // itself will trigger a corresponding `collection:*` event, which will
+    // itself will trigger a corresponding collection:* event, which will
     // allow events to bubble up the application hierarchy.
     var that = this;
     this.collection
@@ -387,7 +397,7 @@ c.ItemListView = Backbone.View.extend({
       $ul.append( item.render().$el );
     });
 
-    // Trigger a `render` event, so other parts of the application can interact
+    // Trigger a render event, so other parts of the application can interact
     // with it.
     this.trigger( 'render', this.collection, this );
 
@@ -399,7 +409,7 @@ c.ItemListView = Backbone.View.extend({
   collapse: function() {
     this.$el.addClass( 'curricula-ui__column--collapsed' );
 
-    // Trigger a `column:collapse` event.
+    // Trigger a column:collapse event.
     this.trigger( 'column:collapse', this.collection, this );
 
     // Allow the chaining of method calls.
@@ -410,7 +420,7 @@ c.ItemListView = Backbone.View.extend({
   expand: function() {
     this.$el.removeClass( 'curricula-ui__column--collapsed' );
 
-    // Trigger a `column:expand` event.
+    // Trigger a column:expand event.
     this.trigger( 'column:expand', this.collection, this );
 
     // Allow the chaining of method calls.
@@ -427,7 +437,7 @@ c.ItemListView = Backbone.View.extend({
     return !this.isCollapsed();
   },
 
-  // Helper function to trigger an `item:*` event.
+  // Helper function to trigger an item:* event.
   triggerItemEvent: function( event, itemModel, itemView ) {
     if ( typeof itemView !== 'undefined' ) {
       this.trigger( 'item:' + event, itemModel, itemView, this.collection, this );
@@ -437,29 +447,30 @@ c.ItemListView = Backbone.View.extend({
   },
 
   // Event handler for when the *Back* button is clicked. Triggers a
-  // `column:go-back` event.
+  // column:go-back event.
   triggerGoBack: function() {
     this.trigger( 'column:go-back', this.collection, this );
   },
 
   // Event handler for when the *Top* button is clicked. Triggers a
-  // `column:go-to-root` event.
+  // column:go-to-root event.
   triggerGoToBeginning: function() {
     this.trigger( 'column:go-to-root', this.collection, this );
   }
 });
 
 
-// Item info view
-// --------------
-//
-// This view represents information about an item.  It requires a model
-// representing the item, usually a `CurriculaUI.ItemModel`. See
-// `models.js` for more information.
+/**
+ * Item info view
+ *
+ * This view represents information about an item.  It requires a model
+ * representing the item, usually a CurriculaUI.ItemModel. See
+ * models.js for more information.
+ */
 c.ItemInfoView = Backbone.View.extend({
   className: 'curricula-ui-item-info',
 
-  // It uses the `itemList` template from our templates list.
+  // It uses the itemList template from our templates list.
   tpl: _.template( c.templates.itemInfo ),
 
   // The item info view can be collapsed by clicking on its label.
@@ -487,7 +498,7 @@ c.ItemInfoView = Backbone.View.extend({
     var variables = this.model ? this.model.toJSON() : {};
     this.$el.html( this.tpl( variables ) );
 
-    // Trigger a `render` event, so other parts of the application can interact
+    // Trigger a render event, so other parts of the application can interact
     // with it.
    this.trigger( 'render', this.model, this );
 
@@ -509,23 +520,24 @@ c.ItemInfoView = Backbone.View.extend({
 });
 
 
-// Summary tree view
-// -----------------
-//
-// This view represents information about the state of the application. When
-// items are selected, their `active` attribute is set to `true`. Based on this
-// information, we can construct a summary of all active items. As the data is
-// a hierarchy, we display it as a recursively rendered tree.
+/**
+ * Summary tree view
+ *
+ * This view represents information about the state of the application. When
+ * items are selected, their active attribute is set to true. Based on this
+ * information, we can construct a summary of all active items. As the data is
+ * a hierarchy, we display it as a recursively rendered tree.
+ */
 c.SummaryTreeView = Backbone.View.extend({
   className: 'curricula-ui-summary',
 
-  // It uses the `summaryList` template from our templates list.
+  // It uses the summaryList template from our templates list.
   tpl: _.template( c.templates.summaryList ),
 
-  // The summary view can react to multiple events, most importantly the `click`
-  // event. This will trigger a `item:select` event, which will allow
+  // The summary view can react to multiple events, most importantly the click
+  // event. This will trigger a item:select event, which will allow
   // other parts of the application to react accordingly. Other events are
-  // `mouseover` and `mouseout`  events. These trigger the toggling of CSS
+  // mouseover and mouseout  events. These trigger the toggling of CSS
   // classes, which can be used to highlight structural information.
   events: {
     "mouseover li > span": "mouseOver",
@@ -551,7 +563,7 @@ c.SummaryTreeView = Backbone.View.extend({
 
   // Render the summary tree.
   render: function() {
-    // The `SummaryTreeView#render()` method can be called very often, sometimes
+    // The SummaryTreeView#render() method can be called very often, sometimes
     // several times per ms. We don't want that. So, we put  a little timeout
     // and wait. If the render function hasn't been called again for a certain
     // time, we proceed with the rendering. Otherwise, we cancel the render, and
@@ -575,7 +587,7 @@ c.SummaryTreeView = Backbone.View.extend({
     this.$el.empty();
     this.$el.append( this.recursiveRender( 'root' ) );
 
-    // Trigger a `render` event, so other parts of the application can interact
+    // Trigger a render event, so other parts of the application can interact
     // with it.
     this.trigger( 'render', this.collection, this );
 
@@ -595,7 +607,7 @@ c.SummaryTreeView = Backbone.View.extend({
       html = '<ul class="curricula-ui-summary__list">';
       children.forEach( function( model ) {
         // Render a single item. Recursively get the child markup by calling
-        // `SummaryTreeView#recursiveRender()` again.
+        // SummaryTreeView#recursiveRender() again.
         var variables = model.toJSON();
         variables.children = that.recursiveRender( model.get( 'id' ) );
 
@@ -618,25 +630,25 @@ c.SummaryTreeView = Backbone.View.extend({
     return html;
   },
 
-  // Event handler for `mouseover` events. Stop the bubbling up of the event,
+  // Event handler for mouseover events. Stop the bubbling up of the event,
   // so we can distinguish which exact (sub)tree got hovered.
-  mouseOver: function( e ) {
+  mouseOver: /* istanbul ignore next */ function( e ) {
     e.stopPropagation();
     this.$( e.target )
       .parent().addClass( 'hover' )
         .parents( 'li' ).addClass( 'child-hovered' );
   },
 
-  // Event handler for `mouseout` events. Undo the modifications done by the
-  // `mouseover` event.
-  mouseOut: function( e ) {
+  // Event handler for mouseout events. Undo the modifications done by the
+  // mouseover event.
+  mouseOut: /* istanbul ignore next */ function( e ) {
     this.$( e.target )
       .parent().removeClass( 'hover' )
         .parents( 'li' ).removeClass( 'child-hovered' );
   },
 
   // Event handler for clicking on an item in the tree. Stop the bubbling up
-  // of the event, and trigger a `item:select` event, so other parts
+  // of the event, and trigger a item:select event, so other parts
   // of the application can react to it.
   triggerSelect: function( e ) {
     e.stopPropagation();
@@ -648,15 +660,16 @@ c.SummaryTreeView = Backbone.View.extend({
 });
 
 
-// Search view
-// -----------
-//
-// This view allows users to search for items in the database. It filters the
-// application collection, and shows a number of selectable results.
+/**
+ * Search view
+ *
+ * This view allows users to search for items in the database. It filters the
+ * application collection, and shows a number of selectable results.
+ */
 c.SearchView = Backbone.View.extend({
   className: 'curricula-ui-search',
 
-  // It uses the `search` template from our templates list.
+  // It uses the search template from our templates list.
   tpl: _.template( c.templates.search ),
 
   // Upon initialization, the view checks if a usable collection is provided.
@@ -689,7 +702,7 @@ c.SearchView = Backbone.View.extend({
       // First try the ID, as it is the easiest and fastest to match.
       regExp.test( item.get( 'id' ) ) ||
       // Next try the first name. Most items have only one, so this will save
-      // an expensive `join()` call.
+      // an expensive join() call.
       regExp.test( name[ 0 ] ) ||
       // Still no match, so we check if we need to join, and if so, join with
       // spaces. This is the most expensive one, so we really try to avoid it
@@ -705,7 +718,7 @@ c.SearchView = Backbone.View.extend({
 
     var that = this;
 
-    // We cannot use the `events` hash of our view, because it tends to get
+    // We cannot use the events hash of our view, because it tends to get
     // completely removed often. Instead, bind our click handler here.
     this.$el.find( '.curricula-ui-search__cancel, .curricula-ui-search__overlay' ).click(function() {
       that.triggerCancel();
@@ -717,10 +730,10 @@ c.SearchView = Backbone.View.extend({
         that.trigger( 'select', that.collection.get( ui.item.value ), that.collection, that );
       },
       source: function( request, response ) {
-        // Methods like `each()` or `filter()` loop over all items before
+        // Methods like each() or filter() loop over all items before
         // exiting. We don't want that. As soon as we find 10, we stop.
         // Databases can contain many thousands of items, and performance is
-        // important. This is why we use the `every()` method, and scope the
+        // important. This is why we use the every() method, and scope the
         // data variable outside of it. This will allow us to stop iterating as
         // soon as we have 10 elements to show.
         var data = [],
@@ -762,7 +775,7 @@ c.SearchView = Backbone.View.extend({
       }
     });
 
-    // Trigger a `render` event, so other parts of the application can interact
+    // Trigger a render event, so other parts of the application can interact
     // with it.
     this.trigger( 'render', this.collection, this );
 

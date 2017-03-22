@@ -6,7 +6,7 @@ QUnit.module( "Core" );
  */
 QUnit.test( "constructor", function( assert ) {
   var $wrapper = $( '<div></div>' ).appendTo( '#qunit-fixture' ),
-      app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $wrapper );
+      app = new CurriculaUI.Core( _testGetJSONItems(), $wrapper );
 
   assert.ok( !!app.getItemDatabase(), "The item database is correctly set." );
   assert.ok( app.getWrapper().length, "The wrapper is correctly set." );
@@ -17,7 +17,7 @@ QUnit.test( "constructor", function( assert ) {
  * Test the settings extension logic.
  */
 QUnit.test( "settings extension", function( assert ) {
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ), {
+  var app = new CurriculaUI.Core( _testGetJSONItems(), $( '#qunit-fixture' ), {
     dummySetting: true,
     itemView: { fake: true }
   } );
@@ -32,7 +32,7 @@ QUnit.test( "settings extension", function( assert ) {
     "The settings are correctly set and extended."
   );
   assert.deepEqual(
-    ArchibaldCurriculum.ItemListView,
+    CurriculaUI.ItemListView,
     app.getSettings().itemListView,
     "The default settings are correctly kept."
   );
@@ -42,10 +42,10 @@ QUnit.test( "settings extension", function( assert ) {
  * Test the column collection event binding.
  */
 QUnit.test( "column collection events", function( assert ) {
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
+  var app = new CurriculaUI.Core( _testGetJSONItems() ),
       columns = app.getColumnDatabase(),
       $dummy = $( '<div>Column</div>' ).appendTo( '#qunit-fixture' ),
-      model = new ArchibaldCurriculum.ColumnModel({ column: $dummy });
+      model = new CurriculaUI.ColumnModel({ column: $dummy });
 
   // Add the column, and then remove it again. This should trigger the remove
   // event, which should remove the $dummy element from the DOM.
@@ -66,7 +66,7 @@ QUnit.test( "column collection events", function( assert ) {
  */
 QUnit.test( "column creation helper", function( assert ) {
   var doneBubbleEvent = assert.async(),
-      app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
+      app = new CurriculaUI.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
       column = app.createRootColumn();
 
   assert.throws(
@@ -116,7 +116,7 @@ QUnit.test( "column creation helper", function( assert ) {
  * Test the column left/right selection helpers.
  */
 QUnit.test( "column left/right selection helpers", function( assert ) {
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
+  var app = new CurriculaUI.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
       column1 = app.createColumn( _testGetJSONItems()[ 'root' ] ),
       column2 = app.createColumn( _testGetJSONItems()[ 'root' ] ),
       column3 = app.createColumn( _testGetJSONItems()[ 'root' ] ),
@@ -158,7 +158,7 @@ QUnit.test( "recursive (un)checking logic", function( assert ) {
   var doneConfirmEvent = assert.async( 2 ),
       doneChangeActiveEvent = assert.async( 3 ),
       done = assert.async(),
-      app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
+      app = new CurriculaUI.Core( _testGetJSONItems() ),
       chain = [ 'id-6', 'id-5', 'id-1' ],
       database = app.getItemDatabase();
 
@@ -247,7 +247,7 @@ QUnit.test( "recursive (un)checking logic", function( assert ) {
 QUnit.test( "responsive logic helpers", function( assert ) {
   var done = assert.async();
 
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
+  var app = new CurriculaUI.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
       column, model, i;
 
   // Activate the responsive logic. In order to have full control over our test
@@ -301,7 +301,7 @@ QUnit.test( "responsive logic helpers", function( assert ) {
 
     // Clean up.
     app.$style.remove();
-    $( 'iframe.__archibald-curricula-ui--hacky-scrollbar-resize-listener__' ).remove();
+    $( 'iframe.__curricula-ui__curricula-ui--hacky-scrollbar-resize-listener__' ).remove();
 
     done();
   }, 200 );
@@ -311,7 +311,7 @@ QUnit.test( "responsive logic helpers", function( assert ) {
  * Test unhighlighting items.
  */
 QUnit.test( "unhighlighting items", function( assert ) {
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
+  var app = new CurriculaUI.Core( _testGetJSONItems() ),
       doneChangeHighlightedEvent = assert.async(),
       done = assert.async();
 
@@ -354,7 +354,7 @@ QUnit.test( "unhighlighting items", function( assert ) {
  * Test resetting expanded items.
  */
 QUnit.test( "reset expanded items", function( assert ) {
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
+  var app = new CurriculaUI.Core( _testGetJSONItems() ),
       doneChangeExpandedEvent = assert.async(),
       done = assert.async();
 
@@ -399,7 +399,7 @@ QUnit.test( "reset expanded items", function( assert ) {
 QUnit.test( "triggering events", function( assert ) {
   var done = assert.async();
 
-  var app = new ArchibaldCurriculum.Core( _testGetJSONItems() ),
+  var app = new CurriculaUI.Core( _testGetJSONItems() ),
       doneEvent = assert.async( 3 );
 
   // Prepare the event listeners.
@@ -432,7 +432,7 @@ QUnit.test( "triggering events", function( assert ) {
  */
 QUnit.test( "summary item selection", function( assert ) {
   var doneSelectEvent = assert.async(),
-      app = new ArchibaldCurriculum.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
+      app = new CurriculaUI.Core( _testGetJSONItems(), $( '#qunit-fixture' ) ),
       column = app.createRootColumn();
 
   // Set an item as being expanded. We will check it later.
@@ -471,9 +471,9 @@ QUnit.test( "summary item selection", function( assert ) {
   item6.set( 'active', true );
   app.recursiveCheck( item6 );
 
-  // For performance reasons, the `ArchibaldCurriculum.SummaryTreeView` doesn't
+  // For performance reasons, the `CurriculaUI.SummaryTreeView` doesn't
   // render on immediately. For this reason, we need to wait a few ms before
-  // triggering our click. See `ArchibaldCurriculum.SummaryTreeView#render()`
+  // triggering our click. See `CurriculaUI.SummaryTreeView#render()`
   // for more information.
   setTimeout( function() {
     // Now, simulate a click on this item.

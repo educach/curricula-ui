@@ -1,5 +1,5 @@
-LOM curriculum data selecor
-===========================
+LOM curriculum data selector
+============================
 
 [![Build Status](https://travis-ci.org/educach/curricula-ui.svg?branch=master)](https://travis-ci.org/educach/curricula-ui) [![Coverage Status](https://coveralls.io/repos/github/educach/curricula-ui/badge.svg?branch=master)](https://coveralls.io/github/educach/curricula-ui?branch=master)
 

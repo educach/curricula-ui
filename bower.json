@@ -2,7 +2,7 @@
   "name": "curricula-ui",
   "version": "2.0.0",
   "authors": [
-    "Wouter Admiraal <wad@wadmiraal.net>"
+    "Wouter Admiraal <wouter.admiraal@educa.ch>"
   ],
   "description": "JS application for managing and editing curricula data for LOM-CH descriptions.",
   "license": "MIT",
